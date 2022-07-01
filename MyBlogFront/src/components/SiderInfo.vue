@@ -34,6 +34,7 @@
 </template>
 
 <script>
+import {mapState} from 'vuex';
 export default {
   data() {
     return {
@@ -44,59 +45,28 @@ export default {
     }
   },
   mounted(){
-    this.getClassifies();
-    this.getJottings();
-    this.getBlogList();
+    this.getBaseInfo();
   },
   computed: {
     
   },
   methods:{
-    // 获取书签
-    async getClassifies() {
-     try {
-        const res = await this.$api.getClassifyList()
-        console.log(res)
-        // 获取博客列表
-        if (res.status === 200) {
-          this.classifies = res.data;
-        } else {
-          this.$message.error('网络出错了,(ノへ￣、)！')
-        }
-      } catch (error) {
-        this.$message.error(error)
-      }
-    },
-    // 获取随笔
-    async getJottings() {
+    // 获取基本信息
+    async getBaseInfo() {
       try {
-        if (this.$store.state.jottingList.length) {
-          this.jottingList = this.$store.state.jottingList;
-          console.log(this.jottingList);
+        let {blogList, jottingList, classifies} = {...mapState(['blogList','jottingList','classifies'])};
+        if (blogList.length && jottingList.length && classifies.length) {
+          this.classifies = classifies;
+          this.blogList = blogList;
+          this.jottingList = jottingList;
         } else {
-          
-          const res = await this.$api.getJottingList()
-          // 获取博客列表
+          const res = await this.$api.getSliderInfo();
           if (res.status === 200) {
-            this.jottingList = res.data.jottingList.slice(0, 3);
-          } else {
-            this.$message.error('网络出错了,(ノへ￣、)！')
-          }
-        }
-        console.log(this.jottingList);
-      } catch (error) {
-        this.$message.error(error)
-      }
-    },
-    // 获取博客
-    async getBlogList(pageStart, pageSize) {
-      try {
-        if (this.$store.state.blogList.length) {
-          this.blogList = this.$store.state.blogList;
-        } else {
-          const res = await this.$api.getArticleList({pageStart, pageSize})
-          if (res.status === 200) {
+            this.classifies = res.data.classifies;
             this.blogList = res.data.blogList.slice(0, 3);
+            this.jottingList = res.data.jottingList.slice(0, 3);
+            this.$store.commit('SAVECLASSIFIES', this.classifies);
+            this.$store.commit('SAVEBLOG', res.data.blogList);
           } else {
             this.$message.error('网络出错了,(ノへ￣、)！')
           }
@@ -109,6 +79,7 @@ export default {
     async getBlogsOfClassify(e) {
       this.$router.push({path:'/bloglist', query:{type:'blog', classification:e.target.id}});
     },
+    // 获取某个文章
     showdetail(type, _id) {
       this.$router.push(`/article/${type}/${_id}`)
     }
@@ -138,13 +109,6 @@ export default {
       padding: 10px;
       text-overflow: ellipsis;
       overflow:hidden;
-      // border-bottom: 1px solid #c5c4c4;
-      // &:nth-child(1){
-      //   padding:0 10px 10px 10px;
-      // }
-      // &:not(1){
-      //   padding: 10px;
-      // }
     }
   }
   // 

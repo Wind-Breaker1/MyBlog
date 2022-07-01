@@ -8,5 +8,6 @@ router.post('/updatecontent', jottingController.updateContent);
 router.post('/addjotting', jottingController.addJotting);
 router.get('/changestate', jottingController.changeState);
 router.get('/getPublishJottings', jottingController.getPublishJottings);
-router.get('/getJotting', jottingController.getJotting)
+router.get('/getJotting', jottingController.getJotting);
+router.get('/addFavour', jottingController.addFavour);
 module.exports = router;

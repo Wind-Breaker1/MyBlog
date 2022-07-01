@@ -1,23 +1,28 @@
 <template>
   <div id="header">
     <div class="logo">MYBLOG</div>
-    <el-input placeholder="请输入内容" v-model="input3" class="input-with-select">
-      <el-button slot="append" icon="el-icon-search"></el-button>
+    <el-input placeholder="请输入关键字..." v-model="searchValue" class="input-with-select">
+      <el-button slot="append" icon="el-icon-search" @click="searchArticle"></el-button>
     </el-input>
   </div>
 </template>
-
 <script>
 export default {
   data(){
     return{
-      input3: ''
+      searchValue: ''
+    }
+  },
+  methods:{
+    async searchArticle() {
+      let result = await this.$api.search({searchValue:this.searchValue});
+      this.searchValue = '';
+      this.$store.commit('SAVESEARCHLIST', result.data);
+      this.$router.push('/search');
     }
   }
 }
 </script>
-
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="less">
 #header{
   height: 60px;

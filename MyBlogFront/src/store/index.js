@@ -7,7 +7,9 @@ export default new Vuex.Store({
   state: {
     blogList: [],
     jottingList: [],
-    blogsOfClassify:[]
+    blogsOfClassify: [],
+    classifies: [],
+    searchList: []
   },
   getters: {
 
@@ -20,8 +22,14 @@ export default new Vuex.Store({
       state.jottingList = jottinglist;
     },
     SAVEBLOGSOFCLASSIFY(state, blogsOfClassify) {
-      state.blogsOfClassify = blogsOfClassify
-    }
+      state.blogsOfClassify = blogsOfClassify;
+    },
+    SAVECLASSIFIES(state, classifies) {
+      state.classifies = classifies;
+    },
+    SAVESEARCHLIST(state, searchList) {
+      state.searchList = searchList;
+    },
   },
   actions: {
   },

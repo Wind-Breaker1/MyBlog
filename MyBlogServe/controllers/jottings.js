@@ -1,41 +1,39 @@
 const JottingModel = require('../model/jottings');
 const addJotting = async (req, res, next) => {
-  var { title, content, digest, state, _id } = req.body;
-  var date = new Date();
-  var year = date.getFullYear();
-  var month = date.getMonth() + 1;
-  var day = date.getDay();
-  var hours = date.getHours();
-  var minutes = date.getMinutes();
-  var time = year + '-' + month + '-' + day + '  ' + hours + ':' + minutes;
+  let { title, content, digest, state, _id } = req.body;
+  let date = new Date();
+  let year = date.getFullYear();
+  let month = date.getMonth() + 1;
+  let day = date.getDay();
+  let time = year + '-' + month + '-' + day;
+  let result = null;
   // 判断是修改还是新增
   if (_id) {
     // 若存在id则更新内容
-    var result = await JottingModel.updateContent({
+    result = await JottingModel.updateContent({
       content,
       _id
     });
   } else {
-    var result = await JottingModel.addJotting({
-      date:time,
+    result = await JottingModel.addJotting({
+      date: time,
       title,
       content,
       digest,
       state,
     });
-    if (result) {
-      res.send({
-        msg: '添加成功',
-        status: 0
-      });
-    } else {
-      res.send({
-        msg: '添加失败！',
-        status: -2
-      });
-    }
   }
-
+  if (result) {
+    res.send({
+      msg: '随笔添加成功',
+      status: 200
+    });
+  } else {
+    res.send({
+      msg: '随笔添加失败',
+      status: -1
+    });
+  }
 };
 // 修改随笔的状态
 const changeState = async (req, res, next) => {
@@ -44,73 +42,84 @@ const changeState = async (req, res, next) => {
   let result = await JottingModel.updateState(!re.state, _id);
   if (result) {
     res.send({
-      msg: '修改成功',
-      status: 0
+      msg: '修改随笔成功',
+      status: 200
     });
-  }
-  else {
+  } else {
     res.send({
-      msg: '修改失败',
+      msg: '修改随笔失败',
       status: -1
     });
   }
 }
 // 修改随笔内容
 const updateContent = async (req, res, next) => {
-  var { content, _id } = req.body;
-  var result = await JottingModel.updateJotting({
+  let { content, _id } = req.body;
+  let result = await JottingModel.updateJotting({
     _id,
     content
   });
-
   if (result) {
     res.send({
-      msg: '修改成功',
-      status: 0
+      msg: '修改随笔成功',
+      status: 200
     });
-  }
-  else {
+  } else {
     res.send({
-      msg: '修改失败',
+      msg: '修改随笔失败',
       status: -1
     });
   }
 };
 // 获取随笔列表
 const getJottingsList = async (req, res, next) => {
-  var result = await JottingModel.JottingsList();
+  let result = await JottingModel.JottingsList();
   if (result) {
     res.send({
-      msg: '查询成功',
+      msg: '随笔查询成功',
       status: 200,
       data: result
+    });
+  } else {
+    res.send({
+      msg: '随笔查询成功',
+      status: 200,
     });
   }
 }
 // 获取已发布文章列表
 const getPublishJottings = async (req, res, next) => {
   let { pageStart, pageSize } = req.query;
-  var jottingList = await JottingModel.publishJottings({ pageStart, pageSize });
-  var count = await JottingModel.jottingNums();
-  console.log(jottingList, 111)
+  let jottingList = await JottingModel.publishJottings({ pageStart, pageSize });
+  let count = await JottingModel.jottingNums();
   if (jottingList) {
     res.send({
-      msg: '查询成功',
+      msg: '随笔查询成功',
       status: 200,
       data: { jottingList, count }
+    });
+  } else {
+    res.send({
+      msg: '随笔查询成功',
+      status: 200,
     });
   }
 }
 // 获取某一随笔
 const getJotting = async (req, res, next) => {
   let { _id } = req.query;
-  let result = await JottingModel.addBrowse(_id);
+  await JottingModel.addBrowse(_id);
   let jotting = await JottingModel.JottingOne(_id);
-  if (jotting && result.modifiedCount) {
+  if (jotting) {
     res.send({
-      msg: '查询成功',
+      msg: '查询随笔详情成功',
       status: 200,
       data: jotting
+    });
+  } else {
+    res.send({
+      msg: '查询随笔详情失败',
+      status: 200,
     });
   }
 }
@@ -121,31 +130,31 @@ const deleteJotting = async (req, res, next) => {
   let result = await JottingModel.deleteJotting(_id);
   if (result.deletedCount != 0) {
     res.send({
-      msg: '删除成功',
-      status: 0,
+      msg: '随笔删除成功',
+      status: 200,
     });
   } else {
     res.send({
-      msg: '删除失败！',
-      status: 0,
+      msg: '随笔删除失败',
+      status: -1,
     });
   }
 }
 // 点赞
 const addFavour = async (req, res) => {
   let { _id } = req.query;
-  let result = await JottingModel.addFavour(_id);
-  let result1 = await JottingModel.getFavour(_id);
-  if (result.modifiedCount === 1) {
+  let addFavour = await JottingModel.addFavour(_id);
+  let getFavour = await JottingModel.getFavour(_id);
+  if (addFavour.modifiedCount === 1) {
     res.send({
-      msg: '点赞成功',
+      msg: '点赞随笔成功',
       status: 200,
-      data: result1
+      data: getFavour.favour
     });
   } else {
     res.send({
-      msg: '点赞失败！',
-      status: 0,
+      msg: '点赞随笔失败',
+      status: -1,
     });
   }
 }

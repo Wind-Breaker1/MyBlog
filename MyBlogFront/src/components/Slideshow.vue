@@ -87,13 +87,8 @@ export default {
       display: flex;
       justify-content: center;
       span{
-        width: 45%;
         margin-top: 25%;
-        // margin-left: 4%;
-        // &:nth-child(1){
-        //   // border-right: 1px solid black;
-          
-        // }
+        text-align: center;
       }
     }
   }

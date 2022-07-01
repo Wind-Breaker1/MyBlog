@@ -1,6 +1,6 @@
 <template>
   <div id="footer">
-   
+    备案号：xxxxxxxxxxx
   </div>
 </template>
 
@@ -15,6 +15,7 @@ export default {
   height: 60px;
   width: 100%;
   background-color: #545c64;
-  
+  line-height: 60px;
+  text-align: center;
 }
 </style>

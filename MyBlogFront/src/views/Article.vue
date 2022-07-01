@@ -2,7 +2,7 @@
    <div class="bloglist" >
     <div class="blogtip">
       <h2>{{article.title}}</h2>
-      <el-tag class="bookmark">标签一</el-tag>
+      <el-tag class="bookmark" v-show="isBlog">{{classifyName}}</el-tag>
       <div class="opration">
           <i class="iconfont icon-icon" @click="giveALike(article._id)"></i>{{favour || article.favour}}
           <i class="el-icon-view"></i>{{article.browse}}
@@ -34,18 +34,10 @@ export default {
   data() {
     return {
       article: {},
-      dialogFormVisible: false,
-        form: {
-          title: '',
-          digest: '',
-        },
-      formLabelWidth: '120px',
-      dialogFormVisible: false,
       content: "",
-      html: "",
-      configs: {},
-      state: false,
-      favour: 0
+      favour: 0,
+      classifyName: '',
+      isBlog: true
     }
   },
   components:{
@@ -55,27 +47,41 @@ export default {
     this.getArticle();
   },
   watch: {
-      $route(){
-          if(this.$route.params.id){
-              this.getArticle()
-          }
+    $route(){
+      if(this.$route.params.id){
+        this.getArticle()
       }
+    }
   },
   methods:{
+    // 获取文章详细信息
     async getArticle() {
-      let {id, type} = this.$route.params;
-      console.log(id, type, this.$route.params)
-      let res = null;
-      if (type === 'blog') {
-        res = await this.$api.getArticle({_id:id});
-      } else {
-        res = await this.$api.getJotting({_id:id});
-      }
-      if (res.status === 200) {
-        this.article = res.data;
-        this.content = res.data.content;
-      } else {
-
+      try {
+        let {id, type} = this.$route.params;
+        let res = {};
+        this.favour = 0;
+        // 判断是博客还是随笔
+        if (type === 'blog') {
+          res = await this.$api.getBlog({_id:id});
+        } else {
+          res = await this.$api.getJotting({_id:id});
+        }
+        if (res.status === 200) {
+          if (res.data.classifyName) {
+            this.article = res.data.article;
+            this.content = res.data.article.content;
+            this.classifyName = res.data.classifyName;
+            this.isBlog = true;
+          } else {
+            this.article = res.data;
+            this.content = res.data.content;
+            this.isBlog = false;
+          }
+        } else {
+          this.$message.error('网络出错了,(ノへ￣、)！')
+        }
+      } catch (error) {
+        this.$message.error(error)
       }
       
     },
@@ -85,12 +91,23 @@ export default {
         // console.log(value, render)
         this.html = render;
     },
+    // 点赞
     async giveALike(id){
-      let res = await this.$api.giveALike({_id:id});
-      console.log(res)
-      if (res.status === 200) {
-        this.favour = res.data;
+      try{
+        let {type} = this.$route.params;
+        let res = {};
+        if (type === 'blog') {
+          res = await this.$api.giveBlogALike({_id:id});
+        } else {
+          res = await this.$api.giveJottingALike({_id:id});
+        }
+        if (res.status === 200) {
+          this.favour = res.data;
+        }
+      } catch (error) {
+        this.$message.error(error)
       }
+      
     }
   }
 }

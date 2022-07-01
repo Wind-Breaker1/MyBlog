@@ -37,6 +37,7 @@
 </template>
 
 <script>
+import {mapState} from 'vuex';
 export default {
   data() {
     return {
@@ -53,12 +54,12 @@ export default {
     }
   },
   mounted() {
-    this.getList(this.pageStart, this.pageSize)
+    this.getBlogList(this.pageStart, this.pageSize)
   },
   watch: {
     $route(){
       if(this.$route.query.classification){
-        this.getList()
+        this.getBlogList()
       }
     }
   },
@@ -66,17 +67,22 @@ export default {
     // 换页回调
     handleCurrentChange(val) {
       this.pageStart = this.pageSize * (val - 1);
-      this.getList(this.pageStart, this.pageSize)
+      this.getBlogList(this.pageStart, this.pageSize)
     },
-    async getList(pageStart, pageSize) {
+    async getBlogList(pageStart, pageSize) {
       try {
+        let {blogList} = {...mapState(['blogList'])};
         // 获取博客列表
         let res = null;
         let {classification, type} = this.$route.query;
-        console.log(Boolean(type))  
         // 判断发什么请求博客
         if (type === 'blog'){
-          res = await this.$api.getBlogsOfClassify({classification});
+          if (pageStart === 0 && blogList.length) {
+            this.blogList = blogList;
+            return ;
+          } else {
+            res = await this.$api.getBlogsOfClassify({classification});
+          }
         } else {
           res = await this.$api.getArticleList({pageStart, pageSize});
         }
@@ -87,16 +93,20 @@ export default {
             this.$store.commit('SAVEBLOG', res.data.blogList.slice(0,3));
           }
         } else {
-          this.$message.error('网络出错了,(ノへ￣、)！')
+          this.$message.error('网络出错了,(ノへ￣、)！');
         }
       } catch (error) {
-        this.$message.error(error)
+        this.$message.error(error);
       }
     },
+    // 获取博客详情
     async blogdetail(type, _id) {
-       await this.$api.addBrowse({_id})
-      this.$router.push(`/article/${type}/${_id}`)
-     
+      try {
+        // await this.$api.addBrowse({_id});
+        this.$router.push(`/article/${type}/${_id}`);
+      } catch (error) {
+        this.$message.error(error);
+      }
     }
   }
 

@@ -1,6 +1,6 @@
 <template>
-  <div class="bloglist">
-    <div class="blogtip">
+  <div class="jottinglist">
+    <div class="jottingtip">
       <h3>随笔</h3>
     </div>
   <!-- 博客列表元素 -->
@@ -35,6 +35,7 @@
 </template>
 
 <script>
+import {mapState} from 'vuex';
 export default {
   data() {
     return {
@@ -57,26 +58,35 @@ export default {
     }
   },
   mounted() {
-    this.getList(this.pageStart, this.pageSize)
+    this.getJottingList(this.pageStart, this.pageSize)
   },
   methods: {
+    // 分页改变事件
     handleCurrentChange(val) {
       this.pageStart = this.pageSize * (val - 1);
-      this.getList(this.pageStart, this.pageSize)
+      this.getJottingList(this.pageStart, this.pageSize)
     },
-    async getList(pageStart, pageSize) {
+    // 获取博客列表
+    async getJottingList(pageStart, pageSize) {
       try {
-          const res = await this.$api.getJottingList({pageStart, pageSize});
-          console.log(res.data.jottingList)
-          if (res.status === 200) {
-            this.jottingList = res.data.jottingList;
-            this.count = res.data.count;
-            if (pageStart === 0) {
-              this.$store.commit('SAVEJOTTING', res.data.jottingList.slice(0, 3));
-            }
-          } else {
-            this.$message.error('网络出错了,(ノへ￣、)！')
+        let {jottingList} = {...mapState(['jottingList'])};
+        // 获取博客列表
+        let res = null;
+        if (pageStart === 0 && jottingList.length) {
+          this.jottingList = jottingList;
+          return;
+        } else {
+          res = await this.$api.getJottingList({pageStart, pageSize});
+        }
+        if (res.status === 200) {
+          this.jottingList = res.data.jottingList;
+          this.count = res.data.count;
+          if (pageStart === 0) {
+            this.$store.commit('SAVEJOTTING', res.data.jottingList.slice(0, 3));
           }
+        } else {
+          this.$message.error('网络出错了,(ノへ￣、)！')
+        }
         // 获取博客列表
       } catch (error) {
         this.$message.error(error)
@@ -87,14 +97,14 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.bloglist{
+.jottinglist{
   flex:1;
   background-color: rgba(255, 255, 255, 0.7);
   margin-top: 5px;
   margin-bottom: 10px;
   border-radius: 5px;
   height: 1000vh;
-  .blogtip{
+  .jottingtip{
     // height: 8vh;
     line-height: 8vh;
     text-align: center;

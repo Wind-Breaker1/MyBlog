@@ -1,6 +1,6 @@
 <template>
   <div id="nav">
-    <el-menu :default-active="select"  @select="handleSelect" class="navbar"
+    <el-menu :default-active="select" class="navbar"
         text-color="#aaaaaa" active-text-color="#FFFFFF" >
         <router-link to="/bloglist">
           <el-menu-item index="/bloglist">
@@ -29,6 +29,7 @@ export default {
     }
   },
   watch:{
+    // 监听路由变化
     $route(){
       let {type} = this.$route.params;
       if(type){
@@ -40,11 +41,6 @@ export default {
       } else {
         this.select = this.$route.path;
       }
-    }
-  },
-  methods: {
-    handleSelect() {
-
     }
   }
 }

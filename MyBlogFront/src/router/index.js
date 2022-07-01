@@ -21,6 +21,10 @@ const routes = [
     component: () => import('@/views/Article.vue')
   },
   {
+    path: '/search',
+    component: () => import('@/views/Search.vue')
+  },
+  {
     path: '/',
     redirect: '/bloglist'
   }
