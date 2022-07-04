@@ -1,5 +1,5 @@
 <template>
-   <div class="bloglist" >
+   <div>
     <div class="blogtip">
       <h2>{{article.title}}</h2>
       <el-tag class="bookmark" v-show="isBlog">{{classifyName}}</el-tag>
@@ -12,7 +12,6 @@
     <mavon-editor
       v-model="content"
       ref="md"
-      @change="change"
       :toolbarsFlag="false"
       :subfield="false"
       defaultOpen="preview"
@@ -21,15 +20,14 @@
       previewBackground="background-color: rgba(255, 255, 255, 0.7);"
       style="min-height: 100vh; z-index: 90;"
     />
-    <div class="discuss">
-
-    </div>
+    <Comment :blogId="this.article._id" v-if="content.length !== 0"></Comment>
   </div>
 </template>
 
 <script>
 import { mavonEditor } from "mavon-editor";
-import 'mavon-editor/dist/css/index.css'
+import 'mavon-editor/dist/css/index.css';
+import Comment from '@/components/Comment.vue';
 export default {
   data() {
     return {
@@ -41,9 +39,10 @@ export default {
     }
   },
   components:{
-    mavonEditor
+    mavonEditor,
+    Comment
   },
-  mounted(){
+  created(){
     this.getArticle();
   },
   watch: {
@@ -83,14 +82,8 @@ export default {
       } catch (error) {
         this.$message.error(error)
       }
-      
     },
-    // 所有操作都会被解析重新渲染
-    change(value, render){
-        // render 为 markdown 解析后的结果[html]
-        // console.log(value, render)
-        this.html = render;
-    },
+    
     // 点赞
     async giveALike(id){
       try{
@@ -114,64 +107,49 @@ export default {
 </script>
 
 <style scoped lang="less">
-.bloglist{
-  flex:1;
-  background-color: rgba(255, 255, 255, 0.7);
-  margin-top: 5px;
-  margin-bottom: 10px;
+.blogtip{
+  min-height: 18vh;
+  font-size: 14px;
+  padding: 15px;
+  position: relative;
+  background-color: rgb(255, 255, 255);
   border-radius: 5px;
-  min-height: 100vh;
-  .blogtip{
-    min-height: 18vh;
-    font-size: 14px;
-    padding: 15px;
-    position: relative;
-    background-color: rgb(255, 255, 255);
-    border-radius: 5px;
-    margin-bottom: 2vh;
-    .bookmark{
-      margin-top: 20px;
-    }
-    .opration{
-      line-height: 40px;
-      position: absolute;
-      bottom: 0;
-      width: 95%;
-      i{
-        margin-right: 15px;
-      }
-      &>i:nth-child(2){
-        margin-left: 25px;
-      }
-      &>i:nth-child(3){
-        margin-left: 25px;
-        float: right;
-      }
-    }
+  margin-bottom: 2vh;
+  .bookmark{
+    margin-top: 20px;
   }
-  .desc{
-    display: block;
-    height: 10vh;
-    text-overflow: ellipsis;
-  }
-  .show{
-    height: 4vh;
-    color: gray;
-    line-height: 4vh;
-    .favour, .brows{
-      float: left;
-      width: 100px;
+  .opration{
+    line-height: 40px;
+    position: absolute;
+    bottom: 0;
+    width: 95%;
+    i{
+      margin-right: 15px;
     }
-    .createtime{
-      float:right;
+    &>i:nth-child(2){
+      margin-left: 25px;
     }
-  }
-  .discuss{
-    min-height: 26vh;
-    background-color: rgb(255, 255, 255);
-    border-radius: 5px;
-    margin-top: 2px;
+    &>i:nth-child(3){
+      margin-left: 25px;
+      float: right;
+    }
   }
 }
-
+.desc{
+  display: block;
+  height: 10vh;
+  text-overflow: ellipsis;
+}
+.show{
+  height: 4vh;
+  color: gray;
+  line-height: 4vh;
+  .favour, .brows{
+    float: left;
+    width: 100px;
+  }
+  .createtime{
+    float:right;
+  }
+}
 </style>

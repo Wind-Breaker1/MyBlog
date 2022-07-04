@@ -34,4 +34,25 @@ export const addBrowse = (params) => requests.get('/articles/addBrowse', { param
 export const getSliderInfo = () => requests.get('/synthesis/getSliderInfo');
 
 // 搜索
-export const search = (params) => requests.get('/synthesis/searchArticle', {params});
+export const search = (params) => requests.get('/synthesis/searchArticle', { params });
+
+// 获取某篇文章的所有评论
+export const getCommentList = (params) => requests.get('/comment/getcommentlist', { params });
+
+// 一级评论点赞
+export const addfirstfavour = (params) => requests.get('/comment/addfirstfavour', { params });
+
+// 二级评论点赞
+export const addsecondfavour = (params) => requests.get('/comment/addsecondfavour', { params });
+
+// 新增一级评论
+export const addfirstcomment = (data) => requests.post('/comment/addfirstcomment', data);
+
+// 新增二级评论
+export const addsecondcomment = (data) => requests.post('/comment/addsecondcomment', data);
+
+// 删除一级评论
+export const deletefirstcomment = (params) => requests.delete('/comment/deletefirstcomment', { params });
+
+// 删除二级评论
+export const deletesecondcomment = (params) => requests.delete('/comment/deletesecondcomment', { params });

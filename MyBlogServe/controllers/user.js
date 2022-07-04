@@ -42,7 +42,7 @@ const login = async (req, res, next) => {
   // 查找用户是否存在
   let user = await UserModel.findUser(email);
   if (user) {
-    let { password: hash } = result;
+    let { password: hash } = user;
     // 比较密码
     let compareResult = await compare(password, hash);
     if (compareResult) {

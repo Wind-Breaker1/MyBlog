@@ -1,10 +1,12 @@
 <template>
-  <el-container :style="{ height: '100vh' }">
-    <el-header height="60px" style="font-weight: 1000">MyBlog后台管理
+  <el-container :style="{ height: '100vh' } " id="app">
+    <!-- 页头 -->
+    <el-header >MyBlog后台管理
       <button  @click="logout">fdsfads</button>
     </el-header>
     <el-container>
-      <el-aside width="200px">
+      <!-- 侧边导航 -->
+      <el-aside width="210px">
         <el-menu
           :default-active="$route.path"
           class="el-menu-vertical-demo"
@@ -14,20 +16,30 @@
         >
           <!-- <router-link to="/article"> -->
               <el-submenu index="/article">
-              <template slot="title">
-                <i class="el-icon-document"></i>
-                <span>文章管理</span>
-              </template>
+                <template slot="title">
+                  <i class="el-icon-document"></i>
+                  <span>文章管理</span>
+                </template>
               <el-menu-item-group>
                 <!-- <template slot="title">分组一</template> -->
                 <router-link to="/admin/article">
-                  <el-menu-item index="/admin/article">博客管理</el-menu-item>
+                  <el-menu-item index="/admin/article">
+                    <i class="el-icon-notebook-2"></i>
+                    <span slot="title">博客管理</span>
+                  </el-menu-item>
                 </router-link>
                 <router-link to="/admin/jottings">
-                  <el-menu-item index="/admin/jottings">随笔管理</el-menu-item>
+
+                  <el-menu-item index="/admin/jottings">
+                    <i class="el-icon-notebook-1"></i>
+                    <span slot="title">随笔管理</span>
+                  </el-menu-item>
                 </router-link>
                 <router-link to="/admin/markdown">
-                  <el-menu-item index="/admin/markdown">编辑文章</el-menu-item>
+                  <el-menu-item index="/admin/markdown">
+                    <i class="el-icon-edit"></i>
+                    <span slot="title">编辑文章</span>
+                  </el-menu-item>
                 </router-link>
                 <!-- <el-menu-item index="1-2">选项2</el-menu-item> -->
               </el-menu-item-group>
@@ -59,10 +71,10 @@
       </el-aside>
       <el-container>
         <el-main>
-          
-    <!-- 注意需要给 el-scrollbar 设置高度，判断是否滚动是看它的height判断的 -->
+          <!-- 注意需要给 el-scrollbar 设置高度，判断是否滚动是看它的height判断的 -->
           <router-view></router-view>
         </el-main>
+        <!-- 页脚 -->
         <el-footer>
           
         </el-footer>
@@ -84,9 +96,9 @@ export default {
 };
 </script>
 
-<style scoped>
-.el-header,
-.el-footer {
+<style lang="less">
+
+.el-header, .el-footer {
   background-color: #b3c0d1;
   color: #333;
   text-align: center;
@@ -96,22 +108,10 @@ export default {
 .el-menu-vertical-demo{
   height: 100%;
 }
-/* .el-aside {
-  background-color: rgb(84, 92, 100);
-  color: #333;
-  text-align: center;
-  line-height: 1000vh;
-} */
-
 .el-main {
   background-color: #e9eef3;
   color: #333;
   text-align: center;
   line-height: 100%;
 }
-
-/* body > .el-container {
-  margin-bottom: 40px;
-} */
-
 </style>

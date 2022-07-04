@@ -37,6 +37,7 @@ export default {
           const {email, password} = this;
           let result = await this.$store.dispatch('userLogin', {email, password});
           // 登录限制后要判断在跳转
+					console.log(result)
           let toPath = this.$route.query.redirect || '/admin/article'
           this.$router.push(toPath);
         } catch (error) {

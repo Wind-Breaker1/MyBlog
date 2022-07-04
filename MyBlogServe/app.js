@@ -13,6 +13,7 @@ var arrticlesRouter = require('./routes/articles');
 var jottingsRouter = require('./routes/jotting');
 var classifiesRouter = require('./routes/classify');
 var synthesisRouter = require('./routes/synthesis');
+var commentRouter = require('./routes/comment');
 
 var app = express();
 app.use(session({
@@ -40,6 +41,7 @@ app.use('/api/articles', arrticlesRouter);
 app.use('/api/jottings', jottingsRouter);
 app.use('/api/classifies', classifiesRouter);
 app.use('/api/synthesis', synthesisRouter);
+app.use('/api/comment', commentRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

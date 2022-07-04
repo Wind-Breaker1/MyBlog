@@ -36,7 +36,7 @@ const actions = {
   async userLogin({ commit }, data) {
     let result = await reqUserLogin(data);
     console.log(result)
-    if (result.status == 0) {
+    if (result.status == 200) {
       commit('USERLOGIN', result.data.token);
       // 本地持久化存储
       // localStorage.setItem("TOKEN", result.data.token);
@@ -49,7 +49,8 @@ const actions = {
   // 获取用户列表
   async getUserList({ commit }) {
     let result = await getUserList();
-    if (result.status == 0) {
+    console.log(result)
+    if (result.status == 200) {
       commit('USERLIST', result.data);
     } else {
       return Promise.reject(new Error('faile'));

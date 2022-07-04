@@ -1,5 +1,11 @@
 <template>
-  <el-table
+  <el-table :data="tableData" style="width: 100%">
+    <el-table-column prop="date" label="日期" width="180"> </el-table-column>
+    <el-table-column prop="title" label="姓名" width="180"> </el-table-column>
+    <el-table-column prop="classification" label="地址"> </el-table-column>
+    <el-table-column prop="state" label="地址"> </el-table-column>
+  </el-table>
+  <!-- <el-table
     :data="tableData"
     style="width: 100%"
     height="565px">
@@ -54,9 +60,9 @@
     </el-table-column>
     <el-table-column label="操作">
       <template slot-scope="scope">
-        <!-- <el-button
+        <el-button
           size="mini"
-          @click="handleEdit(scope.row)">编辑</el-button> -->
+          @click="handleEdit(scope.row)">编辑</el-button>
           <el-button
           size="mini"
           type="success"
@@ -67,72 +73,70 @@
           @click="handleDelete(scope.$index, scope.row)">删除</el-button>
       </template>
     </el-table-column>
-  </el-table>
+  </el-table> -->
 </template>
 
 <script>
-import { mapState } from 'vuex';
-import { getClassifies } from '../util';
+import { mapState } from "vuex";
+import { getClassifies } from "../util";
 export default {
   data() {
-      return {
-      }
-    },
-  mounted(){
+    return {};
+  },
+  mounted() {
     this.getArticleList();
-    this.getClassify()
+    this.getClassify();
   },
   computed: {
     ...mapState({
-      Data: state => state.article.articles,
-      classifies: state => state.classify.classifies
+      Data: (state) => state.article.articles,
+      classifies: (state) => state.classify.classifies,
     }),
     // 调数据的专栏名称
     tableData() {
       let id;
       let classifies = getClassifies();
-      console.log(this.Data, 111)
-      console.log(this.classifies, 111)
-      this.Data.forEach(element => {
+      console.log(this.Data, 111);
+      console.log(this.classifies, 111);
+      this.Data.forEach((element) => {
         id = element.classification;
-        this.classifies.forEach(ele => {
+        this.classifies.forEach((ele) => {
           if (ele._id === id) {
             element.classification = ele.title;
           }
-        })
+        });
       });
-      return this.Data
-    }
+      return this.Data;
+    },
   },
   methods: {
     // 编辑
     handleEdit(row) {
-      this.$store.dispatch('getArticle', {_id:row._id});
-      this.$router.push('/admin/markdown');
+      this.$store.dispatch("getArticle", { _id: row._id });
+      this.$router.push("/admin/markdown");
     },
     // 删除
     handleDelete(index, row) {
-      this.$store.dispatch('deleteArticle', {_id:row._id})
+      this.$store.dispatch("deleteArticle", { _id: row._id });
       this.getArticleList();
     },
     // 获取文章列表
     getArticleList() {
-      this.$store.dispatch('getArticleList');
+      this.$store.dispatch("getArticleList");
     },
     // 获取专栏
     getClassify() {
       if (this.$store.state.classify.classifies.length == 0)
-        this.$store.dispatch('getClassifyList');
+        this.$store.dispatch("getClassifyList");
     },
     // 修改文章状态
-    handlePublish(index,row) {
-      this.$store.dispatch('changeState', {_id: row._id});
+    handlePublish(index, row) {
+      this.$store.dispatch("changeState", { _id: row._id });
       this.getArticleList();
-    }
-  }
-}
+    },
+  },
+};
 </script>
 
 <style>
-
 </style>

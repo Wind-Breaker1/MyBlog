@@ -1,20 +1,20 @@
 <template>
-  <div class="bloglist" >
+  <div >
     <div class="blogtip">
       <h3>博客</h3>
     </div>
   <!-- 博客列表元素 -->
     <el-card v-for="item in blogList" :key="item._id" :style="{marginBottom: '2vh'}" :id="item._id">
       <div @click="blogdetail('blog',item._id)">
-      <div slot="header" >
-        <h3>{{item.title}}</h3>
-      </div>
-      <div class="content">
-        <p class="desc">
-          <span style="font-size:16px;font-weight:bold">文章简介：</span>
-          {{ item.digest }}
-        </p>
-      </div>
+        <div slot="header" >
+          <h3>{{item.title}}</h3>
+        </div>
+        <div class="content">
+          <p class="desc">
+            <span style="font-size:16px;font-weight:bold">文章简介：</span>
+            {{ item.digest }}
+          </p>
+        </div>
       </div>
       <div class="footer">
           <span class="favour">
@@ -69,6 +69,7 @@ export default {
       this.pageStart = this.pageSize * (val - 1);
       this.getBlogList(this.pageStart, this.pageSize)
     },
+    // 获取博客列表数据
     async getBlogList(pageStart, pageSize) {
       try {
         let {blogList} = {...mapState(['blogList'])};
@@ -107,7 +108,29 @@ export default {
       } catch (error) {
         this.$message.error(error);
       }
-    }
+    },
+    // // 图片上传
+    // async $imgAdd (pos, $file) {
+    //   // 第一步，将图片上传到服务器
+    //   let formdata = new FormData();
+    //   formdata.append('file', $file);
+    //   // console.log($file, formdata)
+    //   axios({
+    //       url: `${this.$store.state.baseURL}/admin/uploadCover`,
+    //       method: 'post',
+    //       data: formdata,
+    //       headers: {'Content-Type': 'multipart/form-data'},
+    //   }).then((data) => {
+    //       // 第二部，将返回的url替换到文本原位置![...](0) -> ![...](url)
+    //       /**
+    //        * $vm 指为mavonEditor实例，可以通过如下两种方式获取
+    //        * 1. 通过引入对象获取: `import {mavonEditor} from ...` 等方式引入后，`$vm`为`mavonEditor`
+    //        * 2. 通过$refs获取: html声明ref : `<mavon-editor ref=md ></mavon-editor>，`$vm`为 `this.$refs.md`
+    //        */
+    //       // console.log(pos)
+    //       this.$refs.md.$img2Url(pos, data.data.file.url)
+    //   })
+    // },
   }
 
 }

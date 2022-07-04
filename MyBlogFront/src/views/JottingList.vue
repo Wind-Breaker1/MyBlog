@@ -1,10 +1,11 @@
 <template>
-  <div class="jottinglist">
+  <div>
     <div class="jottingtip">
       <h3>随笔</h3>
     </div>
   <!-- 博客列表元素 -->
     <el-card v-for="(item, index) in jottingList" :key="index" :style="{marginBottom: '2vh'}">
+       <div @click="blogdetail('jotting',item._id)">
       <div slot="header">
         <h3><i class="iconfont icon-wenzhang"></i>{{item.title}}</h3>
       </div>
@@ -13,7 +14,10 @@
           <span style="font-size:16px;font-weight:bold">文章简介：</span>
           {{ item.digest }}
         </p>
-       <div class="show">
+        </div>
+       
+      </div>
+      <div class="show">
           <span class="favour">
             <i class="iconfont icon-icon" style="margin-right: 10px;"></i>{{item.favour}}
           </span>
@@ -24,7 +28,6 @@
             <i class="iconfont icon-rili" style="margin-right: 10px;"></i>{{item.date}}
           </span>
         </div>
-      </div>
     </el-card>
     <!-- 分页 -->
     <div class="paginationWrap">
@@ -92,51 +95,50 @@ export default {
         this.$message.error(error)
       }
     },
+    async blogdetail(type, _id) {
+      try {
+        // await this.$api.addBrowse({_id});
+        this.$router.push(`/article/${type}/${_id}`);
+      } catch (error) {
+        this.$message.error(error);
+      }
+    },
   }
 }
 </script>
 
 <style lang="less" scoped>
-.jottinglist{
-  flex:1;
-  background-color: rgba(255, 255, 255, 0.7);
-  margin-top: 5px;
-  margin-bottom: 10px;
+.jottingtip{
+  // height: 8vh;
+  line-height: 8vh;
+  text-align: center;
+  background-color: rgb(255, 255, 255);
+  border-color: transparent red;
   border-radius: 5px;
-  height: 1000vh;
-  .jottingtip{
-    // height: 8vh;
-    line-height: 8vh;
-    text-align: center;
-    background-color: rgb(255, 255, 255);
-    border-color: transparent red;
-    border-radius: 5px;
-    margin-bottom: 2vh;
+  margin-bottom: 2vh;
+}
+.desc{
+  display: block;
+  height: 10vh;
+  text-overflow: ellipsis;
+}
+.show{
+  height: 4vh;
+  color: gray;
+  line-height: 4vh;
+  .favour, .brows{
+    float: left;
+    width: 100px;
   }
-  .desc{
-    display: block;
-    height: 10vh;
-    text-overflow: ellipsis;
-  }
-  .show{
-    height: 4vh;
-    color: gray;
-    line-height: 4vh;
-    .favour, .brows{
-      float: left;
-      width: 100px;
-    }
-    .createtime{
-      float:right;
-    }
-  }
-  .paginationWrap {
-    margin-top: 2vh;
-    margin-bottom: 10vh;
-    .pagination {
-      float: right;
-    }
+  .createtime{
+    float:right;
   }
 }
-
+.paginationWrap {
+  margin-top: 2vh;
+  margin-bottom: 10vh;
+  .pagination {
+    float: right;
+  }
+}
 </style>

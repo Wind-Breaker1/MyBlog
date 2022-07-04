@@ -4,7 +4,9 @@
     <div id="mainContainer">
       <Slideshow></Slideshow>
       <Nav></Nav>
-      <router-view class="router_content"></router-view>
+      <div class="bloglist" >
+        <router-view class="router_content"></router-view>
+      </div>
       <SiderInfo />
     </div>
     <Footer></Footer>
@@ -16,6 +18,8 @@ import Header from '@/components/Header.vue'
 import Nav from '@/components/Nav.vue'
 import Footer from '@/components/Footer.vue'
 import Slideshow from '@/components/Slideshow.vue'
+import {createFingerprint} from '@/util'
+import Fingerprint2 from 'fingerprintjs2'
 export default {
   data() {
     return {
@@ -31,11 +35,19 @@ export default {
     Footer,
     Slideshow
   },
-  methods: {
-    handleSelect(key, keyPath) {
-      console.log(key, keyPath);
-    }
+  mounted(){
+    this.createBrowseID();
   },
+  methods: {
+    // 创建浏览ID
+    createBrowseID() {
+      // 如果未创建
+      if (!localStorage.getItem('browserId')) {
+        createFingerprint();
+      }
+    }
+  	
+  }
 }
 </script>
 <style lang="less" >
@@ -56,6 +68,14 @@ export default {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
+    .bloglist{
+      flex:1;
+      background-color: rgba(255, 255, 255, 0.7);
+      margin-top: 5px;
+      margin-bottom: 10px;
+      border-radius: 5px;
+      min-height: 100vh;
+    }
   }
 .router_content {
     animation: animate 2s;
@@ -67,7 +87,7 @@ export default {
 }
 ::-webkit-scrollbar {
   /*滚动条整体样式*/
-  width: 10px;
+  width: 8px;
   /*高宽分别对应横竖滚动条的尺寸*/
   height: 5px;
   scrollbar-arrow-color: red;
@@ -87,5 +107,4 @@ export default {
   border-radius: 0;
   background: rgba(0, 0, 0, 0);
 }
-
 </style>
