@@ -61,8 +61,8 @@ const addSecondComment = async (req, res, next) => {
 // 给一级评论点赞
 const addFirstFavour = async (req, res) => {
   try {
-    const { _id } = req.query;
-    await CommentModel.addFirstFavour(_id);
+    const { _id, favourMurmur } = req.query;
+    await CommentModel.addFirstFavour(_id, favourMurmur);
     res.send({
       msg: '评论点赞成功',
       status: 200,
@@ -77,8 +77,9 @@ const addFirstFavour = async (req, res) => {
 // 给次级评论点赞
 const addSecondFavour = async (req, res) => {
   try {
-    const { _id, replyId } = req.query;
-    await CommentModel.addSecondFavour(_id, replyId);
+    const { _id, replyId, favourMurmur } = req.query;
+    console.log(_id, replyId, favourMurmur,'111')
+    await CommentModel.addSecondFavour(_id, replyId, favourMurmur);
     res.send({
       msg: '评论点赞成功',
       status: 200,
@@ -91,10 +92,10 @@ const addSecondFavour = async (req, res) => {
   }
 }
 // 删除一级评论
-const deleteFirstComment = async (req, res, next) => {
+const deleteFirstComment = (req, res, next) => {
   try {
     const { _id } = req.query;
-    await CommentModel.deleteFirstComment(_id);
+    CommentModel.deleteFirstComment(_id);
     res.send({
       msg: '评论删除成功',
       status: 200,

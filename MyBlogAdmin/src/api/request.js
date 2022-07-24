@@ -93,6 +93,7 @@ const requests = axios.create({
 })
 // 请求拦截器：在请求发出去之前做处理
 requests.interceptors.request.use(config => {
+  if (this)
   // config:配置对象，对象信息里边有一个重要信息，请求头headers
   // 进度条开始
   // if (store.state.detail.uuid) {

@@ -3,14 +3,16 @@ const mongoose = require('mongoose');
 const JottingSchema = new mongoose.Schema({//创建表
   date: { type: String},
   title: { type: String, require: true },
-  favour: { type: Number, default: 0 },
+  favour: [{
+    type: String,
+    default: 0
+  }],
   browse: { type: Number, default: 0 },
   content: { type: String, require: true },
   // 描述信息
   digest: { type: String },
   // 状态：是否发布
   state: { type: Boolean, default: false }
-
 })
 const JottingModel = mongoose.model('jotting', JottingSchema);
 // 新增随笔
@@ -44,7 +46,6 @@ const deleteJotting = (_id) => {
 };
 // 查询某一随笔
 const JottingOne = (_id) => {
-  console.log(_id)
   return JottingModel.findOne({ _id });
 };
 // 查询所有随笔
@@ -54,15 +55,19 @@ const JottingsList = () => {
 // 查询所有已发布随笔
 const publishJottings = ({ pageStart = 0, pageSize = 5 }) => {
   console.log(pageStart, pageSize)
-  return JottingModel.find({ state: true }, '_id date digest favour title').skip(pageStart).limit(pageSize);
+  return JottingModel.find({ state: true }, '_id date digest favour title browse').skip(pageStart).limit(pageSize);
 };
 // 查询所有已发布的博客
 const jottingNums = () => {
   return JottingModel.find({ state: true }).count();
 };
 // 增加点赞
-const addFavour = (_id) => {
-  return JottingModel.updateOne({ _id }, { $inc: { 'favour': 1 } });
+const addFavour = (_id, favourMurmur) => {
+  console.log(favourMurmur);
+  return JottingModel.findOneAndUpdate(
+    { _id: _id },
+    { $push: { favour: favourMurmur } }
+  ).then(res => true).catch(err => err)
 };
 // 获取点赞数
 const getFavour = (_id) => {

@@ -2,9 +2,10 @@ let mongoose = require('mongoose');
 let UserSchema = new mongoose.Schema({//创建表
   username: { type: String, require: true },
   password: { type: String, require: true },
-  nickname: { type: String, default: "游客"},
+  limits: { type: Array, require: true},
   email: { type: String, require: true, unique: true }, //index: { unique: true }
-  date: { type: String},
+  date: { type: String },
+  role: {type: String, require: true}
 })
 let UserModel = mongoose.model('user', UserSchema);
 // 新增用户

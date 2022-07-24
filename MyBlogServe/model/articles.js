@@ -4,13 +4,15 @@ const BlogSchema = new mongoose.Schema({//创建博客模型
   date: { type: String }, //创建日期
   title: { type: String, require: true },
   classification: { type: mongoose.Types.ObjectId, require: true },//所属专栏
-  favour: { type: Number, default: 0 },
+  favour: [{
+    type: String,
+  }],
   browse: { type: Number, default: 0 },
   content: {type: String, require: true},
   // 描述信息
   digest: { type: String },
   // 状态：是否发布
-  state: {type: Boolean, default: false}
+  state: {type: Boolean, default: false},
   
 })
 const ArticleModel = mongoose.model('article', BlogSchema);
@@ -33,8 +35,8 @@ const updateArticle = ({ content,title,digest, _id }) => {
 };
 // 修改用状态
 const updateState = ( state, id ) => {
-  return ArticleModel.updateOne({ "_id": id }, { $set:{"state": state } }).then(() => {
-    return true;
+  return ArticleModel.updateOne({ "_id": id }, { $set:{"state": state } }).then((res) => {
+    return res;
   }).catch((err) => {
     return false;
   })
@@ -75,15 +77,18 @@ const blogsOfClassify = (classification ) => {
   return ArticleModel.find({ classification }, '_id date digest favour title browse');
 };
 // 增加点赞
-const addFavour = (_id) => {
-  return ArticleModel.updateOne({ _id }, { $inc: { 'favour': 1 } });
+const addFavour = (_id, favourMurmur) => {
+  return ArticleModel.findOneAndUpdate(
+    { _id: _id },
+    { $push: { favour: favourMurmur } }
+  ).then(res => true).catch(err => err)
 };
 // 获取点赞数
 const getFavour = (_id) => {
   return ArticleModel.findOne({ _id }, 'favour');
 };
 // 增加浏览量
-const addBlogBrowse = (_id) => {
+const addBlogBrowse = (_id, murmur) => {
   return ArticleModel.updateOne({ _id }, { $inc: { 'browse': 1 } });
 };
 // 模糊查询所有文章

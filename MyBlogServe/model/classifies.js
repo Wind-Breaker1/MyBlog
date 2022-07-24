@@ -12,7 +12,9 @@ let UserSchema = new mongoose.Schema({//创建表
 let ClassifyModel = mongoose.model('classify', UserSchema);
 // 新增专栏
 let addClassify = (data) => {
-  data[bgColor] = Math.random() * 0xffffff << 2;
+  console.log(111)
+  data['bgColor'] = Math.random() * 0xffffff << 2;
+  console.log(data)
   let Classify = new ClassifyModel(data);
   return Classify.save().then(() => {
     return true;

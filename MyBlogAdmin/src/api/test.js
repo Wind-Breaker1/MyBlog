@@ -13,7 +13,7 @@ export const changeState = (params) => requests.get('/articles/changestate', { p
 export const addArticle = (data) => requests.post('/articles/addArticle', data);
 
 // 获取某一文章
-export const getArticle = (params) => requests.get('/articles/getarticle', { params });
+export const getBlog = (params) => requests.get('/articles/getblog', { params });
 // 登录
 export const reqUserLogin = (data) => requests.post('/users/login', data); 
 
@@ -56,3 +56,8 @@ export const deleteJotting = (params) => requests.delete('/jottings/deletejottin
 
 // 添加随笔
 export const addJotting = (data) => requests.post('/jottings/addjotting', data);
+// 获取某一随笔
+export const getJotting = (params) => requests.get('/jottings/getjotting', { params });
+
+// 获取某一随笔
+export const uploadImg = (data) => requests.post('/synthesis/uploadimg', data, { headers: { "content-type": "multipart/form-data" } });

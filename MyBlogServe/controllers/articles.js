@@ -1,13 +1,11 @@
 const ArticlesModel = require('../model/articles');
 const ClassifyModel = require('../model/classifies');
+const date = require('../utils');
 // 添加新文章
 const addArticle = async (req, res, next) => {
   // 获取时间字符串
-  let date = new Date();
-  let year = date.getFullYear();
-  let month = date.getMonth() + 1;
-  let day = date.getDay();
-  let time = year + '-' + month + '-' + day;
+
+  let time = date();
   let { title, classification, content, digest, state, _id } = req.body;
   let result = null;
   if (_id) {
@@ -181,12 +179,13 @@ const getBlogsOfClassify = async (req, res) => {
 }
 // 点赞
 const addFavour = async (req, res) => {
-  let { _id } = req.query;
+  let { _id, favourMurmur } = req.query;
   // 增加点赞数
-  let addFavour = await ArticlesModel.addFavour(_id);
+  let addFavour = await ArticlesModel.addFavour(_id, favourMurmur);
   // 获取点赞数
   let getFavour = await ArticlesModel.getFavour(_id);
-  if (addFavour.modifiedCount === 1) {
+  console.log(addFavour, 'addfavour');
+  if (addFavour) {
     res.send({
       msg: '博客点赞成功',
       status: 200,

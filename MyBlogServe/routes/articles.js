@@ -12,4 +12,5 @@ router.get('/getPublishArticles', articleController.getPublishArticles);
 router.get('/getBlogsOfClassify', articleController.getBlogsOfClassify);
 router.get('/addFavour', articleController.addFavour);
 router.get('/addBlogBrowse', articleController.addBlogBrowse);
+router.get('/getblog', articleController.getBlog);
 module.exports = router;

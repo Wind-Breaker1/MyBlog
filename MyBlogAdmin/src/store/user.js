@@ -1,8 +1,8 @@
 import { getUserList, reqUserLogin, deleteUser, reqUserRegister, updatePassword, logout } from "../api/test";
-import { setToken, getToken, clearToken } from "../util";
+import { setToken, getToken, clearToken, setUserInfo, getUserInfo } from "../util";
 const state = {
-  token: getToken(),
-  info: {},
+  token: getToken() || '',
+  username: getUserInfo() ? getUserInfo().username : '',
   userList: []
 };
 const mutations = {
@@ -35,11 +35,11 @@ const actions = {
   // 用户登录
   async userLogin({ commit }, data) {
     let result = await reqUserLogin(data);
-    console.log(result)
     if (result.status == 200) {
-      commit('USERLOGIN', result.data.token);
+      // commit('USERLOGIN', result.data.token);
       // 本地持久化存储
       // localStorage.setItem("TOKEN", result.data.token);
+      setUserInfo(JSON.stringify(result.data.user));
       setToken(result.data.token);
       return 'ok';
     } else {
@@ -49,7 +49,6 @@ const actions = {
   // 获取用户列表
   async getUserList({ commit }) {
     let result = await getUserList();
-    console.log(result)
     if (result.status == 200) {
       commit('USERLIST', result.data);
     } else {
@@ -77,21 +76,21 @@ const actions = {
   },
 
   // 获取用户信息
-  // async getUserInfo({ commit }) {
-  //   let result = await reqUserInfo();
-  //   // console.log(result)
-  //   if (result.code == 200) {
-  //     commit('USERINFO', result.data);
-  //     return 'ok';
-  //   } else {
-  //     return Promise.reject(new Error('faile'));
-  //   }
-  // },
+  async getUserInfo({ commit }) {
+    let result = await reqUserInfo();
+    // console.log(result)
+    if (result.code == 200) {
+      commit('USERINFO', result.data);
+      return 'ok';
+    } else {
+      return Promise.reject(new Error('faile'));
+    }
+  },
 
   // 退出登录
   async logout({ commit }) {
     let result = await logout();
-    if (result.status == 0) {
+    if (result.status == 200) {
       commit('CLEAR');
       return 'ok';
     } else {

@@ -18,7 +18,7 @@
       </div>
       <div class="footer">
           <span class="favour">
-            <i class="iconfont icon-icon" style="margin-right: 10px;"></i>{{item.favour}}
+            <i class="iconfont icon-icon" style="margin-right: 10px;"></i>{{item.favour.length}}
           </span>
           <span class="brows">
             <i class="el-icon-view" style="margin-right: 10px;"></i>{{item.browse}}

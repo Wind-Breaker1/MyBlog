@@ -1,22 +1,21 @@
-import { changeState, getArticleList, deleteArticle, getArticle, addArticle } from "../api/test";
+import { changeState, getArticleList, deleteArticle, getBlog, addArticle } from "../api/test";
 const state = {
   articles: [],
-  art:{}
+  article:{}
 };
 const mutations = {
   ARTICLES(state, articles) {
     state.articles = articles;
   },
-  ARTICLE(state, art) {
-    state.art = art;
+  ARTICLE(state, article) {
+    state.article = article;
   }
 };
 const actions = {
   // 修改文章状态
   async changeState({ commit }, data ) {
     let result = await changeState(data);
-    console.log(result)
-    if (result.status == 200) {
+    if (result.status === 200) {
       return 'ok';
     } else {
       return result;
@@ -36,7 +35,6 @@ const actions = {
   // 获取文章列表
   async getArticleList({ commit }) {
     let result = await getArticleList();
-    console.log(result, 222)
     if (result.status == 200) {
       commit('ARTICLES', result.data);
     } else {
@@ -46,7 +44,7 @@ const actions = {
   // 增加文章
   async addArticle({ commit }, data) {
     let result = await addArticle(data);
-    if (result.status == 0) {
+    if (result.status === 200) {
       // commit('ARTICLES', result.data);
       return "ok"
     } else {
@@ -54,11 +52,10 @@ const actions = {
     }
   },
   // 获取文章
-  async getArticle({ commit }, data) {
-    let result = await getArticle(data);
-    console.log(result)
-    if (result.status == 0) {
-      commit('ARTICLE', result.data);
+  async getBlog({ commit }, data) {
+    let result = await getBlog(data);
+    if (result.status == 200) {
+      commit('ARTICLE', result.data.article);
     } else {
       return Promise.reject(new Error('faile'));
     }
@@ -66,7 +63,7 @@ const actions = {
 
 };
 const getters = {
-
+  
 };
 export default {
   state,

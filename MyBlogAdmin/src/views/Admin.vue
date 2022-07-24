@@ -1,8 +1,18 @@
 <template>
   <el-container :style="{ height: '100vh' } " id="app">
     <!-- 页头 -->
-    <el-header >MyBlog后台管理
-      <button  @click="logout">fdsfads</button>
+    <el-header >
+      <h3>MyBlog后台管理</h3>
+    <div class="user">
+      <el-dropdown  placement="bottom"  @command="logout" style="margin-right:10px;">
+        <el-avatar src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"></el-avatar>
+        <el-dropdown-menu slot="dropdown" >
+          <el-dropdown-item>个人中心</el-dropdown-item>
+          <el-dropdown-item command="logout">退出登录</el-dropdown-item>
+        </el-dropdown-menu>
+      </el-dropdown>
+      {{this.$store.state.user.username}}
+    </div>
     </el-header>
     <el-container>
       <!-- 侧边导航 -->
@@ -43,24 +53,20 @@
                 </router-link>
                 <!-- <el-menu-item index="1-2">选项2</el-menu-item> -->
               </el-menu-item-group>
-              
             </el-submenu>
           <!-- </router-link> -->
-
           <router-link to="/admin/classify">
             <el-menu-item index="/admin/classify">
               <i class="el-icon-menu"></i>
               <span slot="title">专栏管理</span>
             </el-menu-item>
           </router-link>
-
           <router-link to="/admin/user">
             <el-menu-item index="/admin/user">
               <i class="el-icon-s-custom"></i>
               <span slot="title">个人中心</span>
             </el-menu-item>
           </router-link>
-
           <router-link to="/admin/logs">
             <el-menu-item index="/admin/logs">
               <i class="el-icon-setting"></i>
@@ -76,7 +82,7 @@
         </el-main>
         <!-- 页脚 -->
         <el-footer>
-          
+          <img src="http://127.0.0.1:3001/public/images/1657071187610.jpg" alt="">
         </el-footer>
       </el-container>
     </el-container>
@@ -86,10 +92,13 @@
 export default {
   methods: {
     // 登出
-    async logout() {
-      let result = await this.$store.dispatch("logout");
-      if (result == "ok") {
-        this.$router.push('./login')
+    async logout(type) {
+      if (type === "logout") {
+        let result = await this.$store.dispatch("logout");
+        if (result == "ok") {
+          console.log('22222')
+          this.$router.push('/login')
+        }
       }
     }
   },
@@ -101,8 +110,15 @@ export default {
 .el-header, .el-footer {
   background-color: #b3c0d1;
   color: #333;
-  text-align: center;
-  line-height: 60px;
+  padding:0 3vw;
+  display:inline-flex; 
+  align-items:center;
+  justify-content: space-between;
+  .user{
+    display:inline-flex; 
+    align-items:center;
+    justify-content: space-between;
+  }
 }
 /* 给导航设置高 */
 .el-menu-vertical-demo{

@@ -4,9 +4,9 @@
       <h2>{{article.title}}</h2>
       <el-tag class="bookmark" v-show="isBlog">{{classifyName}}</el-tag>
       <div class="opration">
-          <i class="iconfont icon-icon" @click="giveALike(article._id)"></i>{{favour || article.favour}}
+          <i class="iconfont icon-icon" @click="giveALike(article._id)" :class="isGiveALiked ? 'active' : ''"></i>{{favour.length}}
           <i class="el-icon-view"></i>{{article.browse}}
-          <i class="iconfont icon-rili">&nbsp&nbsp写于&nbsp2000-12-23</i>
+          <i class="iconfont icon-rili">&nbsp&nbsp写于&nbsp{{article.date}}</i>
         </div>
     </div>
     <mavon-editor
@@ -33,9 +33,10 @@ export default {
     return {
       article: {},
       content: "",
-      favour: 0,
+      favourList:[] ,
       classifyName: '',
-      isBlog: true
+      isBlog: true,
+      isGiveALiked: false
     }
   },
   components:{
@@ -70,12 +71,16 @@ export default {
             this.article = res.data.article;
             this.content = res.data.article.content;
             this.classifyName = res.data.classifyName;
+            this.favour = res.data.article.favour;
             this.isBlog = true;
           } else {
             this.article = res.data;
             this.content = res.data.content;
+            this.favour = res.data.favour;
             this.isBlog = false;
           }
+          let murmur = localStorage.getItem('browserId');
+          this.isGiveALiked = this.favour.includes(murmur) ? true : false;
         } else {
           this.$message.error('网络出错了,(ノへ￣、)！')
         }
@@ -88,12 +93,18 @@ export default {
     async giveALike(id){
       try{
         let {type} = this.$route.params;
+        let murmur = localStorage.getItem('browserId');
+        if (this.isGiveALiked){
+          alert('您已经点过赞啦！');
+          return;
+        }
         let res = {};
         if (type === 'blog') {
-          res = await this.$api.giveBlogALike({_id:id});
+          res = await this.$api.giveBlogALike({_id:id, favourMurmur:murmur});
         } else {
-          res = await this.$api.giveJottingALike({_id:id});
+          res = await this.$api.giveJottingALike({_id:id, favourMurmur:murmur});
         }
+        console.log(res);
         if (res.status === 200) {
           this.favour = res.data;
         }
@@ -107,6 +118,9 @@ export default {
 </script>
 
 <style scoped lang="less">
+.active{
+  color: red;
+}
 .blogtip{
   min-height: 18vh;
   font-size: 14px;
@@ -124,7 +138,8 @@ export default {
     bottom: 0;
     width: 95%;
     i{
-      margin-right: 15px;
+      margin-right: 10px;
+      cursor:pointer
     }
     &>i:nth-child(2){
       margin-left: 25px;

@@ -1,10 +1,14 @@
-import { getJottingList, changeJottingState, deleteJotting, addJotting } from "../api/test";
+import { getJottingList, changeJottingState, deleteJotting, addJotting, getJotting } from "../api/test";
 const state = {
-  jottings: []
+  jottings: [],
+  jotting: {}
 };
 const mutations = {
   JOTTINGS(state, jottings) {
     state.jottings = jottings;
+  },
+  JOTTING(state, jotting) {
+    state.jotting = jotting;
   }
 };
 const actions = {
@@ -40,13 +44,23 @@ const actions = {
   // 添加随笔
   async addJotting({ commit },data) {
     let result = await addJotting(data);
-    if (result.status == 0) {
+    if (result.status == 200) {
       return "ok";
     } else {
       return Promise.reject(new Error('faile'));
     }
   },
-
+  // 获取某一随笔
+  async getJotting({ commit }, data) {
+    let result = await getJotting(data);
+    console.log(result)
+    if (result.status == 200) {
+      commit('JOTTING', result.data);
+      return 'ok'
+    } else {
+      return Promise.reject(new Error(result));
+    }
+  },
 };
 const getters = {
 

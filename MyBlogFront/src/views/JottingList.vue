@@ -19,10 +19,10 @@
       </div>
       <div class="show">
           <span class="favour">
-            <i class="iconfont icon-icon" style="margin-right: 10px;"></i>{{item.favour}}
+            <i class="iconfont icon-icon" style="margin-right: 10px;"></i>{{item.favour.length}}
           </span>
           <span class="brows">
-            <i class="el-icon-view" style="margin-right: 10px;"></i>{{item.favour}}
+            <i class="el-icon-view" style="margin-right: 10px;"></i>{{item.browse}}
           </span>
           <span class="createtime">
             <i class="iconfont icon-rili" style="margin-right: 10px;"></i>{{item.date}}

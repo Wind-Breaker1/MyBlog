@@ -2,7 +2,7 @@ const UserModel = require('../model/user');
 const { sign, verify, hash, compare  } = require('../utils')
 // 添加新用户
 const register = async (req, res, next) => {
-  let { username, password, email } = req.body;
+  let { username, password, email, role } = req.body;
   // 密码加密
   const bcryptPassword = await hash(password);
   // 检查此邮箱是否已经被注册
@@ -19,7 +19,8 @@ const register = async (req, res, next) => {
       username,
       password: bcryptPassword,
       email,
-      date: time
+      date: time,
+      role
     });
 
     if (result) {
@@ -41,17 +42,24 @@ const login = async (req, res, next) => {
   let { email, password } = req.body;
   // 查找用户是否存在
   let user = await UserModel.findUser(email);
+  console.log(user)
   if (user) {
     let { password: hash } = user;
     // 比较密码
     let compareResult = await compare(password, hash);
     if (compareResult) {
+      let userInfo = {
+        username: user.username,
+        limits: user.limits,
+        role: user.role
+      }
       const token = sign(email);
       res.send({
         msg: '登陆成功',
         status: 200,
         data: {
-          token: token
+          token: token,
+          user: userInfo
         }
       });
     } else {

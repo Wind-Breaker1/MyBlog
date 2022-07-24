@@ -43,8 +43,8 @@ const actions = {
   
   async addclassify({ commit }, data) {
     let result = await addclassify(data);
-    if (result.status == 0) {
-      return 'ok';
+    if (result.status == 200) {
+      return result;
     } else {
       return result;
     }

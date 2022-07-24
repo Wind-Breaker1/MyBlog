@@ -1,58 +1,31 @@
 <template>
 <div>
-  <el-table
-    :data="tableData"
-    style="width: 100%"
-    height="530px"
-    >
+  <el-table :data="tableData" style="width: 100%" height="530px">
     <el-table-column
-      label="创建时间"
+      label="提交日期"
       width="180">
       <template slot-scope="scope">
         <i class="el-icon-time"></i>
         <span style="margin-left: 10px">{{ scope.row.date }}</span>
       </template>
     </el-table-column>
-    <el-table-column
-      label="专栏名称"
-      width="180">
-      <template slot-scope="scope">
-          <div slot="reference" class="name-wrapper">
-            <span size="medium">{{ scope.row.title }}</span>
-          </div>
-      </template>
-    </el-table-column>
-    <el-table-column
-      label="专栏描述"
-      width="500">
-      <template slot-scope="scope">
-          <div slot="reference" class="name-wrapper">
-            <span size="medium">{{ scope.row.digest }}</span>
-          </div>
-      </template>
-    </el-table-column>
-    <el-table-column
-      label="文章数量"
-      width="100">
-      <template slot-scope="scope">
-          <div slot="reference" class="name-wrapper">
-            <span size="medium">{{ scope.row.articleNum }}</span>
-          </div>
-      </template>
-    </el-table-column>
+    <el-table-column prop="title" label="标题" width="250"> </el-table-column>
+    <el-table-column prop="digest" label="专栏描述" width="500"> </el-table-column>
+    <el-table-column prop="articleNum" label="博客数量" width="100"> </el-table-column>
     <el-table-column label="操作">
       <template slot-scope="scope">
         <el-button
           size="mini"
-          @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+          @click="handleEdit(scope.row)">编辑</el-button>
+          
         <el-button
           size="mini"
           type="danger"
-          @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+          @click="handleDelete(scope.row)">删除</el-button>
       </template>
     </el-table-column>
   </el-table>
-<el-dialog title="编辑专栏" :visible.sync="dialogFormVisible" center>
+<el-dialog :title="dialogTitle" :visible.sync="dialogFormVisible" center>
   <el-form :model="form" >
     <el-form-item label="专栏名" :label-width="formLabelWidth">
       <el-input v-model="form.title" autocomplete="off"></el-input>
@@ -81,7 +54,8 @@ export default {
         },
         formLabelWidth: '120px',
         dialogFormVisible: false,
-        _id: ''
+        _id: '',
+        dialogTitle: ''
       }
     },
     computed: {
@@ -94,14 +68,16 @@ export default {
     },
     methods: {
       // 修改数据
-      handleEdit(index, row) {
-      
+      handleEdit(row) {
+        this.dialogTitle = "编辑专栏";
         this.dialogFormVisible = true;
+        this.form.title = row.title;
+        this.form.digest = row.digest;
         // 获取点击行的email
         this._id = row._id;
       },
       // 删除数据
-      handleDelete(index, row) {
+      handleDelete(row) {
         this.$store.dispatch('deleteClassify',{_id: row._id});
         this.getData();
       },
@@ -113,26 +89,31 @@ export default {
       // 提交数据
       async submit() {
         let result;
-      if (this._id)
-        result = await this.$store.dispatch("compile", {_id: this._id, title: this.form.title, digest: this.form.digest});
-      else {
-        result = await this.$store.dispatch("addclassify", {title: this.form.title, digest: this.form.digest});
-      }
-      if (result === "ok") {
-        // 修改成功后清空值
-        this.form.title = '';
-        this.form.digeste = '';
+        if (this._id)
+          result = await this.$store.dispatch("compile", {_id: this._id, title: this.form.title, digest: this.form.digest});
+        else {
+          result = await this.$store.dispatch("addclassify", {title: this.form.title, digest: this.form.digest});
+        }
+        console.log(result)
+        if (result.status === 200) {
+          // 修改成功后清空值
+          this.form.title = '';
+          this.form.digest = '';
+          this._id = '';
+          this.dialogFormVisible = false;
+          this.getData();
+        } else {
+          alert(result.msg)
+        }
         this._id = '';
-        this.dialogFormVisible = false;
-        this.getData();
-      } else {
-        alert(result.msg)
-      }
       },
       // 增加专栏
       addClassify() {
+        this.dialogTitle = "新增专栏";
         this.dialogFormVisible = true;
-      }
+      },
+      Awesome
+      
     }
 };
 </script>

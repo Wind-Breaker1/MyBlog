@@ -1,14 +1,5 @@
 <template>
   <el-table :data="tableData" style="width: 100%">
-    <el-table-column prop="date" label="日期" width="180"> </el-table-column>
-    <el-table-column prop="title" label="姓名" width="180"> </el-table-column>
-    <el-table-column prop="classification" label="地址"> </el-table-column>
-    <el-table-column prop="state" label="地址"> </el-table-column>
-  </el-table>
-  <!-- <el-table
-    :data="tableData"
-    style="width: 100%"
-    height="565px">
     <el-table-column
       label="提交日期"
       width="180">
@@ -17,47 +8,15 @@
         <span style="margin-left: 10px">{{ scope.row.date }}</span>
       </template>
     </el-table-column>
-    <el-table-column
-      label="标题"
-      width="350">
+    <el-table-column prop="title" label="标题" width="350"> </el-table-column>
+    <el-table-column prop="classification" label="书签" width="150"> </el-table-column>
+    <el-table-column label="状态" width="80">
       <template slot-scope="scope">
-        <el-popover trigger="hover" placement="top">
-          <p>姓名: {{ scope.row.name }}</p>
-          <p>住址: {{ scope.row.address }}</p>
-          <div slot="reference" class="name-wrapper">
-            <el-tag size="medium">{{ scope.row.title }}</el-tag>
-          </div>
-        </el-popover>
+        {{scope.row.state ? '已发布': '未发布'}}
       </template>
     </el-table-column>
-    <el-table-column
-      label="专栏"
-      width="180">
-      <template slot-scope="scope">
-        <span style="margin-left: 10px">{{ scope.row.classification }}</span>
-      </template>
-    </el-table-column>
-    <el-table-column
-      label="状态"
-      width="100">
-      <template slot-scope="scope">
-        <span style="margin-left: 10px">{{ scope.row.state }}</span>
-      </template>
-    </el-table-column>
-    <el-table-column
-      label="点赞量"
-      width="100">
-      <template slot-scope="scope">
-        <span style="margin-left: 10px">{{ scope.row.favour }}</span>
-      </template>
-    </el-table-column>
-    <el-table-column
-      label="浏览量"
-      width="100">
-      <template slot-scope="scope">
-        <span style="margin-left: 10px">{{ scope.row.browse }}</span>
-      </template>
-    </el-table-column>
+    <el-table-column prop="favour" label="点赞量" width="80"> </el-table-column>
+    <el-table-column prop="browse" label="浏览量" width="80"> </el-table-column>
     <el-table-column label="操作">
       <template slot-scope="scope">
         <el-button
@@ -66,22 +25,22 @@
           <el-button
           size="mini"
           type="success"
-          @click="handlePublish(scope.$index, scope.row)">发布</el-button>
+          @click="handlePublish(scope.row)">{{scope.row.state ? '下架':'发布'}}</el-button>
         <el-button
           size="mini"
           type="danger"
-          @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+          @click="handleDelete(scope.row)">删除</el-button>
       </template>
     </el-table-column>
-  </el-table> -->
+  </el-table>
 </template>
 
 <script>
 import { mapState } from "vuex";
-import { getClassifies } from "../util";
 export default {
   data() {
-    return {};
+    return {
+    };
   },
   mounted() {
     this.getArticleList();
@@ -89,15 +48,12 @@ export default {
   },
   computed: {
     ...mapState({
-      Data: (state) => state.article.articles,
-      classifies: (state) => state.classify.classifies,
+      Data: (state) => state.article.articles || [],
+      classifies: (state) => state.classify.classifies || [],
     }),
     // 调数据的专栏名称
     tableData() {
       let id;
-      let classifies = getClassifies();
-      console.log(this.Data, 111);
-      console.log(this.classifies, 111);
       this.Data.forEach((element) => {
         id = element.classification;
         this.classifies.forEach((ele) => {
@@ -106,17 +62,17 @@ export default {
           }
         });
       });
-      return this.Data;
+      return JSON.parse(JSON.stringify(this.Data))
     },
   },
   methods: {
     // 编辑
-    handleEdit(row) {
-      this.$store.dispatch("getArticle", { _id: row._id });
-      this.$router.push("/admin/markdown");
+    async handleEdit(row) {
+      await this.$store.dispatch("getBlog", { _id: row._id });
+      this.$router.push({path:"/admin/markdown", query:{type:'blog'}});
     },
     // 删除
-    handleDelete(index, row) {
+    handleDelete(row) {
       this.$store.dispatch("deleteArticle", { _id: row._id });
       this.getArticleList();
     },
@@ -130,9 +86,9 @@ export default {
         this.$store.dispatch("getClassifyList");
     },
     // 修改文章状态
-    handlePublish(index, row) {
-      this.$store.dispatch("changeState", { _id: row._id });
-      this.getArticleList();
+    async handlePublish(row) {
+      await this.$store.dispatch("changeState", { _id: row._id });
+      this.$store.dispatch("getArticleList");
     },
   },
 };

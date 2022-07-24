@@ -1,6 +1,6 @@
 <template>
   <div id="header">
-    <div class="logo">MYBLOG</div>
+    <img src="@/assets/logo.png" alt="欢迎来Meditators的博客" class="logo">
     <el-input placeholder="请输入关键字..." v-model="searchValue" class="input-with-select">
       <el-button slot="append" icon="el-icon-search" @click="searchArticle"></el-button>
     </el-input>
@@ -35,8 +35,7 @@ export default {
   line-height: 60px;
   z-index: 100;
   .logo{
-    color:aliceblue;
-    font-size: 50px;
+    height: 65px;
     float: left;
   }
   .input-with-select{
@@ -44,6 +43,5 @@ export default {
     margin-top: 10px;
     float: right;
   }
- 
 }
 </style>

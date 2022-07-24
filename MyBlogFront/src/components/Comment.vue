@@ -21,9 +21,9 @@
           </p>
           <!-- 一级评论评论点赞 -->
           <div class="comment-right">
-            <i class="iconfont icon-icon" @click="giveALike(undefined, item._id)">&nbsp{{item.favour}}</i>
+            <i class="iconfont icon-icon" @click="giveALike(undefined, item._id)">&nbsp{{item.favour.length}}</i>
             <i class="el-icon-chat-dot-round" @click="isShowReply(item._id, item.username)">&nbsp回复</i>
-            <i class="el-icon-delete" @click="deleteCommentc(item._id,undefined)">&nbsp删除</i>
+            <i class="el-icon-delete" @click="deleteCommentc(item._id,undefined)" v-if="murmur === item.murmur">&nbsp删除</i>
           </div>
           <!-- 回复一级评论 -->
           <div class="reply-comment" v-show="isShow === item._id">
@@ -49,9 +49,9 @@
               </p>
               <!-- 次级评论评论点赞 -->
               <div class="comment-right" >
-                <i class="iconfont icon-icon" @click="giveALike(reply._id, item._id)">&nbsp{{reply.favour}}</i>
-                <i class="el-icon-chat-dot-round" @click="isShowReply(reply._id, reply.username)">&nbsp回复</i>
-                <i class="el-icon-delete" @click="deleteCommentc(item._id, reply._id)">&nbsp删除</i>
+                <i class="iconfont icon-icon" @click="giveALike(reply._id, item._id)">{{reply.favour.length}}</i>
+                <i class="el-icon-chat-dot-round" @click="isShowReply(reply._id, reply.username)">回复</i>
+                <i class="el-icon-delete" @click="deleteCommentc(item._id, reply._id)" v-if="murmur === reply.murmur">删除</i>
               </div>
               <div class="reply-comment" v-show="isShow === reply._id">
                 <el-input placeholder="请输入最多150字的评论...." v-model="replyContext" :maxlength="150">
@@ -96,7 +96,8 @@ export default {
       isShow: '',//是否显示次级回复框
       pageSize: 11,
       isClickId: '',
-      replyName:''
+      replyName:'',
+      murmur: localStorage.getItem('browserId')
     };
   },
   // watch: {
@@ -122,20 +123,23 @@ export default {
     async getCommentList() {
       const res = await this.$api.getCommentList({id:this.blogId});
       this.comment = res.data;
-      console.log(this.comment)
-      console.log(this.blogId, res)
     },
     // 评论点赞
-    async giveALike(replyId,_id) {
+    async giveALike(replyId, _id) {
       let res = null;
       if(replyId) {
-        res = await this.$api.addsecondfavour({replyId,_id});
+        if (this.comment.find(item => item._id === _id).replyInfo.find(item => item._id === replyId).favour.includes(this.murmur)){
+          alert('您已经点过赞了！');
+          return;
+        }
+        res = await this.$api.addsecondfavour({replyId, _id, favourMurmur: this.murmur});
       } else {
-        res = await this.$api.addfirstfavour({_id});
+        if (this.comment.find(item => item._id === _id).favour.includes(this.murmur)) {
+          alert('您已经点过赞了！');
+          return;
+        }
+        res = await this.$api.addfirstfavour({_id, favourMurmur: this.murmur});
       }
-      this.comment = res.data;
-      console.log(this.comment)
-      console.log(this.blogId, res)
       this.getCommentList();
     },
     // // 一级评论点赞
@@ -168,13 +172,12 @@ export default {
     },
     async addComment(id, replyId) {
       let res = null;
-      let murmur = localStorage.getItem('browseId');
       let username = "123";
       if (replyId){
-        res = await this.$api.addsecondcomment({_id:id, replyId,reply:this.replyContext,replyname:this.replyName, username, murmur });
+        res = await this.$api.addsecondcomment({_id:id, replyId,reply:this.replyContext,replyname:this.replyName, username,murmur: this.murmur });
         this.replyContext = '';
       } else {
-        res = await this.$api.addfirstcomment({articleId:id,username,context:this.context,murmur});
+        res = await this.$api.addfirstcomment({articleId:id,username,content:this.context,murmur: this.murmur});
         this.context = '';
       }
       this.isShow = this.isClickId = this.replyName = '';

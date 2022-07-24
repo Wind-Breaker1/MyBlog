@@ -1,11 +1,8 @@
 const JottingModel = require('../model/jottings');
+const date = require('../utils');
 const addJotting = async (req, res, next) => {
   let { title, content, digest, state, _id } = req.body;
-  let date = new Date();
-  let year = date.getFullYear();
-  let month = date.getMonth() + 1;
-  let day = date.getDay();
-  let time = year + '-' + month + '-' + day;
+  let time = date();
   let result = null;
   // 判断是修改还是新增
   if (_id) {
@@ -38,8 +35,8 @@ const addJotting = async (req, res, next) => {
 // 修改随笔的状态
 const changeState = async (req, res, next) => {
   let { _id } = req.query;
-  let re = await JottingModel.JottingOne(_id);
-  let result = await JottingModel.updateState(!re.state, _id);
+  let jotting = await JottingModel.JottingOne(_id);
+  let result = await JottingModel.updateState(!jotting.state, _id);
   if (result) {
     res.send({
       msg: '修改随笔成功',
@@ -142,10 +139,11 @@ const deleteJotting = async (req, res, next) => {
 }
 // 点赞
 const addFavour = async (req, res) => {
-  let { _id } = req.query;
-  let addFavour = await JottingModel.addFavour(_id);
+  let { _id, favourMurmur } = req.query;
+  let addFavour = await JottingModel.addFavour(_id, favourMurmur);
   let getFavour = await JottingModel.getFavour(_id);
-  if (addFavour.modifiedCount === 1) {
+  console.log(favourMurmur);
+  if (addFavour) {
     res.send({
       msg: '点赞随笔成功',
       status: 200,
