@@ -4,7 +4,6 @@ export const routes = [
     name: 'home',
     component: () => import('../views/Admin.vue'),
     children: [
-      
       {
         path: 'article',
         component: () => import('../views/Article.vue'),
@@ -35,7 +34,7 @@ export const routes = [
   },
   {
     path: '/login',
-    component: () => import('../views/Login')
+    component: () => import('../views/LoginOrRegister')
   },
   {
     path: '*',

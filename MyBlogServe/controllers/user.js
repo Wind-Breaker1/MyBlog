@@ -2,19 +2,13 @@ const UserModel = require('../model/user');
 const { sign, verify, hash, compare  } = require('../utils')
 // 添加新用户
 const register = async (req, res, next) => {
-  let { username, password, email, role } = req.body;
+  let { username, password, email, role, date } = req.body;
   // 密码加密
   const bcryptPassword = await hash(password);
   // 检查此邮箱是否已经被注册
-  let Email = await UserModel.findUser(email);
+  const Email = await UserModel.findUser(email);
+  const time = date();
   if (!Email) {
-    let date = new Date();
-    let year = date.getFullYear();
-    let month = date.getMonth() + 1;
-    let day = date.getDay();
-    let hours = date.getHours();
-    let minutes = date.getMinutes();
-    let time = year + '-' + month + '-' + day + '  ' + hours + ':' + minutes;
     let result = await UserModel.save({
       username,
       password: bcryptPassword,

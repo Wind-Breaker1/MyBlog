@@ -17,8 +17,8 @@ const CommentSchema = new mongoose.Schema({//创建博客模型
     favour: [{
       type: String
     }],
-    reply: { type: String, default: "" },
-    murmur: { type: String, require: true },// 当前此条恢复的指纹
+    reply: { type: String, default: '' },
+    murmur: { type: String, require: true },// 当前此条回复的指纹
   }]
 })
 const CommentModel = mongoose.model('comment', CommentSchema);
