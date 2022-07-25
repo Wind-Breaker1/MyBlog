@@ -33,7 +33,7 @@ export const routes = [
     ]
   },
   {
-    path: '/login',
+    path: '/loginorregister',
     component: () => import('../views/LoginOrRegister')
   },
   {

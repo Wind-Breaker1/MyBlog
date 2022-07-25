@@ -40,10 +40,10 @@ router.beforeEach((to, from, next) => {
       }
     }
   } else { //未登录
-    if (['/login', '/register'].includes(to.path)) {
+    if ('/loginorregister' === to.path) {
       next();
     } else {
-      next('/login')
+      next('/loginorregister')
     }
   }
 })
