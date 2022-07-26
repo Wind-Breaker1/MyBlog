@@ -3,8 +3,7 @@
     <div
       class="main-box"
       :style="{
-        height: isLogin ? '364px' : '520px',
-        margin: isLogin ? '10% auto' : '8% auto',
+        height: isLogin ? '364px' : '520px'
       }"
     >
       <div :class="isLogin ? 'login-box' : 'register-box'">
@@ -79,14 +78,17 @@ export default {
 			// if (this.password !=)
 			try {
         const { email, password, username } = this;
-        let result = await this.$store.dispatch("register", {
+        let res = await this.$store.dispatch("register", {
           email,
           password,
 					username
         });
         // 登录限制后要判断在跳转
         // let toPath = this.$route.query.redirect || "/admin/article";
-        this.$router.push("/login");
+        // this.$router.push("/login");
+        if (res.status === 200) {
+          this.isLogin = true;
+        }
       } catch (error) {
         console.log(error);
       }
@@ -113,6 +115,7 @@ button {
   background-size: cover;
   color: #03e9f4;
   font-size: 16px;
+  position: relative;
 }
 
 .main-box {
@@ -124,25 +127,22 @@ button {
   padding: 40px;
   box-sizing: border-box;
   opacity: 0.8;
-  position: relative;
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  margin: auto;
 }
 
 .login-box {
   position: absolute;
-
   width: 320px;
-  /* left: -100%; */
-  /* animation: login 4s 1 linear; */
-
   animation: loginAnimation 1s ;
 }
 .register-box{
 	position: absolute;
-
   width: 320px;
-  /* left: -100%; */
-  /* animation: login 4s 1 linear; */
-
   animation: registerAnimation 1s ;
 }
 

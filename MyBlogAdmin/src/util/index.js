@@ -29,7 +29,6 @@ export const asyncRoute = function (myAsyncRoute) {
 }
 function filterRoute(arr, menuIdList) {
   if (!arr.length) return [];
-  // console.log(arr)
   return arr.filter(item => {
     if (item.children && item.children.length) {
       item.children = filterRoute(item.children, menuIdList);

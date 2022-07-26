@@ -2,7 +2,7 @@ export const routes = [
   {
     path: '/admin',
     name: 'home',
-    component: () => import('../views/Admin.vue'),
+    component: () => import('@/views/Admin.vue'),
     children: [
       {
         path: 'article',
@@ -34,7 +34,7 @@ export const routes = [
   },
   {
     path: '/loginorregister',
-    component: () => import('../views/LoginOrRegister')
+    component: () => import('../views/LoginOrRegister.vue')
   },
   {
     path: '*',
@@ -51,12 +51,12 @@ export const myAsyncRout = [
       {
         path: 'user',
         component: () => import('../views/User.vue'),
-        meta: { id: 1001, btnPermissions: [ 'user'] }
+        meta: { id: '1001', btnPermissions: [ 'user'] }
       },
       {
         path: 'logs',
         component: () => import('../views/Log.vue'),
-        meta: { id: 1002 }
+        meta: { id: '1002' }
       },
     ]
   }

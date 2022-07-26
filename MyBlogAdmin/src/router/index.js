@@ -1,8 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import { routes } from './router';
+import { routes, myAsyncRout } from './router';
 import { getToken, asyncRoute } from '@/util';
-import { myAsyncRout } from '@/router/router';
 
 Vue.use(VueRouter)
 
@@ -20,8 +19,11 @@ router.beforeEach((to, from, next) => {
   if (getToken()) {
     if (flag) {
       try {
+        console.log(flag);
         //获取有权限的路由进行组装
         let route = asyncRoute(myAsyncRout) || [];
+        console.log(route);
+        
         route[0].children.push({
           path: '*',
           redirect: '404'
@@ -33,17 +35,17 @@ router.beforeEach((to, from, next) => {
         next(false)
       }
     } else {
-      if (['/login', '/register'].includes(to.path) && !['/login', '/register'].includes(from.path)) {
+      if ('/loginorregister' === to.path ) {
         next(from.path);
       } else {
         next();
       }
     }
   } else { //未登录
-    if ('/loginorregister' === to.path) {
-      next();
-    } else {
+    if (to.path !== '/loginorregister') {
       next('/loginorregister')
+    } else {
+      next();
     }
   }
 })

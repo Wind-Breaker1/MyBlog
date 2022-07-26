@@ -2,10 +2,10 @@ let mongoose = require('mongoose');
 let UserSchema = new mongoose.Schema({//创建表
   username: { type: String, require: true },
   password: { type: String, require: true },
-  // limits: [{ 
-  //   type: String, 
-  //   require: true
-  // }],
+  limits: [{ 
+    type: Number, 
+    require: true
+  }],
   email: { type: String, require: true, unique: true }, //index: { unique: true }
   date: { type: String },
   role: {type: String, require: true,default: 'user'}

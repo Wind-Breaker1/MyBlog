@@ -6,6 +6,16 @@
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <link rel="icon" href="<%= BASE_URL %>favicon.ico">
     <title><%= htmlWebpackPlugin.options.title %></title>
+    <style>
+      @media (prefers-color-scheme: dark) {
+        .back {background:  #333; color: white;}
+        .models {border:solid 1px #00ff00}
+      }
+      @media (prefers-color-scheme: light) {
+        .back {background: white; color:  #555;}
+        .models {border:solid 1px #2b85e4}
+      }
+    </style>
   </head>
   <body>
     <noscript>
