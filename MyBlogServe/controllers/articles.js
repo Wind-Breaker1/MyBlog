@@ -1,11 +1,11 @@
 const ArticlesModel = require('../model/articles');
 const ClassifyModel = require('../model/classifies');
-const date = require('../utils');
+const util = require('../utils');
 // 添加新文章
 const addArticle = async (req, res, next) => {
   // 获取时间字符串
 
-  let time = date();
+  let time = util.date();
   let { title, classification, content, digest, state, _id } = req.body;
   let result = null;
   if (_id) {

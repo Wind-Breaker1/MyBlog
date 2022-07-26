@@ -1,6 +1,6 @@
 <template>
 <div>
-  <el-table :data="tableData" style="width: 100%" height="530px">
+  <el-table :data="tableData" style="width: 100%">
     <el-table-column
       label="提交日期"
       width="180">
@@ -112,8 +112,6 @@ export default {
         this.dialogTitle = "新增专栏";
         this.dialogFormVisible = true;
       },
-      Awesome
-      
     }
 };
 </script>
@@ -127,13 +125,13 @@ export default {
   border-radius: 5%;
   border: 0;
 }
-.el-header,
+/* .el-header,
 .el-footer {
   background-color: #b3c0d1;
   color: #333;
   text-align: center;
   line-height: 100px;
-}
+} */
 
 .el-aside {
   background-color: rgb(84, 92, 100);

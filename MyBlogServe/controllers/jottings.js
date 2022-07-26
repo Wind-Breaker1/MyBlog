@@ -1,8 +1,8 @@
 const JottingModel = require('../model/jottings');
-const date = require('../utils');
+const util = require('../utils');
 const addJotting = async (req, res, next) => {
   let { title, content, digest, state, _id } = req.body;
-  let time = date();
+  let time = util.date();
   let result = null;
   // 判断是修改还是新增
   if (_id) {

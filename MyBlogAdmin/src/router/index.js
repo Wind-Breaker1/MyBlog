@@ -19,17 +19,28 @@ router.beforeEach((to, from, next) => {
   if (getToken()) {
     if (flag) {
       try {
-        console.log(flag);
         //获取有权限的路由进行组装
         let route = asyncRoute(myAsyncRout) || [];
-        console.log(route);
-        
-        route[0].children.push({
-          path: '*',
-          redirect: '404'
-        });
+        if (route.length !== 0) {
+          route[0].children.push({
+            path: '*',
+            redirect: '404'
+          });
+        } else {
+          route.push({
+            path: '/admin',
+            name: 'home',
+            component: () => import('../views/Admin.vue'),
+            children: [
+              {
+                path: '*',
+                component: () => import('@/views/404.vue')
+              },
+            ]
+          })
+        }
         router.addRoutes(route)
-        flag = false
+        flag = false;
         next({ ...to, replace: true })
       } catch (e) {
         next(false)

@@ -22,11 +22,6 @@ export const routes = [
         component: () => import('../views/Jottings'),
       },
       {
-        path: '404',
-        component: () => import('../views/404.vue')
-      },
-      
-      {
         path: '/admin',
         redirect: 'article'
       },
@@ -36,6 +31,7 @@ export const routes = [
     path: '/loginorregister',
     component: () => import('../views/LoginOrRegister.vue')
   },
+
   {
     path: '*',
     redirect: '/admin',

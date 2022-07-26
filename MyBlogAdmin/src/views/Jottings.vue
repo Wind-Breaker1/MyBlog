@@ -1,5 +1,5 @@
 <template>
-<el-table :data="Data" height="575">
+<el-table :data="Data" height="570">
     <el-table-column
       label="提交日期"
       width="180">
@@ -15,7 +15,7 @@
         {{scope.row.state ? '已发布': '未发布'}}
       </template>
     </el-table-column>
-    <el-table-column prop="favour" label="点赞量" width="80"> </el-table-column>
+    <el-table-column prop="favour.length" label="点赞量" width="80"> </el-table-column>
     <el-table-column prop="browse" label="浏览量" width="80"> </el-table-column>
     <el-table-column label="操作">
       <template slot-scope="scope">
