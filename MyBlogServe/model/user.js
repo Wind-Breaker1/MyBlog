@@ -1,54 +1,54 @@
-let mongoose = require('mongoose');
-let UserSchema = new mongoose.Schema({//创建表
-  username: { type: String, require: true },
-  password: { type: String, require: true },
-  limits: [{ 
-    type: Number, 
-    require: true
-  }],
-  email: { type: String, require: true, unique: true }, //index: { unique: true }
-  date: { type: String },
-  role: {type: String, require: true,default: 'user'}
-})
-let UserModel = mongoose.model('user', UserSchema);
+const mongoose = require('mongoose');
+const UserSchema = new mongoose.Schema({
+	//创建表
+	username: { type: String, require: true },
+	password: { type: String, require: true },
+	limits: [
+		{
+			type: Number,
+			require: true,
+		},
+	],
+	email: { type: String, require: true, unique: true }, //index: { unique: true }
+	date: { type: String },
+	role: { type: String, require: true, default: 'user' },
+});
+const UserModel = mongoose.model('user', UserSchema);
 // 新增用户
-let save = (data) => { 
-  let user = new UserModel(data);
-  return user.save().then(() => {
-    return true;
-  }).catch(() => {
-    return false;
-  })
+const save = data => {
+	const user = new UserModel(data);
+	return user.save();
 };
 // 更新密码
-let updatePassword = ({ password, email }) => {
-  return UserModel.updateOne({ "email": email }, { $set: { "password": password } }).then(() => {
-    return true;
-  }).catch((err) => {
-    return false;
-  })
+const updateUserInfo = ({ password, email, role }) => {
+	return UserModel.updateOne({ email }, { $set: { password, role } })
+		.then(() => {
+			return true;
+		})
+		.catch(err => {
+			return false;
+		});
 };
 // 删除用户
-var deleteUser = (email) => {
-  return UserModel.deleteOne({ email });
+const deleteUser = email => {
+	return UserModel.deleteOne({ email });
 };
 // 查找登录信息
-var findUser = email => {
-  return UserModel.findOne({ email });
+const findUser = email => {
+	return UserModel.findOne({ email });
 };
-var findOneUser = username => {
-  return UserModel.findOne(username);
+const findOneUser = username => {
+	return UserModel.findOne(username);
 };
 // 查询所有用户
-var usersList = () => {
-  return UserModel.find();
+const usersList = () => {
+	return UserModel.find();
 };
-
 module.exports = {
-  save,
-  findOneUser,
-  updatePassword,
-  usersList,
-  deleteUser,
-  findUser
-}
+	save,
+	findOneUser,
+	updateUserInfo,
+	usersList,
+	deleteUser,
+	findUser,
+};

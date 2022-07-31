@@ -5,7 +5,7 @@ var usersController = require( '../controllers/user');
 router.post('/login', usersController.login);
 router.get('/logout', usersController.logout);
 router.get('/getUser', usersController.getUser);
-router.post('/updatepassword', usersController.updatePassword);
+router.post('/updateuserinfo', usersController.updateUserInfo);
 router.get('/getUserList', usersController.getUserList);
 router.post('/register', usersController.register);
 router.delete('/deleteUser', usersController.deleteUser);
