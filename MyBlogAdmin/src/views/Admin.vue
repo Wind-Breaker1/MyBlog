@@ -67,6 +67,12 @@
               <span slot="title">个人中心</span>
             </el-menu-item>
           </router-link>
+          <router-link to="/admin/routingmanage">
+            <el-menu-item index="/admin/routingmanage">
+              <i class="el-icon-s-custom"></i>
+              <span slot="title">路由管理</span>
+            </el-menu-item>
+          </router-link>
           <router-link to="/admin/logs">
             <el-menu-item index="/admin/logs">
               <i class="el-icon-setting"></i>
