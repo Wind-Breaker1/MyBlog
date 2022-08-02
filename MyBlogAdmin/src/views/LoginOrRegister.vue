@@ -65,6 +65,7 @@ export default {
 					password,
 				});
 				if (result === "ok") {
+					// await this.$store.dispatch("getRouteList", getUserInfo().role);
 					this.$router.push("/admin/article");
 				}
 				// 登录限制后要判断在跳转

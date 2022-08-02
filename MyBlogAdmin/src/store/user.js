@@ -89,15 +89,15 @@ const actions = {
 	},
 
 	// 退出登录
-	async logout({ commit }) {
-		let result = await logout();
-		if (result.status == 200) {
-			commit("CLEAR");
-			return "ok";
-		} else {
-			return result;
-		}
-	},
+	// async logout({ commit }) {
+	// 	let result = await logout();
+	// 	if (result.status == 200) {
+	// 		commit("CLEAR");
+	// 		return "ok";
+	// 	} else {
+	// 		return result;
+	// 	}
+	// },
 };
 const getters = {};
 export default {
