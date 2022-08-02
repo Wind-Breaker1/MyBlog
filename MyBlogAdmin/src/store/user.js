@@ -39,9 +39,9 @@ const actions = {
 			// commit('USERLOGIN', result.data.token);
 			// 本地持久化存储
 			// localStorage.setItem("TOKEN", result.data.token);
-			console.log(result);
 			setUserInfo(JSON.stringify(result.data.user));
 			setToken(result.data.token);
+			console.log(result);
 			return "ok";
 		} else {
 			return Promise.reject(new Error("faile"));
@@ -67,7 +67,7 @@ const actions = {
 		}
 	},
 	// 更新密码
-	async updateUserInfo({ commit }, data) {
+	async updatePassword({ commit }, data) {
 		let result = await updatePassword(data);
 		if (result.status == 0) {
 			return "ok";

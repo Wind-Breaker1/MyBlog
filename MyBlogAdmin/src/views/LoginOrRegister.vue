@@ -64,13 +64,11 @@ export default {
 					email,
 					password,
 				});
-				// 登录限制后要判断在跳转
-				if (result) {
-					console.log(getUserInfo());
-					await this.$store.dispatch("getRouteList", getUserInfo().role);
-					let toPath = this.$route.query.redirect;
+				if (result === "ok") {
 					this.$router.push("/admin/article");
 				}
+				// 登录限制后要判断在跳转
+				let toPath = this.$route.query.redirect || "/admin/article";
 			} catch (error) {
 				console.log(error);
 			}
@@ -88,8 +86,8 @@ export default {
 					username,
 				});
 				// 登录限制后要判断在跳转
-				let toPath = this.$route.query.redirect || "/admin/article";
-				this.$router.push("/admin/article");
+				// let toPath = this.$route.query.redirect || "/admin/article";
+				// this.$router.push("/login");
 				if (res.status === 200) {
 					this.isLogin = true;
 				}
@@ -147,7 +145,7 @@ button {
 .register-box {
 	position: absolute;
 	width: 320px;
-	animation: registerAnimation 1s;
+	animation: loginAnimation 1s;
 }
 
 @keyframes loginAnimation {
