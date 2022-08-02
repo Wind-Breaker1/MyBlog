@@ -1,4 +1,4 @@
-const ArticlesModel = require('../model/articles');
+const ArticlesModel = require('../model/blogs');
 const JottingModel = require('../model/jottings');
 const ClassifyModel = require('../model/classifies');
 var path = require("path")
@@ -106,10 +106,7 @@ editSelf = (data, callback) => {
 
 const uploadImg = async (req, res) => {
   const file = req.file //这个就是前端传来的文件
-  console.log('file', file)
-
   editSelf(file, (response) => {
-    console.log("re", response)
     res.send({
       url: "http://127.0.0.1:3001/images/" + file.filename,
       status: 200,

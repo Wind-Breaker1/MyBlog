@@ -37,23 +37,23 @@ export const routes = [
     redirect: '/admin',
   },
 ]
-// 需要权限的路由
-export const myAsyncRout = [
-  {
-    path: '/admin',
-    name: 'home',
-    component: () => import('../views/Admin.vue'),
-    children: [
-      {
-        path: 'user',
-        component: () => import('../views/User.vue'),
-        meta: { id: '1001', btnPermissions: [ 'user'] }
-      },
-      {
-        path: 'logs',
-        component: () => import('../views/Log.vue'),
-        meta: { id: '1002' }
-      },
-    ]
-  }
-]
+// // 需要权限的路由
+// export const myAsyncRout = [
+//   {
+//     path: '/admin',
+//     name: 'home',
+//     component: () => import('../views/Admin.vue'),
+//     children: [
+//       {
+//         path: 'user',
+//         component: () => import('../views/User.vue'),
+//         meta: { id: '1001', btnPermissions: [ 'user'] }
+//       },
+//       {
+//         path: 'logs',
+//         component: () => import('../views/Log.vue'),
+//         meta: { id: '1002' }
+//       },
+//     ]
+//   }
+// ]

@@ -1,14 +1,9 @@
 const ClassifyModel = require('../model/classifies');
+const util = require('../utils');
 // 添加新专栏
 const addClassify = async (req, res) => {
-  let { title, digest } = req.body;
-  let date = new Date();
-  let year = date.getFullYear();
-  let month = date.getMonth() + 1;
-  let day = date.getDay();
-  let time = year + '-' + month + '-' + day;
   let result = await ClassifyModel.addClassify({
-    date: time,
+    date: util.date(),
     title,
     digest,
   });
@@ -24,10 +19,9 @@ const addClassify = async (req, res) => {
     });
   }
 };
-
 // 获取专栏名称
-const getClassifysList = async (req, res) => {
-  let result = await ClassifyModel.ClassifiesList();
+const getClassifies = async (req, res) => {
+  let result = await ClassifyModel.getClassifies();
   if (result) {
     res.send({
       msg: '查询专栏成功',
@@ -42,9 +36,9 @@ const getClassifysList = async (req, res) => {
   }
 }
 // 修改专栏描述标题
-const compile = async (req, res) => {
+const updateClassifyTitle = async (req, res) => {
   let { _id, title, digest } = req.body;
-  let result = await ClassifyModel.updateTitle(_id, title, digest);
+  let result = await ClassifyModel.updateClassifyTitle(_id, title, digest);
   if (result) {
     res.send({
       msg: '编辑专栏成功',
@@ -62,7 +56,7 @@ const compile = async (req, res) => {
 const deleteClassify = async (req, res, next) => {
   const { _id } = req.query;
   // 这里必须要await
-  let article = await ClassifyModel.classifyOne(_id);
+  let article = await ClassifyModel.deleteClassify(_id);
   let { articleNum } = article;
   if (articleNum != 0) {
     res.send({
@@ -86,8 +80,8 @@ const deleteClassify = async (req, res, next) => {
 }
 
 module.exports = {
-  getClassifysList,
+  updateClassifyTitle,
   deleteClassify,
   addClassify,
-  compile
+  getClassifies
 };

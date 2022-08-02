@@ -1,4 +1,4 @@
-const UserModel = require('../model/user');
+const UserModel = require('../model/users');
 const { sign, verify, hash, compare, date } = require('../utils');
 // 添加新用户
 const register = async (req, res, next) => {
@@ -6,7 +6,7 @@ const register = async (req, res, next) => {
 	// 密码加密
 	const bcryptPassword = await hash(password);
 	// 检查此邮箱是否已经被注册
-	const Email = await UserModel.findUser(email);
+	const Email = await UserModel.getUser(email);
 	const time = date();
 	if (!Email) {
 		let result = await UserModel.save({
@@ -35,7 +35,7 @@ const login = async (req, res, next) => {
 	let { email, password } = req.body;
 	// 查找用户是否存在
 	console.log(email, password);
-	let user = await UserModel.findUser(email);
+	let user = await UserModel.getUser(email);
 	if (user) {
 		let { password: hash } = user;
 		// 比较密码
@@ -77,7 +77,7 @@ const logout = async (req, res, next) => {
 	});
 };
 // 进入登录态
-const getUser = async (req, res, next) => {
+const getUserState = async (req, res, next) => {
 	try {
 		// 验证token
 		let result = verify(token);
@@ -99,11 +99,11 @@ const getUser = async (req, res, next) => {
 const updateUserInfo = async (req, res, next) => {
 	let { email, password, role } = req.body;
 	const bcryptPassword = await hash(password);
-	let result = await UserModel.updateUserInfo({
+	let result = await UserModel.updateUserInfo(
 		email,
-		password: bcryptPassword,
+		bcryptPassword,
 		role,
-	});
+	);
 	if (result) {
 		res.send({
 			msg: '用户信息修改成功',
@@ -117,8 +117,8 @@ const updateUserInfo = async (req, res, next) => {
 	}
 };
 // 获取用户列表
-const getUserList = async (req, res, next) => {
-	let result = await UserModel.usersList();
+const getUsers = async (req, res, next) => {
+	let result = await UserModel.getUsers();
 	if (result) {
 		res.send({
 			msg: '查询用户成功',
@@ -153,9 +153,9 @@ const deleteUser = async (req, res, next) => {
 module.exports = {
 	login,
 	logout,
-	getUser,
+	getUserState,
 	updateUserInfo,
-	getUserList,
+	getUsers,
 	register,
 	deleteUser,
 };

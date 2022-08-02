@@ -1,42 +1,36 @@
-const RouteModel = require('../model/route');
+const RouteModel = require('../model/routes');
 const { sign, verify, hash, compare, date } = require('../utils');
 // 添加新路由
-const saveFirstRoute = async (req, res, next) => {
+const addFirstRoute = async (req, res, next) => {
 	let { route } = req.body;
 	// 密码加密
 	// 检查此邮箱是否已经被注册
-	const Name = await RouteModel.findOneByName(route.name);
-	if (!Name) {
-		let result = await RouteModel.saveFirstRoute(route);
-		if (result) {
-			res.send({
-				msg: '注册成功',
-				status: 200,
-			});
-		}
-	} else {
+	let result = await RouteModel.addFirstRoute(route);
+	if (result) {
+		res.send({
+			msg: '注册成功',
+			status: 200,
+		});
+	}
+	else {
 		res.send({
 			msg: '此邮箱已经被注册！',
 			status: -1,
 		});
 	}
 };
-const saveSecondRoute = async (req, res, next) => {
+const addSecondRoute = async (req, res, next) => {
 	let { route, parentRouteName } = req.body;
 	// 密码加密
 	// 检查此邮箱是否已经被注册
-	const Name = await RouteModel.findOneByName(parentRouteName);
-	console.log(Name);
-
-	if (Name) {
-		let result = await RouteModel.saveSecondRoute(parentRouteName, route);
-		if (result) {
-			res.send({
-				msg: '注册成功',
-				status: 200,
-			});
-		}
-	} else {
+	let result = await RouteModel.addSecondRoute(parentRouteName, route);
+	if (result) {
+		res.send({
+			msg: '注册成功',
+			status: 200,
+		});
+	}
+	else {
 		res.send({
 			msg: '此邮箱已经被注册！',
 			status: -1,
@@ -46,7 +40,7 @@ const saveSecondRoute = async (req, res, next) => {
 // 修改路由
 const updatRoute = async (req, res, next) => {
 	let { route } = req.body;
-	let result = await RouteModel.updateRouteInfo(route);
+	let result = await RouteModel.updateFirstRouteInfo(route);
 	if (result) {
 		res.send({
 			msg: '修改成功',
@@ -59,12 +53,11 @@ const updatRoute = async (req, res, next) => {
 		});
 	}
 };
-// 获取用户列表
-const getRouteList = async (req, res, next) => {
+// 获取路由列表
+const getRoutes = async (req, res, next) => {
 	const { role } = req.query;
-	let result = await RouteModel.findRoute();
+	let result = await RouteModel.getRoutes();
 	const route = _filterRoute(role, result);
-	console.log(route, role, result);
 	if (result) {
 		res.send({
 			msg: '查询成功',
@@ -107,10 +100,10 @@ const deleteRoute = async (req, res, next) => {
 	// 这里必须要await
 	let result = null;
 	if (!name) {
-		result = await RouteModel.deleteFirstLevelRoute(_id);
+		result = await RouteModel.deleteFirstRoute(_id);
 		_id;
 	} else {
-		result = await RouteModel.deleteSecondlevelRoute(_id, name);
+		result = await RouteModel.deleteSecondRoute(_id, name);
 	}
 	if (result.deletedCount != 0) {
 		res.send({
@@ -126,9 +119,9 @@ const deleteRoute = async (req, res, next) => {
 };
 
 module.exports = {
-	saveSecondRoute,
-	saveFirstRoute,
+	addSecondRoute,
+	addFirstRoute,
 	updatRoute,
-	getRouteList,
+	getRoutes,
 	deleteRoute,
 };

@@ -11,8 +11,8 @@ const CommentSchema = new mongoose.Schema({//创建博客模型
   replyInfo: [{
     date: { type: String, require: true }, //创建日期
     // replymurmur: { type: String, require: true },// 回复的指纹
-    replyId: { type: mongoose.Types.ObjectId, require: true },// 回复的指纹
-    replyname: { type: String, require: true } ,
+    replyId: { type: mongoose.Types.ObjectId, require: true },// 回复的id
+    replyname: { type: String, require: true },
     username: { type: String, require: true },
     favour: [{
       type: String
@@ -33,26 +33,21 @@ const addFirstComment = (data) => {
 };
 // 新增次级评论
 const addSecondComment = ({ _id, reply }) => {
-  return CommentModel.findOneAndUpdate(
-    { _id: _id },
+  return CommentModel.findByIdAndUpdate(
+    { _id },
     { $push: { replyInfo: reply } }
-  ).then((res) => {
-    return res;
-  }).catch((err) => {
-    return new Error(err);
-  })
- 
-}; 
+  );
+};
 // 给一级评论点赞
 const addFirstFavour = (_id, favourMurmur) => {
-  return CommentModel.findOneAndUpdate(
-    { _id: _id },
+  return CommentModel.findByIdAndUpdate(
+    { _id },
     { $push: { favour: favourMurmur } }
-  ).then(res => true).catch(err =>  new Error(err))
+  );
 };
 // // 给次级评论点赞
 const addSecondFavour = async (_id, replyId, favourMurmur) => {
-  return CommentModel.findOneAndUpdate({ _id, replyInfo: { $elemMatch: { _id: replyId } } }, {$push: {"replyInfo.$.favour": favourMurmur}});
+  return CommentModel.findByIdAndUpdate({ _id, replyInfo: { $elemMatch: { _id: replyId } } }, { $push: { "replyInfo.$.favour": favourMurmur } });
   // const res = await CommentModel.findOne({ _id });
   // for (let item of res.replyInfo) {
   //     if (item._id.toString() === replyId) {
@@ -63,28 +58,16 @@ const addSecondFavour = async (_id, replyId, favourMurmur) => {
   // return CommentModel.findOneAndUpdate({ _id }, { $set: { replyInfo: res.replyInfo } });
 };
 // 删除一级评论
-const deleteFirstComment = (_id) => {
-    const res = CommentModel.findOneAndDelete({ _id }).then((res) => {
-      return res;
-    }).catch((err) => {
-      return new Error(err);
-    })
+const deleteFirstComment = (id) => {
+  return CommentModel.findByIdAndDelete(id);
 };
 // 删除次级评论
-const deleteSecondComment = (_id, replyId) => {
-  return CommentModel.updateOne({ _id }, { $pull: { replyInfo: { _id: replyId } } }).then((res) => {
-      return res;
-    }).catch((err) => {
-      return new Error(err);
-    })
+const deleteSecondComment = (id, replyId) => {
+  return CommentModel.findByIdAndUpdate(id, { $pull: { replyInfo: { _id: replyId } } });
 };
 // 查询所有评论
-const commentList = (_id) => {
-    return CommentModel.find({ articleId: _id }).then((res) => {
-      return res;
-    }).catch((err) => {
-      return new Error(err);
-    })
+const getComments = (_id) => {
+  return CommentModel.find({ articleId: _id });
 };
 
 module.exports = {
@@ -93,6 +76,6 @@ module.exports = {
   addFirstFavour,
   deleteFirstComment,
   deleteSecondComment,
-  commentList,
+  getComments,
   addSecondFavour
 }

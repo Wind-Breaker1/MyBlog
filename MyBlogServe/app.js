@@ -9,12 +9,12 @@ var db = require('./db/connect');
 
 // 引入路由
 var usersRouter = require('./routes/users');
-var arrticlesRouter = require('./routes/articles');
-var jottingsRouter = require('./routes/jotting');
-var classifiesRouter = require('./routes/classify');
+var arrticlesRouter = require('./routes/blogs');
+var jottingsRouter = require('./routes/jottings');
+var classifiesRouter = require('./routes/classifies');
 var synthesisRouter = require('./routes/synthesis');
-var commentRouter = require('./routes/comment');
-const routeRouter = require('./routes/route')
+var commentRouter = require('./routes/comments');
+const routeRouter = require('./routes/routes')
 var app = express();
 
 app.use(session({
@@ -29,7 +29,6 @@ app.use(session({
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
-app.use(express.static(path.join(__dirname, 'public')))
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -38,12 +37,12 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // 注册路由
 app.use('/api/users', usersRouter);
-app.use('/api/articles', arrticlesRouter);
+app.use('/api/blogs', arrticlesRouter);
 app.use('/api/jottings', jottingsRouter);
 app.use('/api/classifies', classifiesRouter);
 app.use('/api/synthesis', synthesisRouter);
-app.use('/api/comment', commentRouter);
-app.use('/api/route', routeRouter);
+app.use('/api/comments', commentRouter);
+app.use('/api/routes', routeRouter);
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));

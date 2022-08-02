@@ -9,10 +9,8 @@ const JottingSchema = new mongoose.Schema({//创建表
   }],
   browse: { type: Number, default: 0 },
   content: { type: String, require: true },
-  // 描述信息
-  digest: { type: String },
-  // 状态：是否发布
-  state: { type: Boolean, default: false }
+  digest: { type: String },// 描述信息
+  state: { type: Boolean, default: false }// 状态：是否发布
 })
 const JottingModel = mongoose.model('jotting', JottingSchema);
 // 新增随笔
@@ -20,81 +18,71 @@ const addJotting = (data) => {
   let jotting = new JottingModel(data);
   return jotting.save().then(() => {
     return true;
-  }).catch((err) => {
-    return err;
+  }).catch(() => {
+    return false;
   })
 };
 // 更新随笔
-const updateJotting = ({ content, _id }) => {
-  return JottingModel.updateOne({ "_id": _id }, { $set: { "content": content } }).then(() => {
-    return true;
-  }).catch((err) => {
-    return false;
-  })
+const updateJotting = (content, id) => {
+  return JottingModel.findByIdAndUpdate(id, { $set: { content } });
 };
-// 修改用状态
-const updateState = (state, id) => {
-  return JottingModel.updateOne({ "_id": id }, { $set: { "state": state } }).then(() => {
-    return true;
-  }).catch((err) => {
-    return false;
-  })
+// 修改随笔状态
+const changeJottingState = (state, id) => {
+  return JottingModel.findByIdAndUpdate(id, { $set: { state } });
 };
 // 删除随笔
-const deleteJotting = (_id) => {
-  return JottingModel.deleteOne({ _id });
+const deleteJotting = (id) => {
+  return JottingModel.findByIdAndDelete(id);
 };
 // 查询某一随笔
-const JottingOne = (_id) => {
-  return JottingModel.findOne({ _id });
+const getJotting = (id) => {
+  return JottingModel.findById(id);
 };
 // 查询所有随笔
-const JottingsList = () => {
+const getJottings = () => {
   return JottingModel.find();
 };
 // 查询所有已发布随笔
-const publishJottings = ({ pageStart = 0, pageSize = 5 }) => {
-  console.log(pageStart, pageSize)
+const getPublishJottings = (pageStart = 0, pageSize = 5) => {
   return JottingModel.find({ state: true }, '_id date digest favour title browse').skip(pageStart).limit(pageSize);
 };
 // 查询所有已发布的博客
-const jottingNums = () => {
+const getJottingSums = () => {
   return JottingModel.find({ state: true }).count();
 };
 // 增加点赞
-const addFavour = (_id, favourMurmur) => {
-  console.log(favourMurmur);
-  return JottingModel.findOneAndUpdate(
-    { _id: _id },
+const addFavour = (id, favourMurmur) => {
+  return JottingModel.findByIdAndUpdate(
+    id,
     { $push: { favour: favourMurmur } }
-  ).then(res => true).catch(err => err)
+  );
 };
 // 获取点赞数
-const getFavour = (_id) => {
-  return JottingModel.findOne({ _id }, 'favour');
+const getFavour = (id) => {
+  return JottingModel.findById(id, 'favour');
 };
 // 增加浏览量
-const addBrowse = (_id) => {
-  return JottingModel.updateOne({ _id }, { $inc: { 'browse': 1 } });
+const addBrowse = (id) => {
+  return JottingModel.findByIdAndUpdate(id, { $inc: { browse: 1 } });
 };
 //  模糊查询所有文章
-const searchJottings = (searchValue) => {
+const searchJottings = (searchValue, pageStart = 0, pageSize = 5) => {
   let regexp = new RegExp(searchValue, 'i')
   return JottingModel.find({
     $or: [
       { 'title': { '$regex': regexp } }],
     state: true
-  })
+  }).skip(pageStart).limit(pageSize);
 };
 module.exports = {
   addJotting,
-  updateState,
   updateJotting,
+  changeJottingState,
   deleteJotting,
-  JottingsList,
-  JottingOne,
-  publishJottings,
-  jottingNums,
+  getJotting,
+  getJottings,
+  getPublishJottings,
+  getJottingSums,
   addBrowse,
   addFavour,
   getFavour,

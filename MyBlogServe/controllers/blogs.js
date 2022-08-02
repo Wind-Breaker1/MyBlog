@@ -1,33 +1,20 @@
-const ArticlesModel = require('../model/articles');
+const ArticlesModel = require('../model/blogs');
 const ClassifyModel = require('../model/classifies');
 const util = require('../utils');
-// 添加新文章
-const addArticle = async (req, res, next) => {
+// 添加新博客
+const addBlog = async (req, res, next) => {
   // 获取时间字符串
-
-  let time = util.date();
   let { title, classification, content, digest, state, _id } = req.body;
-  let result = null;
-  if (_id) {
-    // 若存在id则更新内容
-    result = await ArticlesModel.updateArticle({
-      title,
-      digest,
-      content,
-      _id
-    });
-  } else {
-    result = await ArticlesModel.addArticle({
-      date: time,
-      title,
-      classification,
-      content,
-      digest,
-      state,
-    });
-  }
+  let result = await ArticlesModel.addblog({
+    date: util.date(),
+    title,
+    classification,
+    content,
+    digest,
+    state,
+  });
   if (result) {
-    await ClassifyModel.updateClassifyNum(classification);
+    ClassifyModel.updateClassifySum(classification);
     res.send({
       msg: '博客添加成功',
       status: 200
@@ -39,12 +26,11 @@ const addArticle = async (req, res, next) => {
     });
   }
 };
-
 // 修改文章的状态
-const changeState = async (req, res, next) => {
+const changeBlogState = async (req, res, next) => {
   let { _id } = req.query;
-  let article = await ArticlesModel.articleOne(_id);
-  let result = await ArticlesModel.updateState(!article.state, _id);
+  let article = await ArticlesModel.getBlog(_id);
+  let result = await ArticlesModel.changeBlogState(!article.state, _id);
   if (result) {
     res.send({
       msg: '博客状态修改成功',
@@ -57,12 +43,12 @@ const changeState = async (req, res, next) => {
       status: -1
     });
   }
-  
+
 }
 // 修改文章内容
-const updateContent = async (req, res, next) => {
+const updateBlog = async (req, res, next) => {
   let { content, _id } = req.body;
-  let result = await ArticlesModel.updateArticle({
+  let result = await ArticlesModel.updateBlog({
     _id,
     content
   });
@@ -72,7 +58,7 @@ const updateContent = async (req, res, next) => {
       msg: '博客修改成功',
       status: 200
     });
-  }else {
+  } else {
     res.send({
       msg: '修改失败',
       status: -1
@@ -80,8 +66,8 @@ const updateContent = async (req, res, next) => {
   }
 };
 // 获取文章列表
-const getArticleList = async (req, res, next) => {
-  let result = await ArticlesModel.articlesList();
+const getBlogs = async (req, res, next) => {
+  let result = await ArticlesModel.getBlogList();
   if (result) {
     res.send({
       msg: '博客查询成功',
@@ -96,15 +82,15 @@ const getArticleList = async (req, res, next) => {
   }
 }
 // 获取已发布文章列表
-const getPublishArticles = async (req, res, next) => {
+const getPublishBlogs = async (req, res, next) => {
   let { pageStart, pageSize } = req.query;
-  let blogList = await ArticlesModel.publishArticles({ pageStart, pageSize });
-  let count = await ArticlesModel.articleNums();
+  let blogList = await ArticlesModel.getPublishBlogs({ pageStart, pageSize });
+  let count = await ArticlesModel.getblogSums();
   if (blogList) {
     res.send({
       msg: '博客查询成功',
       status: 200,
-      data: { blogList, count}
+      data: { blogList, count }
     });
   } else {
     res.send({
@@ -114,12 +100,12 @@ const getPublishArticles = async (req, res, next) => {
   }
 }
 // 删除文章
-const deleteArticle = async (req, res) => {
-  const _id = req.query;
+const deleteBlog = async (req, res) => {
+  const {_id} = req.query;
   // 这里必须要await
-  let deleteArticle = await ArticlesModel.deleteArticle(_id);
+  let deleteArticle = await ArticlesModel.deleteBlog(_id);
   // 修改所属专栏的文章数量
-  let result = await ClassifyModel.updateClassifyNum(deleteArticle.classification, -1);
+  let result = await ClassifyModel.updateClassifySum(deleteArticle.classification, -1);
   if (deleteArticle.deletedCount != 0 && result.modifiedCount != 0) {
     res.send({
       msg: '删除博客成功',
@@ -136,11 +122,10 @@ const deleteArticle = async (req, res) => {
 const getBlog = async (req, res) => {
   const { _id } = req.query;
   // 这里必须要await
-  await ArticlesModel.addBlogBrowse(_id);
-  let article = await ArticlesModel.articleOne(_id);
+  let article = await ArticlesModel.getBlog(_id);
+  let classify = await ClassifyModel.getClassify(article.classification);
   if (article) {
     // 查询博客所属书签
-    let classify = await ClassifyModel.classifyOne(article.classification);
     if (article) {
       res.send({
         msg: '查找博客成功',
@@ -161,7 +146,7 @@ const getBlog = async (req, res) => {
 // 获取某书签下所有博客
 const getBlogsOfClassify = async (req, res) => {
   const { classification } = req.query;
-  let result = await ArticlesModel.blogsOfClassify(classification);
+  let result = await ArticlesModel.getBlogsOfClassify(classification);
   if (result && result.length) {
     res.send({
       msg: '查找博客成功',
@@ -215,13 +200,13 @@ const addBlogBrowse = async (req, res) => {
   }
 }
 module.exports = {
-  getArticleList,
-  deleteArticle,
-  updateContent,
-  addArticle,
-  changeState,
+  addBlog,
+  changeBlogState,
+  updateBlog,
+  getBlogs,
+  getPublishBlogs,
+  deleteBlog,
   getBlog,
-  getPublishArticles,
   getBlogsOfClassify,
   addFavour,
   addBlogBrowse

@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import { routes, myAsyncRout } from './router';
+import { routes } from './router';
 import { getToken, asyncRoute } from '@/util';
 
 Vue.use(VueRouter)
@@ -18,33 +18,9 @@ router.beforeEach((to, from, next) => {
   // console.log(getToken(), 12)
   if (getToken()) {
     if (flag) {
-      try {
         //获取有权限的路由进行组装
         let route = asyncRoute(myAsyncRout) || [];
-        if (route.length !== 0) {
-          route[0].children.push({
-            path: '*',
-            redirect: '404'
-          });
-        } else {
-          route.push({
-            path: '/admin',
-            name: 'home',
-            component: () => import('../views/Admin.vue'),
-            children: [
-              {
-                path: '*',
-                component: () => import('@/views/404.vue')
-              },
-            ]
-          })
-        }
-        router.addRoutes(route)
-        flag = false;
-        next({ ...to, replace: true })
-      } catch (e) {
-        next(false)
-      }
+        
     } else {
       if ('/loginorregister' === to.path ) {
         next(from.path);

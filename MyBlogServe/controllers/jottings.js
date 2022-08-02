@@ -2,24 +2,23 @@ const JottingModel = require('../model/jottings');
 const util = require('../utils');
 const addJotting = async (req, res, next) => {
   let { title, content, digest, state, _id } = req.body;
-  let time = util.date();
   let result = null;
   // 判断是修改还是新增
-  if (_id) {
-    // 若存在id则更新内容
-    result = await JottingModel.updateContent({
-      content,
-      _id
-    });
-  } else {
+  // if (_id) {
+  //   // 若存在id则更新内容
+  //   result = await JottingModel.updateContent({
+  //     content,
+  //     _id
+  //   });
+  // } else {
     result = await JottingModel.addJotting({
-      date: time,
+      date: util.date(),
       title,
       content,
       digest,
       state,
     });
-  }
+  // }
   if (result) {
     res.send({
       msg: '随笔添加成功',
@@ -35,8 +34,8 @@ const addJotting = async (req, res, next) => {
 // 修改随笔的状态
 const changeState = async (req, res, next) => {
   let { _id } = req.query;
-  let jotting = await JottingModel.JottingOne(_id);
-  let result = await JottingModel.updateState(!jotting.state, _id);
+  let jotting = await JottingModel.getJotting(_id);
+  let result = await JottingModel.changeJottingState(!jotting.state, _id);
   if (result) {
     res.send({
       msg: '修改随笔成功',
@@ -50,7 +49,7 @@ const changeState = async (req, res, next) => {
   }
 }
 // 修改随笔内容
-const updateContent = async (req, res, next) => {
+const updateJotting = async (req, res, next) => {
   let { content, _id } = req.body;
   let result = await JottingModel.updateJotting({
     _id,
@@ -69,8 +68,8 @@ const updateContent = async (req, res, next) => {
   }
 };
 // 获取随笔列表
-const getJottingsList = async (req, res, next) => {
-  let result = await JottingModel.JottingsList();
+const getJottings = async (req, res, next) => {
+  let result = await JottingModel.getJottings();
   if (result) {
     res.send({
       msg: '随笔查询成功',
@@ -87,7 +86,7 @@ const getJottingsList = async (req, res, next) => {
 // 获取已发布文章列表
 const getPublishJottings = async (req, res, next) => {
   let { pageStart, pageSize } = req.query;
-  let jottingList = await JottingModel.publishJottings({ pageStart, pageSize });
+  let jottingList = await JottingModel.getPublishJottings({ pageStart, pageSize });
   let count = await JottingModel.jottingNums();
   if (jottingList) {
     res.send({
@@ -106,7 +105,7 @@ const getPublishJottings = async (req, res, next) => {
 const getJotting = async (req, res, next) => {
   let { _id } = req.query;
   await JottingModel.addBrowse(_id);
-  let jotting = await JottingModel.JottingOne(_id);
+  let jotting = await JottingModel.getJotting(_id);
   if (jotting) {
     res.send({
       msg: '查询随笔详情成功',
@@ -157,9 +156,9 @@ const addFavour = async (req, res) => {
   }
 }
 module.exports = {
-  getJottingsList,
+  getJottings,
   deleteJotting,
-  updateContent,
+  updateJotting,
   addJotting,
   changeState,
   getPublishJottings,

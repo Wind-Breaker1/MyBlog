@@ -1,4 +1,4 @@
-const CommentModel = require('../model/Comment');
+const CommentModel = require('../model/comments');
 const ClassifyModel = require('../model/classifies');
 const util = require('../utils');
 // 添加新一级评论
@@ -78,7 +78,6 @@ const addFirstFavour = async (req, res) => {
 const addSecondFavour = async (req, res) => {
   try {
     const { _id, replyId, favourMurmur } = req.query;
-    console.log(_id, replyId, favourMurmur,'111')
     await CommentModel.addSecondFavour(_id, replyId, favourMurmur);
     res.send({
       msg: '评论点赞成功',
@@ -125,12 +124,12 @@ const deleteSecondComment = async (req, res, next) => {
   }
 }
 // 查询所有评论
-const getCommentList = async (req, res) => {
+const getComments = async (req, res) => {
   try {
     const { id } = req.query;
     // 这里必须要await
     console.log(id)
-    const result = await CommentModel.commentList(id);
+    const result = await CommentModel.getComments(id);
     res.send({
       msg: '评论查询成功',
       status: 200,
@@ -152,5 +151,5 @@ module.exports = {
   addSecondFavour,
   deleteFirstComment,
   deleteSecondComment,
-  getCommentList
+  getComments
 };
