@@ -212,7 +212,6 @@ export default {
       let result;
       let { type } = this.$route.query;
       // 判断是添加到随笔还是博客
-      console.log(this.classification);
       if (type === "jotting" || this.classification[0] === "suibi") {
         delete data.classification;
         result = await this.$store.dispatch("addJotting", data);
