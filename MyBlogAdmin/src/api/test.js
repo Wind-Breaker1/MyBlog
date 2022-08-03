@@ -2,7 +2,8 @@
 import requests from "./request";
 // 获取文章列表
 export const getArticleList = () => requests.get("/blogs/getblogs");
-
+// 更新文章
+export const updateBlog = () => requests.get("/blogs/updateblog");
 // 删除文章
 export const deleteArticle = (params = {}) => requests.delete("/blogs/deleteblog", { params });
 

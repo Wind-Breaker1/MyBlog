@@ -48,7 +48,7 @@
 						</el-form-item>
 						<el-form-item class="form-last">
 							<el-button @click="addMetaItem" class="form-button" type="primary">新增配置</el-button>
-							<el-button @click="resetForm" class="form-button">重置</el-button>
+							<el-button @click="resetFormMeta" class="form-button">重置</el-button>
 						</el-form-item>
 					</el-form>
 				</el-form-item>
@@ -93,11 +93,11 @@ export default {
 		}),
 	},
 	mounted() {
-		this.getData("普通用户");
+		this.getData("管理员");
 	},
 	methods: {
 		// 重置
-		resetForm() {
+		resetFormMeta() {
 			this.metaList.forEach(item => {
 				(item.key = ""), (item.value = "");
 			});
@@ -119,7 +119,8 @@ export default {
 		},
 		// 获取路由数据
 		async getData(role) {
-			this.$store.dispatch("getRouteList", role);
+			if (this.routeList.length === 0)
+				this.$store.dispatch("getRouteList", role);
 		},
 		addRoute() {
 			this.dialogFormVisible = true;
@@ -163,7 +164,6 @@ export default {
 					result = this.$store.dispatch("addSecondRoute", { parentRouteName: this.parentRouteName, route: this.form });
 				}
 			} else {
-				console.log(124);
 				result = this.$store.dispatch("updatRoute", { route: this.form });
 			}
 			console.log(result);
@@ -177,11 +177,11 @@ export default {
 			const obj = {};
 			if (data._id) {
 				obj._id = data._id;
+				obj.name = undefined;
 			} else {
 				obj._id = _id;
 				obj.name = data.name;
 			}
-			console.log(obj);
 			this.$store.dispatch("deleteRoute", obj);
 		},
 		// 初始化数据

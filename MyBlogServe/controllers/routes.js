@@ -74,9 +74,10 @@ const getRoutes = async (req, res, next) => {
 // 递归处理符合条件的路由
 const _filterRoute = (role, routeList) => {
 	const route = [];
+	console.log('role', role);
+	
 	routeList.forEach(item => {
 		if (item.limits && item.limits.includes(role)) {
-			console.log(item);
 			const obj = {};
 			obj._id = item._id;
 			obj.path = item.path;

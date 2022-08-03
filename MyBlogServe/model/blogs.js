@@ -23,7 +23,7 @@ const addblog = (data) => {
   })
 };
 // 更新博客内容
-const updateBlog = ({ content, title, digest, id }) => {
+const updateBlog = (id, { content, title, digest}) => {
   return ArticleModel.findByIdAndUpdate(id, { $set: { content, title, digest } });
 };
 // 修改博客状态
@@ -39,7 +39,7 @@ const getBlog = (id) => {
   return ArticleModel.findById(id);
 };
 // 查询所有文章
-const getBlogList = () => {
+const getBlogs = () => {
   return ArticleModel.find();
 };
 // 查询所有已发布的博客
@@ -84,7 +84,7 @@ module.exports = {
   changeBlogState,
   deleteBlog,
   getBlog,
-  getBlogList,
+  getBlogs,
   getPublishBlogs,
   getblogSums,
   getBlogsOfClassify,

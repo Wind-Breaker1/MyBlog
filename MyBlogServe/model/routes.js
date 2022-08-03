@@ -4,14 +4,25 @@ const RouteSchema = new mongoose.Schema({
 	path: { type: String, require: true, unique: true },
 	name: { type: String },
 	meta: { type: Object, default: {} },
-	parentId: {type: mongoose.Types.ObjectId,},
+	children: [{
+		path: { type: String, require: true, unique: true },
+		name: { type: String },
+		meta: { type: Object, default: {} },
+		limits: [
+			{
+				type: String,
+				require: true,
+			},
+		],
+		component: { type: String } //index: { unique: true }
+	}],
 	limits: [
 		{
 			type: String,
 			require: true,
 		},
 	],
-	component: { type: String }, //index: { unique: true }
+	component: { type: String } //index: { unique: true }
 });
 
 const RouteModel = mongoose.model('route', RouteSchema);

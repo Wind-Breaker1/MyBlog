@@ -21,6 +21,15 @@ const actions = {
       return result;
     }
   },
+  // 更新文章
+  async updateBlog({ commit }, data ) {
+    let result = await updateBlog(data);
+    if (result.status === 200) {
+      return 'ok';
+    } else {
+      return result;
+    }
+  },
   // 删除文章
   async deleteArticle({ commit }, data) {
     let result = await deleteArticle(data);

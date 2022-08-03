@@ -34,8 +34,8 @@ const actions = {
   async getClassifyList({ commit }) {
     let result = await getClassifyList();
     if (result.status == 200) {
-      commit('CLASSIFYLIST', result.data);
-      setClassifies(JSON.stringify(result.data));
+      // commit('CLASSIFYLIST', result.data);
+      setClassifies(result.data);
     } else {
       return Promise.reject(new Error('faile'));
     }

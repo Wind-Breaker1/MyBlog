@@ -53,8 +53,8 @@ export const routes = [
 		name: "loginorregister",
 		component: () => import("../views/LoginOrRegister.vue"),
 	},
-	// {
-	// 	path: "*",
-	// 	redirect: "/loginorregister",
-	// },
+	{
+		path: "/",
+		redirect: "/loginorregister",
+	},
 ];

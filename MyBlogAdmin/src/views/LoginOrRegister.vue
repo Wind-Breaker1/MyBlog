@@ -45,7 +45,6 @@
 </template>
 
 <script>
-import { getUserInfo } from "@/util";
 export default {
 	data() {
 		return {
@@ -64,12 +63,10 @@ export default {
 					email,
 					password,
 				});
-				if (result === "ok") {
-					// await this.$store.dispatch("getRouteList", getUserInfo().role);
-					this.$router.push("/admin/article");
-				}
 				// 登录限制后要判断在跳转
-				let toPath = this.$route.query.redirect || "/admin/article";
+				if (result === "ok") {
+					this.$router.push("/admin/blog");
+				}
 			} catch (error) {
 				console.log(error);
 			}

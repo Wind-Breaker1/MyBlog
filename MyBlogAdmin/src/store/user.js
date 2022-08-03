@@ -39,7 +39,7 @@ const actions = {
 			// commit('USERLOGIN', result.data.token);
 			// 本地持久化存储
 			// localStorage.setItem("TOKEN", result.data.token);
-			setUserInfo(JSON.stringify(result.data.user));
+			setUserInfo(result.data.user);
 			setToken(result.data.token);
 			console.log(result);
 			return "ok";
@@ -89,15 +89,15 @@ const actions = {
 	},
 
 	// 退出登录
-	// async logout({ commit }) {
-	// 	let result = await logout();
-	// 	if (result.status == 200) {
-	// 		commit("CLEAR");
-	// 		return "ok";
-	// 	} else {
-	// 		return result;
-	// 	}
-	// },
+	async logout({ commit }) {
+		let result = await logout();
+		if (result.status == 200) {
+			commit("CLEAR");
+			return "ok";
+		} else {
+			return result;
+		}
+	},
 };
 const getters = {};
 export default {

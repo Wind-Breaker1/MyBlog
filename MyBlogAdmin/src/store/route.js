@@ -71,7 +71,22 @@ const actions = {
 		}
 	},
 };
-const getters = {};
+const getters = {
+	routeInfoList(state) {
+		const routeInfoList = [];
+		state.routeList.forEach(item => {
+			if (item.name) {
+				routeInfoList.push({
+					id: item._id,
+					path: '/admin/' + item.path,
+					name: item.name,
+					icon: item.meta.icon
+				})
+			}
+		})
+		return routeInfoList;
+	}
+};
 export default {
 	state,
 	mutations,

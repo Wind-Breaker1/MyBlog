@@ -65,6 +65,7 @@ export default {
           label: "随笔",
         },
       ],
+      type: this.$route.query.type
     };
   },
   // computed: {
@@ -212,10 +213,15 @@ export default {
       let result;
       let { type } = this.$route.query;
       // 判断是添加到随笔还是博客
-      if (type === "jotting" || this.classification[0] === "suibi") {
+      if (this.type === "jotting" || this.classification[0] === "suibi") {
         delete data.classification;
         result = await this.$store.dispatch("addJotting", data);
-      } else if (type === "blog" || this.classification[0] !== "suibi") {
+      } else if (this.type === "blog" || this.classification[0] !== "suibi") {
+        result = await this.$store.dispatch("addArticle", data);
+      } else if (!this.type && this.classification[0] === 'suibi') {
+        delete data.classification;
+        result = await this.$store.dispatch("addJotting", data);
+      } else if (!this.type && this.classification[0] !== 'suibi') {
         result = await this.$store.dispatch("addArticle", data);
       }
       console.log(result);
@@ -226,17 +232,17 @@ export default {
         this.form.email = "";
         this.dialogFormVisible = false;
         if (type === "blog" || this.classification[0] !== "suibi")
-          this.$router.push("/admin/article");
+          this.$router.push("/admin/blog");
         else this.$router.push("/admin/jottings");
       } else {
         alert(result);
       }
     },
     init() {
-      let { type } = this.$route.query;
+      
       let article = {};
-      if (type) {
-        if (type === "blog") {
+      if (this.type) {
+        if (this.type === "blog") {
           article = this.$store.state.article.article;
           // this.change();
         } else {
