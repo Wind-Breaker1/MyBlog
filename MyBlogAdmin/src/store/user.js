@@ -67,9 +67,9 @@ const actions = {
 		}
 	},
 	// 更新密码
-	async updatePassword({ commit }, data) {
+	async updateUserInfo({ commit }, data) {
 		let result = await updatePassword(data);
-		if (result.status == 0) {
+		if (result.status == 200) {
 			return "ok";
 		} else {
 			return result;

@@ -22,6 +22,11 @@ const register = async (req, res, next) => {
 				msg: '注册成功',
 				status: 200,
 			});
+		} else {
+			res.send({
+				msg: '注册失败',
+				status: 0,
+			});
 		}
 	} else {
 		res.send({
@@ -34,7 +39,6 @@ const register = async (req, res, next) => {
 const login = async (req, res, next) => {
 	let { email, password } = req.body;
 	// 查找用户是否存在
-	console.log(email, password);
 	let user = await UserModel.getUser(email);
 	if (user) {
 		let { password: hash } = user;
@@ -57,14 +61,14 @@ const login = async (req, res, next) => {
 			});
 		} else {
 			res.send({
-				msg: '登陆失败',
-				status: 200,
+				msg: '密码错误',
+				status: 0,
 			});
 		}
 	} else {
 		res.send({
-			msg: '用户不存在！',
-			status: -1,
+			msg: '账号信息不存在！',
+			status: 0,
 		});
 	}
 };
@@ -82,7 +86,7 @@ const getUserState = async (req, res, next) => {
 		// 验证token
 		let result = verify(token);
 		res.send({
-			msg: '获取信息成功',
+			msg: '已登录',
 			status: 200,
 			data: {
 				username: result.username,
@@ -91,7 +95,7 @@ const getUserState = async (req, res, next) => {
 	} catch (err) {
 		res.send({
 			msg: '请登录',
-			status: -1,
+			status: 0,
 		});
 	}
 };
@@ -99,12 +103,8 @@ const getUserState = async (req, res, next) => {
 const updateUserInfo = async (req, res, next) => {
 	let { email, password, role } = req.body;
 	const bcryptPassword = await hash(password);
-	let result = await UserModel.updateUserInfo(
-		email,
-		bcryptPassword,
-		role,
-	);
-	if (result) {
+	let result = await UserModel.updateUserInfo(email, bcryptPassword, role);
+	if (result.modifiedCount !== 0) {
 		res.send({
 			msg: '用户信息修改成功',
 			status: 200,
@@ -112,7 +112,7 @@ const updateUserInfo = async (req, res, next) => {
 	} else {
 		res.send({
 			msg: '用户信息修改失败',
-			status: -1,
+			status: 0,
 		});
 	}
 };
@@ -128,7 +128,7 @@ const getUsers = async (req, res, next) => {
 	} else {
 		res.send({
 			msg: '查询用户失败',
-			status: -1,
+			status: 0,
 		});
 	}
 };
@@ -137,6 +137,7 @@ const deleteUser = async (req, res, next) => {
 	const { email } = req.query;
 	// 这里必须要await
 	let result = await UserModel.deleteUser(email);
+	console.log(result);
 	if (result.deletedCount != 0) {
 		res.send({
 			message: '用户删除成功！',
@@ -145,7 +146,7 @@ const deleteUser = async (req, res, next) => {
 	} else {
 		res.send({
 			message: '用户删除失败！',
-			status: -1,
+			status: 0,
 		});
 	}
 };

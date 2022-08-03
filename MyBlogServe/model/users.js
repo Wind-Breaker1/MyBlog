@@ -11,11 +11,14 @@ const UserModel = mongoose.model('user', UserSchema);
 // 新增用户
 const addUser = data => {
 	const user = new UserModel(data);
-	return user.save().then(() => true).catch(() => false);
+	return user
+		.save()
+		.then(() => true)
+		.catch(() => false);
 };
 // 更新用户信息
-const updateUserInfo = (email, password, role ) => {
-	return UserModel.updateOne({ email }, { $set: { password, role } })
+const updateUserInfo = (email, password, role) => {
+	return UserModel.updateOne({ email }, { $set: { password, role } });
 };
 // 删除用户
 const deleteUser = email => {
@@ -25,17 +28,12 @@ const deleteUser = email => {
 const getUser = email => {
 	return UserModel.findOne({ email });
 };
-// 根据用户名查找某一用户
-const findOneUser = username => {
-	return UserModel.findOne({username});
-};
 // 查询所有用户
 const getUsers = () => {
 	return UserModel.find();
 };
 module.exports = {
 	addUser,
-	findOneUser,
 	updateUserInfo,
 	getUsers,
 	deleteUser,

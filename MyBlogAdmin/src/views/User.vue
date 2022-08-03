@@ -32,21 +32,21 @@
 		</el-table>
 		<el-dialog :title="title" :visible.sync="dialogFormVisible" center>
 			<el-form :model="form">
-				<el-form-item v-if="flag" label="用户名" :label-width="formLabelWidth">
+				<el-form-item label="用户名" :label-width="formLabelWidth">
 					<el-input v-model="form.username" autocomplete="off"></el-input>
 				</el-form-item>
 				<el-form-item :label="lable" :label-width="formLabelWidth">
 					<el-input v-model="form.password" autocomplete="off"></el-input>
 				</el-form-item>
-				<el-form-item v-if="flag" label="email" :label-width="formLabelWidth">
+				<el-form-item v-show="flag" label="email" :label-width="formLabelWidth">
 					<el-input v-model="form.email" autocomplete="off"></el-input>
 				</el-form-item>
 				<el-form-item label="角色" :label-width="formLabelWidth">
 					<el-dropdown split-button @command="changeRole">
-						{{ form.role == "user" ? "普通用户" : "管理员" }}
+						{{ form.role }}
 						<el-dropdown-menu slot="dropdown">
-							<el-dropdown-item command="admin">管理员</el-dropdown-item>
-							<el-dropdown-item command="user">普通用户</el-dropdown-item>
+							<el-dropdown-item command="管理员">管理员</el-dropdown-item>
+							<el-dropdown-item command="普通用户">普通用户</el-dropdown-item>
 						</el-dropdown-menu>
 					</el-dropdown>
 				</el-form-item>
@@ -101,6 +101,7 @@ export default {
 			// 获取点击行的email
 			this.email = row.email;
 			this.form.role = row.role;
+			this.form.username = row.username;
 		},
 		changeRole(command) {
 			this.form.role = command;
@@ -126,12 +127,12 @@ export default {
 				let password = this.form.password;
 				result = await this.$store.dispatch("updateUserInfo", {
 					email: this.email,
-					password,
+					password: this.form.password,
 					role: this.form.role,
 				});
 			}
 			console.log(result);
-			if (result.status === 200) {
+			if (result === "ok") {
 				// 修改成功后清空值
 				this.form.username = "";
 				this.form.password = "";
