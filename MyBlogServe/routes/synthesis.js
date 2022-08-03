@@ -17,7 +17,7 @@ var storage = multer.diskStorage({
     cb(null, Date.now() + path.extname(file.originalname))
   }
 })
-var upload = multer({ storage: storage })
+const upload = multer({ storage: storage })
 /* GET users listing. */
 router.get('/getWebInfo', synthesisControll.getWebInfo);
 router.get('/getSliderInfo', synthesisControll.getSliderInfo);

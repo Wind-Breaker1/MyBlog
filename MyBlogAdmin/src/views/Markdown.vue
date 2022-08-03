@@ -78,10 +78,10 @@ export default {
       let _this = this;
       const formData = new FormData();
       formData.append("file", file);
-      console.log(formData);
-      console.log(pos);
-      console.log(file);
-      console.log(formData.get("file"));
+      // console.log(formData);
+      // console.log(pos);
+      // console.log(file);
+      // console.log(formData.get("file"));
       let res = await uploadImg(formData);
       if (res.status === 200) {
         _this.$refs.md.$img2Url(pos, res.url);
