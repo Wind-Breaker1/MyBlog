@@ -1,62 +1,46 @@
-import { getClassifyList, deleteClassify, compile, addclassify } from "../api/test";
-import { setClassifies,getClassifies } from '../util'
+import { getClassifies, deleteClassify, updateClassifyTitle, addClassify } from "../api/api";
+import { setClassifies, getClassifyList } from "../util";
 const state = {
-  classifies: getClassifies() || []
+	classifies: [],
 };
 const mutations = {
-  CLASSIFYLIST(state, classifies) {
-    state.classifies = classifies;
-  },
-
+	CLASSIFYLIST(state, classifies) {
+		state.classifies = classifies;
+	},
 };
 const actions = {
-  // 编辑专栏
-  async compile({ commit }, data) {
-    let result = await compile(data);
-    if (result.status == 0) {
-      return 'ok';
-    } else {
-      return result;
-    }
-  },
-  //删除专栏
-  async deleteClassify({ commit }, data) {
-    let result = await deleteClassify(data);
-    if (result.status == 0) {
-      // 本地持久化存储
-      // localStorage.setItem("TOKEN", result.data.token);
-      return 'ok';
-    } else {
-      return result;  
-    }
-  },
-  // 获取专栏列表
-  async getClassifyList({ commit }) {
-    let result = await getClassifyList();
-    if (result.status == 200) {
-      // commit('CLASSIFYLIST', result.data);
-      setClassifies(result.data);
-    } else {
-      return Promise.reject(new Error('faile'));
-    }
-  },
-  
-  async addclassify({ commit }, data) {
-    let result = await addclassify(data);
-    if (result.status == 200) {
-      return result;
-    } else {
-      return result;
-    }
-  },
-  
+	// 编辑专栏
+	async updateClassifyTitle({ commit }, data) {
+		return await updateClassifyTitle(data);
+	},
+	//删除专栏
+	async deleteClassify({ commit }, data) {
+		return await deleteClassify(data);
+	},
+	// 获取专栏列表
+	async getClassifies({ commit }) {
+		let result = await getClassifies();
+		if (result.status == 200) {
+			commit("CLASSIFYLIST", result.data);
+			setClassifies(result.data);
+		} else {
+			console.log(result);
+		}
+	},
+
+	async addClassify({ commit }, data) {
+		console.log(data);
+		return await addClassify(data);
+	},
 };
 const getters = {
-
+	classifies(state) {
+		return state.classifies;
+	},
 };
 export default {
-  state,
-  mutations,
-  actions,
-  getters,
+	state,
+	mutations,
+	actions,
+	getters,
 };

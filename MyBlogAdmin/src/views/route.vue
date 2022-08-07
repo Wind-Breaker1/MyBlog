@@ -1,5 +1,8 @@
 <template>
 	<div class="block">
+		<div class="option">
+			<el-button type="primary" size="mini" @click="addRoute" class="sub">新增路由</el-button>
+		</div>
 		<el-tree
 			class="tree"
 			:data="routeList"
@@ -9,17 +12,17 @@
 			default-expand-all
 			:expand-on-click-node="false">
 			<span class="custom-tree-node" slot-scope="{ node, data }">
-				{{ data.name }}
+				{{ data.path }}
 				<span>
-					<el-button type="text" size="mini" @click="() => updateRoute(data)"> 修改信息 </el-button>
-					<el-button type="text" size="mini" @click="() => removeRoute(node.parent.data._id, data)"> 删除路由 </el-button>
+					<el-button type="text" size="mini" @click="() => updateRoute(data)"> 路由详情 </el-button>
+					<el-button type="text" size="mini" @click="() => removeRoute(data._id)"> 删除路由 </el-button>
 				</span>
 			</span>
 		</el-tree>
-		<button @click="addRoute" class="sub">新增路由</button>
+
 		<el-dialog :title="dialogFormTitle" :visible.sync="dialogFormVisible" center>
 			<el-form :model="form">
-				<el-form-item label="新增路由等级" :label-width="formLabelWidth" v-show="dialogFormTitle === '新增路由'">
+				<!-- <el-form-item label="新增路由等级" :label-width="formLabelWidth" v-show="dialogFormTitle === '新增路由'">
 					<el-select v-model="routeLevel" placeholder="请选择" style="width: 100%">
 						<el-option label="一级路由" value="firstRoute"> </el-option>
 						<el-option label="二级路由" value="secondRoute"> </el-option>
@@ -27,7 +30,7 @@
 				</el-form-item>
 				<el-form-item label="父级路由名字" :label-width="formLabelWidth" v-show="routeLevel === 'secondRoute'">
 					<el-input v-model="parentRouteName" autocomplete="off"></el-input>
-				</el-form-item>
+				</el-form-item> -->
 				<el-form-item label="路由" :label-width="formLabelWidth">
 					<el-input v-model="form.path" autocomplete="off"></el-input>
 				</el-form-item>
@@ -69,7 +72,7 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapGetters } from "vuex";
 export default {
 	data() {
 		return {
@@ -88,15 +91,13 @@ export default {
 		};
 	},
 	computed: {
-		...mapState({
-			routeList: state => state.route.routeList || [],
-		}),
+		...mapGetters(["routeList", "routes"]),
 	},
 	mounted() {
-		this.getData("管理员");
+		this.init();
 	},
 	methods: {
-		// 重置
+		// 重置meta
 		resetFormMeta() {
 			this.metaList.forEach(item => {
 				(item.key = ""), (item.value = "");
@@ -118,9 +119,9 @@ export default {
 			console.log(this.metaList);
 		},
 		// 获取路由数据
-		async getData(role) {
-			if (this.routeList.length === 0)
-				this.$store.dispatch("getRouteList", role);
+		async init() {
+			// if (this.routeList.length === 0)
+			this.$store.dispatch("getRouteList");
 		},
 		addRoute() {
 			this.dialogFormVisible = true;
@@ -130,18 +131,18 @@ export default {
 		},
 		// 修改路由数据
 		updateRoute(data) {
-			console.log(data);
 			this.metaList = [];
 			this.form = data;
 			this.dialogFormVisible = true;
 			this.dialogFormTitle = "修改路由信息";
-			for (let item of Object.keys(data.meta)) {
-				this.metaList.push({
-					key: item,
-					value: data.meta[item],
-				});
+			if (data.meta) {
+				for (let item of Object.keys(data.meta)) {
+					this.metaList.push({
+						key: item,
+						value: data.meta[item],
+					});
+				}
 			}
-			console.log(this.dialogFormVisible);
 			// const newChild = { id: id++, label: 'testtest', children: [] };
 			// if (!data.children) {
 			// 	this.$set(data, 'children', []);
@@ -149,40 +150,63 @@ export default {
 			// data.children.push(newChild);
 		},
 		// 提交注册路由信息
-		submit() {
+		async submit() {
 			if (this.metaList.length > 0) {
 				this.metaList.forEach(item => {
 					this.form.meta[item.key] = item.value;
 				});
 				this.metaList = [];
 			}
-			let result;
+			let res;
 			if (this.dialogFormTitle === "新增路由") {
-				if (this.routeLevel === "firstRoute") {
-					result = this.$store.dispatch("addFirstRoute", { route: this.form });
-				} else {
-					result = this.$store.dispatch("addSecondRoute", { parentRouteName: this.parentRouteName, route: this.form });
-				}
+				res = await this.$store.dispatch("addFirstRoute", { route: this.form });
+				// if (this.routeLevel === "firstRoute") {
+				// 	result = this.$store.dispatch("addFirstRoute", { route: this.form });
+				// } else {
+				// }
 			} else {
-				result = this.$store.dispatch("updatRoute", { route: this.form });
+				res = await this.$store.dispatch("updatRoute", { route: this.form });
 			}
-			console.log(result);
-			if (result == "ok") {
+			if (res.status == 200) {
 				this.dialogFormVisible = false;
-				this.form = this.resetFrom();
+				this.form = this.resetForm();
+				this.$message.success(res.msg);
+			} else {
+				this.$message.error(res.msg);
 			}
 		},
-		removeRoute(_id, data) {
-			console.log(_id);
-			const obj = {};
-			if (data._id) {
-				obj._id = data._id;
-				obj.name = undefined;
-			} else {
-				obj._id = _id;
-				obj.name = data.name;
-			}
-			this.$store.dispatch("deleteRoute", obj);
+		async removeRoute(_id) {
+			this.$confirm("将永久删除该路由信息, 是否继续?", "提示", {
+				confirmButtonText: "确定",
+				cancelButtonText: "取消",
+				type: "warning",
+			})
+				.then(async () => {
+					const res = await this.$store.dispatch("deleteRoute", { _id });
+					if (res.status === 200) {
+						this.$message({
+							type: "success",
+							message: "删除成功!",
+						});
+						this.$store.dispatch("getRouteList");
+					} else {
+						this.$message.error(res.msg);
+					}
+				})
+				.catch(() => {
+					this.$message({
+						type: "info",
+						message: "已取消删除",
+					});
+				});
+			// const obj = {};
+			// if (data._id) {
+			// 	obj._id = data._id;
+			// 	obj.name = undefined;
+			// } else {
+			// 	obj._id = _id;
+			// 	obj.name = data.name;
+			// }
 		},
 		// 初始化数据
 		resetForm() {
@@ -199,25 +223,41 @@ export default {
 </script>
 
 <style scoped lang="less">
-.custom-tree-node {
-	flex: 1;
-	display: flex;
-	align-items: center;
-	justify-content: space-between;
-	font-size: 20px;
-	padding-right: 80px;
-}
-.form-meta {
-	.form-input {
-		width: 40%;
+.block {
+	overflow-y: auto;
+	/deep/ .el-tree-node {
+		height: 10vh;
+		.el-tree-node__content {
+			height: 100%;
+		}
 	}
-	.form-label,
-	.form-delete {
-		margin-left: 1%;
-		margin-right: 0.5%;
+	.option {
+		background-color: #ffffff;
+		line-height: 10vh;
+		button {
+			margin-left: 1vw;
+		}
 	}
-}
-.form-last {
-	margin-bottom: 0;
+	.custom-tree-node {
+		flex: 1;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		font-size: 20px;
+		padding-right: 80px;
+	}
+	.form-meta {
+		.form-input {
+			width: 40%;
+		}
+		.form-label,
+		.form-delete {
+			margin-left: 1%;
+			margin-right: 0.5%;
+		}
+	}
+	.form-last {
+		margin-bottom: 0;
+	}
 }
 </style>

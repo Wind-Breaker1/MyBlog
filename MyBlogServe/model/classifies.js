@@ -26,10 +26,10 @@ var getClassify = id => {
 };
 // 删除专栏
 var deleteClassify = _id => {
-	return ClassifyModel.deleteOne({ id });
+	return ClassifyModel.deleteOne({ _id });
 };
 // 更新某一专栏文章数量
-var updateClassifySum = (_id, num = 1) => {
+var updateClassifySum = (_id, num) => {
 	return ClassifyModel.updateOne({ _id }, { $inc: { articleNum: num } });
 };
 // 更新某一专栏

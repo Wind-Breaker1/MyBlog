@@ -1,23 +1,39 @@
 <template>
   <div id="nav">
-    <el-menu :default-active="select" class="navbar"
-        text-color="#aaaaaa" active-text-color="#FFFFFF" >
-        <router-link to="/bloglist">
-          <el-menu-item index="/bloglist">
-            <i class="el-icon-menu"></i>博客
-          </el-menu-item>
-        </router-link>
-        <router-link to="/jottinglist">
-          <el-menu-item index="/jottinglist">
-            <i class="el-icon-s-opportunity"></i>随笔
-          </el-menu-item>
-        </router-link>
-        <router-link to="/about">
-          <el-menu-item index="/about">
-            <i class="el-icon-user"></i>关于
-          </el-menu-item>
-        </router-link>
-      </el-menu>
+    <el-menu
+      :default-active="$route.path"
+      class="navbar"
+      text-color="#aaaaaa"
+      active-text-color="#FFFFFF"
+    >
+      <router-link to="/bloglist">
+        <el-menu-item
+          index="/bloglist"
+          :class="$route.path === '/bloglist' ? 'active' : ''"
+          @click="active = 0"
+        >
+          <i class="el-icon-menu"></i>博客
+        </el-menu-item>
+      </router-link>
+      <router-link to="/jottinglist">
+        <el-menu-item
+          index="/jottinglist"
+          :class="$route.path === '/jottinglist' ? 'active' : ''"
+          @click="active = 1"
+        >
+          <i class="el-icon-s-opportunity"></i>随笔
+        </el-menu-item>
+      </router-link>
+      <router-link to="/about">
+        <el-menu-item
+          index="/about"
+          :class="$route.path === '/about' ? 'active' : ''"
+          @click="active = 2"
+        >
+          <i class="el-icon-user"></i>关于
+        </el-menu-item>
+      </router-link>
+    </el-menu>
   </div>
 </template>
 
@@ -25,53 +41,41 @@
 export default {
   data() {
     return {
-      select: '/bloglist'
-    }
+      active: 0,
+    };
   },
-  watch:{
-    // 监听路由变化
-    $route(){
-      let {type} = this.$route.params;
-      if(type){
-        if (type === 'blog'){
-          this.select = '/bloglist'
-        } else {
-          this.select = '/jottinglist'
-        }
-      } else {
-        this.select = this.$route.path;
-      }
-    }
-  }
-}
+};
 </script>
 
 <style scoped lang="less">
-#nav{
+#nav {
   width: 15vw;
   height: 100%;
   margin-right: 1vw;
   position: sticky;
   top: 60px;
   padding-top: 5px;
-  .navbar{
+  .navbar {
     height: calc(100vh - 130px - 15vh);
-    background-color:rgba(40, 40, 40, 0.7);
-    border:0;
+    background-color: rgba(40, 40, 40, 0.7);
+    // opacity: 0.7;
+    border: 0;
     border-radius: 5px;
-    .el-menu-item{
+    .el-menu-item {
       border-radius: 5px;
     }
-    .el-menu-item:hover{
-      background-color:rgb(40, 40, 40);
+    .el-menu-item:hover {
+      background-color: rgb(40, 40, 40);
     }
-    .is-active{
-      background-color:rgb(40, 40, 40);
+    // .el-menu-item:focus {
+    //   background-color: rgb(40, 40, 40);
+    // }
+    .active {
+      background-color: rgb(40, 40, 40);
     }
   }
-  a{
+  a {
     text-decoration: none;
   }
 }
-
 </style>

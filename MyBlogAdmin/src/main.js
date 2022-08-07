@@ -2,13 +2,16 @@ import Vue from "vue";
 import App from "@/App.vue";
 import router from "@/router";
 import store from "@/store";
-import api from "@/api";
 import "element-ui/lib/theme-chalk/index.css";
 import element from "element-ui";
 import { has } from "./util/directive";
+// import { Message } from "element-ui";
+// import { Notification } from "element-ui";
+// import { MessageBox } from "element-ui";
+// Vue.prototype.$message = Message;
+// Vue.prototype.$notify = Notification;
+// Vue.prototype.$msgbox = MessageBox;
 Vue.use(element);
-Vue.use(api);
-
 new Vue({
 	router,
 	store,

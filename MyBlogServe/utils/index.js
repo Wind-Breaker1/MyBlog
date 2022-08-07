@@ -39,6 +39,15 @@ exports.date = () => {
 	return year + '-' + month + '-' + day;
 };
 // 生成随机颜色
+exports.randomColor = function () {
+	return (
+		'#' +
+		(function (color) {
+			return (color += '5678956789defdef'[Math.floor(Math.random() * 16)]) && color.length == 6 ? color : arguments.callee(color);
+		})('')
+	);
+};
+// 生成随机颜色
 exports.randomHex = () =>
 	`#${Math.floor(Math.random() * 0xffffff)
 		.toString(16)

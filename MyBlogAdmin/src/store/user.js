@@ -1,4 +1,4 @@
-import { getUserList, reqUserLogin, deleteUser, reqUserRegister, updatePassword, logout } from "../api/test";
+import { getUsers, login, deleteUser, register, getUser, updatePassword, logout, updateUserInfo } from "../api/api";
 import { setToken, getToken, clearToken, setUserInfo, getUserInfo } from "../util";
 const state = {
 	token: getToken() || "",
@@ -25,66 +25,46 @@ const mutations = {
 const actions = {
 	// 用户注册
 	async register({ commit }, user) {
-		let result = await reqUserRegister(user);
-		if (result.status == 0) {
-			return "ok";
+		return await register(user);
+	},
+	// 用户登录
+	async login({ commit }, data) {
+		let result = await login(data);
+		if (result.status == 200) {
+			setUserInfo(result.data.user);
+			setToken(result.data.token);
 		} else {
 			return result;
 		}
 	},
-	// 用户登录
-	async userLogin({ commit }, data) {
-		let result = await reqUserLogin(data);
-		if (result.status == 200) {
-			// commit('USERLOGIN', result.data.token);
-			// 本地持久化存储
-			// localStorage.setItem("TOKEN", result.data.token);
-			setUserInfo(result.data.user);
-			setToken(result.data.token);
-			console.log(result);
-			return "ok";
-		} else {
-			return Promise.reject(new Error("faile"));
-		}
-	},
 	// 获取用户列表
-	async getUserList({ commit }) {
-		let result = await getUserList();
+	async getUsers({ commit }) {
+		let result = await getUsers();
 		if (result.status == 200) {
 			commit("USERLIST", result.data);
 		} else {
-			return Promise.reject(new Error("faile"));
+			console.log(result);
 		}
 	},
 	// 删除用户
 	async deleteUser({ commit }, data) {
-		let result = await deleteUser(data);
-
-		if (result.status == 0) {
-			return "ok";
-		} else {
-			return result;
-		}
+		return await deleteUser(data);
+	},
+	// 更新用户信息
+	async updateUserInfo({ commit }, data) {
+		return await updateUserInfo(data);
 	},
 	// 更新密码
-	async updateUserInfo({ commit }, data) {
-		let result = await updatePassword(data);
-		if (result.status == 200) {
-			return "ok";
-		} else {
-			return result;
-		}
+	async updatePassword({ commit }, data) {
+		return await updatePassword(data);
 	},
-
 	// 获取用户信息
-	async getUserInfo({ commit }) {
-		let result = await reqUserInfo();
-		// console.log(result)
+	async getUser({ commit }) {
+		let result = await getUser();
 		if (result.code == 200) {
 			commit("USERINFO", result.data);
-			return "ok";
 		} else {
-			return Promise.reject(new Error("faile"));
+			return result;
 		}
 	},
 
@@ -93,13 +73,16 @@ const actions = {
 		let result = await logout();
 		if (result.status == 200) {
 			commit("CLEAR");
-			return "ok";
 		} else {
 			return result;
 		}
 	},
 };
-const getters = {};
+const getters = {
+	userList(state) {
+		return state.userList;
+	},
+};
 export default {
 	state,
 	mutations,

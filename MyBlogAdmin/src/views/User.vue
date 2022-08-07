@@ -1,5 +1,8 @@
 <template>
 	<div>
+		<div class="option">
+			<el-button type="primary" size="mini" @click="register" class="sub">新增用户</el-button>
+		</div>
 		<el-table :data="userList" style="width: 100%" height="530px">
 			<i class="add"></i>
 			<el-table-column label="注册日期" width="180">
@@ -20,28 +23,29 @@
 			</el-table-column>
 			<el-table-column label="角色" width="100">
 				<template slot-scope="scope">
-					<span style="margin-left: 10px">{{ scope.row.role == "user" ? "普通用户" : "管理员" }}</span>
+					<span style="margin-left: 10px">{{ scope.row.role }}</span>
 				</template>
 			</el-table-column>
 			<el-table-column label="操作">
 				<template slot-scope="scope">
-					<el-button size="mini" @click="handleEdit(scope.$index, scope.row)">更改信息</el-button>
-					<el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+					<el-button size="mini" @click="editUserInfo(scope.row)">更改信息</el-button>
+					<el-button size="mini" type="primary" @click="changePassword(scope.row)">修改密码</el-button>
+					<el-button size="mini" type="danger" @click="deleteUser(scope.row)">注销</el-button>
 				</template>
 			</el-table-column>
 		</el-table>
 		<el-dialog :title="title" :visible.sync="dialogFormVisible" center>
 			<el-form :model="form">
-				<el-form-item label="用户名" :label-width="formLabelWidth">
+				<el-form-item label="用户名" :label-width="formLabelWidth" v-show="flag !== 'password'">
 					<el-input v-model="form.username" autocomplete="off"></el-input>
 				</el-form-item>
-				<el-form-item :label="lable" :label-width="formLabelWidth">
+				<el-form-item :label="lable" :label-width="formLabelWidth" v-show="flag !== 'userInfo'">
 					<el-input v-model="form.password" autocomplete="off"></el-input>
 				</el-form-item>
-				<el-form-item v-show="flag" label="email" :label-width="formLabelWidth">
+				<el-form-item v-show="flag === 'register'" label="email" :label-width="formLabelWidth">
 					<el-input v-model="form.email" autocomplete="off"></el-input>
 				</el-form-item>
-				<el-form-item label="角色" :label-width="formLabelWidth">
+				<el-form-item label="角色" :label-width="formLabelWidth" v-show="flag !== 'password'">
 					<el-dropdown split-button @command="changeRole">
 						{{ form.role }}
 						<el-dropdown-menu slot="dropdown">
@@ -56,12 +60,11 @@
 				<el-button type="primary" @click="submit">确 定</el-button>
 			</div>
 		</el-dialog>
-		<button @click="register" class="addUser">添加用户</button>
 	</div>
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapGetters } from "vuex";
 export default {
 	data() {
 		return {
@@ -71,20 +74,18 @@ export default {
 				username: "",
 				password: "",
 				email: "",
-				role: "",
+				role: "普通用户",
 			},
 			formLabelWidth: "120px",
 			dialogFormVisible: false,
 			title: "",
 			lable: "",
-			flag: true,
+			flag: "",
 			email: "",
 		};
 	},
 	computed: {
-		...mapState({
-			userList: state => state.user.userList || [],
-		}),
+		...mapGetters(["userList"]),
 	},
 	mounted() {
 		//获取个人购物车数据
@@ -93,13 +94,22 @@ export default {
 	methods: {
 		//
 		// 改密码
-		handleEdit(index, row) {
+		changePassword(row) {
+			this.title = "修改密码信息";
+			this.lable = "新密码";
+			this.flag = false;
+			this.dialogFormVisible = true;
+			this.flag = "password";
+			this.form.email = row.email;
+		},
+		editUserInfo(row) {
 			this.title = "修改用户信息";
 			this.lable = "新密码";
 			this.flag = false;
 			this.dialogFormVisible = true;
+			this.flag = "userInfo";
 			// 获取点击行的email
-			this.email = row.email;
+			this.form.email = row.email;
 			this.form.role = row.role;
 			this.form.username = row.username;
 		},
@@ -107,40 +117,49 @@ export default {
 			this.form.role = command;
 		},
 		// 删除
-		handleDelete(index, row) {
+		async deleteUser(row) {
 			// 删除用户
-			this.$store.dispatch("deleteUser", { email: row.email });
+			const res = await this.$store.dispatch("deleteUser", { email: row.email });
+			if (res.status === 200) {
+				this.$message.success(res.msg);
+			} else {
+				this.$message.error(res.msg);
+			}
 			this.getData();
 		},
 		// 获取数据
 		getData() {
-			this.$store.dispatch("getUserList");
+			this.$store.dispatch("getUsers");
 		},
 		// 提交数据
 		async submit() {
-			let result;
-			if (this.flag) {
+			let res = null;
+			if (this.flag === "register") {
 				// 注册请求接口
-				result = await this.$store.dispatch("register", this.form);
-			} else {
+				res = await this.$store.dispatch("register", this.form);
+			} else if (this.flag === "userInfo") {
 				// 修改密码请求接口
-				let password = this.form.password;
-				result = await this.$store.dispatch("updateUserInfo", {
-					email: this.email,
-					password: this.form.password,
+				res = await this.$store.dispatch("updateUserInfo", {
+					email: this.form.email,
 					role: this.form.role,
+					username: this.form.username,
+				});
+			} else {
+				res = await this.$store.dispatch("updatePassword", {
+					email: this.form.email,
+					password: this.form.password,
 				});
 			}
-			console.log(result);
-			if (result === "ok") {
+			if (res.status === 200) {
 				// 修改成功后清空值
 				this.form.username = "";
 				this.form.password = "";
 				this.form.email = "";
 				this.dialogFormVisible = false;
+				this.$message.success(res.msg);
 				this.getData();
 			} else {
-				alert(result.msg);
+				this.$message.error(res.msg);
 			}
 		},
 		// 注册
@@ -149,18 +168,21 @@ export default {
 			this.lable = "密码";
 			this.flag = true;
 			this.dialogFormVisible = true;
+			this.form.username = "";
+			this.form.email = "";
+			this.form.role = "普通用户";
+			this.flag = "register";
 		},
 	},
 };
 </script>
 
-<style scoped>
-.addUser {
-	width: 100px;
-	height: 30px;
-	margin-top: 10px;
-	box-shadow: 4px 4px 10px #888888;
-	border-radius: 5%;
-	border: 0;
+<style scoped lang="less">
+.option {
+	background-color: #ffffff;
+	line-height: 10vh;
+	button {
+		margin-left: 1vw;
+	}
 }
 </style>

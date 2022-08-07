@@ -1,73 +1,62 @@
-import { getJottingList, changeJottingState, deleteJotting, addJotting, getJotting } from "../api/test";
+import { getJottings, changeJottingState, deleteJotting, addJotting, getJotting, updateJotting } from "../api/api";
 const state = {
-  jottings: [],
-  jotting: {}
+	jottings: [],
+	jotting: {},
 };
 const mutations = {
-  JOTTINGS(state, jottings) {
-    state.jottings = jottings;
-  },
-  JOTTING(state, jotting) {
-    state.jotting = jotting;
-  }
+	JOTTINGS(state, jottings) {
+		state.jottings = jottings;
+	},
+	JOTTING(state, jotting) {
+		state.jotting = jotting;
+	},
 };
 const actions = {
-  // 修改文章状态
-  async changeJottingState({ commit }, data) {
-    let result = await changeJottingState(data);
-    if (result.status == 0) {
-      return 'ok';
-    } else {
-      return result;
-    }
-  },
-  // 删除文章
-  async deleteJotting({ commit }, data) {
-    let result = await deleteJotting(data);
-    if (result.status == 0) {
-      // 本地持久化存储
-      // localStorage.setItem("TOKEN", result.data.token);
-      return 'ok';
-    } else {
-      return result;
-    }
-  },
-  // 获取文章列表
-  async getJottingList({ commit }) {
-    let result = await getJottingList();
-    if (result.status == 200) {
-      commit('JOTTINGS', result.data);
-    } else {
-      return Promise.reject(new Error('faile'));
-    }
-  },
-  // 添加随笔
-  async addJotting({ commit },data) {
-    let result = await addJotting(data);
-    if (result.status == 200) {
-      return "ok";
-    } else {
-      return Promise.reject(new Error('faile'));
-    }
-  },
-  // 获取某一随笔
-  async getJotting({ commit }, data) {
-    let result = await getJotting(data);
-    console.log(result)
-    if (result.status == 200) {
-      commit('JOTTING', result.data);
-      return 'ok'
-    } else {
-      return Promise.reject(new Error(result));
-    }
-  },
+	// 修改文章状态
+	async changeJottingState({ commit }, data) {
+		return await changeJottingState(data);
+	},
+	async updateJotting({ commit }, data) {
+		return await updateJotting(data);
+	},
+	// 删除文章
+	async deleteJotting({ commit }, data) {
+		return await deleteJotting(data);
+	},
+	// 获取文章列表
+	async getJottings({ commit }) {
+		let result = await getJottings();
+		if (result.status == 200) {
+			commit("JOTTINGS", result.data);
+		} else {
+			console.log(result);
+		}
+	},
+	// 添加随笔
+	async addJotting({ commit }, data) {
+		return await addJotting(data);
+	},
+	// 获取某一随笔
+	async getJotting({ commit }, data) {
+		let result = await getJotting(data);
+		if (result.status == 200) {
+			commit("JOTTING", result.data);
+		} else {
+			console.log(result);
+		}
+	},
 };
 const getters = {
-
+	jottings(state) {
+		return state.jottings;
+	},
+	jotting(state) {
+		return state.jotting;
+	},
 };
 export default {
-  state,
-  mutations,
-  actions,
-  getters,
+	state,
+	mutations,
+	actions,
+	getters,
 };

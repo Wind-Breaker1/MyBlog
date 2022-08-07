@@ -15,7 +15,7 @@ const BlogSchema = new mongoose.Schema({
 	digest: { type: String }, // 描述信息
 	state: { type: Boolean, default: false }, // 状态：是否发布
 });
-const BlogModel = mongoose.model('article', BlogSchema);
+const BlogModel = mongoose.model('blogs', BlogSchema);
 // 新增文章
 const addblog = data => {
 	let article = new BlogModel(data);
@@ -29,8 +29,8 @@ const addblog = data => {
 		});
 };
 // 更新博客内容
-const updateBlog = (id, { content, title, digest }) => {
-	return BlogModel.findByIdAndUpdate(id, { $set: { content, title, digest } });
+const updateBlog = (_id, { content, title, digest }) => {
+	return BlogModel.updateOne({ _id }, { $set: { content, title, digest } });
 };
 // 修改博客状态
 const changeBlogState = (state, id) => {
@@ -49,7 +49,7 @@ const getBlogs = () => {
 	return BlogModel.find();
 };
 // 查询所有已发布的博客
-const getPublishBlogs = ({ pageStart = 0, pageSize = 5 }) => {
+const getPublishBlogs = (pageStart = 0, pageSize = 5) => {
 	return BlogModel.find({ state: true }, '_id date digest favour title browse').skip(pageStart).limit(pageSize);
 };
 // 查询所有已发布的博客的数量
@@ -78,9 +78,7 @@ const searchBlogs = searchValue => {
 	return BlogModel.find({
 		$or: [{ title: { $regex: regexp } }],
 		state: true,
-	})
-		.skip(pageStart)
-		.limit(pageSize);
+	});
 };
 module.exports = {
 	addblog,

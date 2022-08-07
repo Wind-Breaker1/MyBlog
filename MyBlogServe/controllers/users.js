@@ -9,7 +9,7 @@ const register = async (req, res, next) => {
 	const Email = await UserModel.getUser(email);
 	const time = date();
 	if (!Email) {
-		let result = await UserModel.save({
+		let result = await UserModel.addUser({
 			username,
 			password: bcryptPassword,
 			email,
@@ -24,14 +24,14 @@ const register = async (req, res, next) => {
 			});
 		} else {
 			res.send({
-				msg: '注册失败',
+				msg: '注册失败了！请检查信息',
 				status: 0,
 			});
 		}
 	} else {
 		res.send({
-			msg: '此邮箱已经被注册！',
-			status: -1,
+			msg: '此邮箱已经被注册，换个邮箱吧！',
+			status: 0,
 		});
 	}
 };
@@ -61,7 +61,7 @@ const login = async (req, res, next) => {
 			});
 		} else {
 			res.send({
-				msg: '密码错误',
+				msg: '密码错误！',
 				status: 0,
 			});
 		}
@@ -101,9 +101,8 @@ const getUserState = async (req, res, next) => {
 };
 // 修改用户信息
 const updateUserInfo = async (req, res, next) => {
-	let { email, password, role } = req.body;
-	const bcryptPassword = await hash(password);
-	let result = await UserModel.updateUserInfo(email, bcryptPassword, role);
+	let { email, role, username } = req.body;
+	let result = await UserModel.updateUserInfo(email, role, username);
 	if (result.modifiedCount !== 0) {
 		res.send({
 			msg: '用户信息修改成功',
@@ -112,6 +111,23 @@ const updateUserInfo = async (req, res, next) => {
 	} else {
 		res.send({
 			msg: '用户信息修改失败',
+			status: 0,
+		});
+	}
+};
+// 修改密码
+const updatePassword = async (req, res, next) => {
+	let { email, password } = req.body;
+	const bcryptPassword = await hash(password);
+	let result = await UserModel.updatePassword(email, bcryptPassword);
+	if (result.modifiedCount !== 0) {
+		res.send({
+			msg: '密码修改成功',
+			status: 200,
+		});
+	} else {
+		res.send({
+			msg: '密码修改失败',
 			status: 0,
 		});
 	}
@@ -140,12 +156,12 @@ const deleteUser = async (req, res, next) => {
 	console.log(result);
 	if (result.deletedCount != 0) {
 		res.send({
-			message: '用户删除成功！',
+			msg: '用户注销成功！',
 			status: 200,
 		});
 	} else {
 		res.send({
-			message: '用户删除失败！',
+			msg: '用户注销失败！',
 			status: 0,
 		});
 	}
@@ -159,4 +175,5 @@ module.exports = {
 	getUsers,
 	register,
 	deleteUser,
+	updatePassword,
 };

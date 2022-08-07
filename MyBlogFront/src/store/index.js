@@ -1,25 +1,23 @@
-import Vue from 'vue'
-import Vuex from 'vuex'
+import Vue from "vue";
+import Vuex from "vuex";
 
-Vue.use(Vuex)
+Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
-    blogList: [],
-    jottingList: [],
+    blogs: [],
+    jottings: [],
     blogsOfClassify: [],
     classifies: [],
-    searchList: []
+    searchs: [],
   },
-  getters: {
-
-  },
+  getters: {},
   mutations: {
-    SAVEBLOG(state, bloglist) {
-      state.blogList = bloglist;
+    SAVEBLOG(state, blogs) {
+      state.blogs = blogs;
     },
-    SAVEJOTTING(state, jottinglist) {
-      state.jottingList = jottinglist;
+    SAVEJOTTING(state, jottings) {
+      state.jottings = jottings;
     },
     SAVEBLOGSOFCLASSIFY(state, blogsOfClassify) {
       state.blogsOfClassify = blogsOfClassify;
@@ -27,12 +25,10 @@ export default new Vuex.Store({
     SAVECLASSIFIES(state, classifies) {
       state.classifies = classifies;
     },
-    SAVESEARCHLIST(state, searchList) {
-      state.searchList = searchList;
+    SAVESEARCHLIST(state, searchs) {
+      state.searchs = searchs;
     },
   },
-  actions: {
-  },
-  modules: {
-  }
-})
+  actions: {},
+  modules: {},
+});

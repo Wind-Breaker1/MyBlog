@@ -1,91 +1,94 @@
-import { getRouteList, saveSecondRoute, updatRoute, deleteRoute, saveFirstRoute } from '../api/test';
+import { getRoutes, addSecondRoute, updatRoute, deleteRoute, addFirstRoute, getRouteList } from "../api/api";
 
 const state = {
 	routeList: [],
+	routes: [],
 };
 const mutations = {
 	ROUTELIST(state, routeList) {
 		state.routeList = routeList;
 	},
-	// USERINFO(state, info) {
-	//   state.info = info;
-	// },
-	// USERLIST(state, userlist) {
-	//   state.userList = userlist;
-	// },
-	// //清除本地数据
-	// CLEAR(state) {
-	//   state.token = '';
-	//   state.info = {};
-	//   clearToken();
-	// }
+	ROUTES(state, routes) {
+		state.routes = routes;
+	},
+	CLEARROUTES(state) {
+		state.routes = [];
+	},
 };
 const actions = {
 	// 新增一级路由
 	async addFirstRoute({ commit }, route) {
-		let result = await saveFirstRoute(route);
-		console.log(result);
-		if (result.status == 200) {
-			return 'ok';
-		} else {
-			return result;
-		}
+		return await addFirstRoute(route);
 	},
+	// 新增二级路由
 	async addSecondRoute({ commit }, route) {
-		let result = await saveSecondRoute(route);
-		console.log(result);
-		if (result.status == 200) {
-			return 'ok';
-		} else {
-			return result;
-		}
+		return await addSecondRoute(route);
 	},
 	// 更新获取路由信息
 	async updatRoute({ commit }, data) {
-		let result = await updatRoute(data);
-		console.log(result);
-		if (result.status == 200) {
-			return 'ok';
-		} else {
-			return Promise.reject(new Error('faile'));
-		}
+		return await updatRoute(data);
 	},
-	// 获取用户列表
+	//删除路由
 	async deleteRoute({ commit }, data) {
-		let result = await deleteRoute(data);
+		return await deleteRoute(data);
+	},
+	// 获取有权限路由列表
+	async getRoutes({ commit }, role) {
+		let result = await getRoutes({ role: role });
 		if (result.status == 200) {
-			commit('USERLIST', result.data);
+			commit("ROUTES", result.data);
 		} else {
-			return Promise.reject(new Error('faile'));
+			console.log(result);
 		}
 	},
-	// 获取路由信息
+	// 获取所有路由
 	async getRouteList({ commit }, role) {
-		let result = await getRouteList({ role: role });
-		console.log(result);
+		let result = await getRouteList();
 		if (result.status == 200) {
-			commit('ROUTELIST', result.data);
-			return 'ok';
+			commit("ROUTELIST", result.data);
 		} else {
-			return Promise.reject(new Error('faile'));
+			console.log(result);
 		}
+	},
+	// 清空routelist
+	clearRoutes({ commit }) {
+		commit("CLEARROUTES");
 	},
 };
+// 返回特定路由数据
 const getters = {
-	routeInfoList(state) {
-		const routeInfoList = [];
-		state.routeList.forEach(item => {
+	// 路由管理需要的路由信息和动态导航栏
+	routeList(state) {
+		// const routeList = [];
+		// state.routeList.forEach(item => {
+		// 	if (item.name) {
+		// 		routeList.push({
+		// 			id: item._id,
+		// 			path: "/admin/" + item.path,
+		// 			name: item.name,
+		// 			icon: item.meta.icon,
+		// 			limits: item.limits,
+		// 		});
+		// 	}
+		// });
+		return state.routeList;
+	},
+	// 路由拦截需要的路由信息
+	routes(state) {
+		const routes = [];
+		state.routes.forEach(item => {
 			if (item.name) {
-				routeInfoList.push({
+				routes.push({
 					id: item._id,
-					path: '/admin/' + item.path,
+					path: item.path,
 					name: item.name,
-					icon: item.meta.icon
-				})
+					component: item.component,
+					meta: item.meta,
+				});
 			}
-		})
-		return routeInfoList;
-	}
+		});
+		return routes;
+	},
 };
 export default {
 	state,

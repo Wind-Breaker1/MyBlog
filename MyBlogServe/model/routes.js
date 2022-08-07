@@ -61,9 +61,9 @@ const getRoutes = () => {
 	return RouteModel.find();
 };
 // 根据path查找路由
-// const getRouteBy = path => {
-// 	return RouteModel.findOne({ path });
-// };
+const getRouteByPath = path => {
+	return RouteModel.findOne({ path });
+};
 
 module.exports = {
 	addFirstRoute,
@@ -73,4 +73,5 @@ module.exports = {
 	deleteFirstRoute,
 	deleteSecondRoute,
 	getRoutes,
+	getRouteByPath,
 };

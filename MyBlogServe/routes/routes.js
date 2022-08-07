@@ -6,5 +6,6 @@ router.post('/addfirstroute', routeController.addFirstRoute);
 router.post('/addsecondroute', routeController.addSecondRoute);
 router.post('/updatroute', routeController.updatRoute);
 router.get('/getroutes', routeController.getRoutes);
-router.get('/deleteroute', routeController.deleteRoute);
+router.get('/getroutelist', routeController.getRouteList);
+router.delete('/deleteroute', routeController.deleteRoute);
 module.exports = router;

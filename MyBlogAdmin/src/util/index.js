@@ -18,6 +18,6 @@ export const setUserInfo = user => {
 export const getUserInfo = () => {
 	return JSON.parse(sessionStorage.getItem("userInfo"));
 };
-export const getClassifies = () => {
+export const getClassifyList = () => {
 	return JSON.parse(sessionStorage.getItem("CLASSIFIES"));
 };

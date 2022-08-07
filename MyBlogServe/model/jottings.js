@@ -29,16 +29,16 @@ const addJotting = data => {
 		});
 };
 // 更新随笔
-const updateJotting = (_id, content) => {
-	return JottingModel.updateOne({ _id }, { $set: { content } });
+const updateJotting = (_id, { content, digest, title }) => {
+	return JottingModel.updateOne({ _id }, { $set: { content, digest, title } });
 };
 // 修改随笔状态
 const changeJottingState = (state, _id) => {
 	return JottingModel.updateOne({ _id }, { $set: { state } });
 };
 // 删除随笔
-const deleteJotting = id => {
-	return JottingModel.deleteOne(id);
+const deleteJotting = _id => {
+	return JottingModel.deleteOne({ _id });
 };
 // 查询某一随笔
 const getJotting = id => {
@@ -57,7 +57,7 @@ const getJottingSums = () => {
 	return JottingModel.find({ state: true }).count();
 };
 // 增加点赞
-const addFavour = ({ _id }, favourMurmur) => {
+const addFavour = (_id, favourMurmur) => {
 	return JottingModel.updateOne({ _id }, { $push: { favour: favourMurmur } });
 };
 // 获取点赞数
@@ -65,18 +65,16 @@ const getFavour = id => {
 	return JottingModel.findById(id, 'favour');
 };
 // 增加浏览量
-const addBrowse = id => {
-	return JottingModel.updateOne(id, { $inc: { browse: 1 } });
+const addJottingBrowse = _id => {
+	return JottingModel.updateOne({ _id }, { $inc: { browse: 1 } });
 };
 //  模糊查询所有随笔
-const searchJottings = (searchValue, pageStart = 0, pageSize = 5) => {
+const searchJottings = searchValue => {
 	let regexp = new RegExp(searchValue, 'i');
 	return JottingModel.find({
 		$or: [{ title: { $regex: regexp } }],
 		state: true,
-	})
-		.skip(pageStart)
-		.limit(pageSize);
+	});
 };
 module.exports = {
 	addJotting,
@@ -87,7 +85,7 @@ module.exports = {
 	getJottings,
 	getPublishJottings,
 	getJottingSums,
-	addBrowse,
+	addJottingBrowse,
 	addFavour,
 	getFavour,
 	searchJottings,

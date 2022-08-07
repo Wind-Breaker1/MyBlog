@@ -2,7 +2,7 @@ import Vue from "vue";
 import Vuex from "vuex";
 import user from "./user";
 import classify from "./classify";
-import article from "./article";
+import article from "./blogs";
 import jotting from "./jotting";
 import route from "./route";
 Vue.use(Vuex);

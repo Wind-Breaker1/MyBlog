@@ -1,5 +1,5 @@
 <template>
-<el-table :data="Data" height="570">
+<el-table :data="jottings" height="570">
     <el-table-column
       label="提交日期"
       width="180">
@@ -29,29 +29,21 @@
         <el-button
           size="mini"
           type="danger"
-          @click="handleDelete(scope.row)">删除</el-button>
+          @click="deleteJotting(scope.row)">删除</el-button>
       </template>
     </el-table-column>
   </el-table>
 </template>
 
 <script>
-import {mapState} from 'vuex'
+import {mapGetters} from 'vuex'
 export default {
-  data() {
-      return {
-     
-      }
-    },
   mounted(){
     this.getData()
   },
   computed: {
     // 获取数据
-    ...mapState({
-      Data: state => state.jotting.jottings,
-    }),
-    
+    ...mapGetters(['jottings']),
   },
   methods: {
     // 编辑
@@ -60,17 +52,27 @@ export default {
       this.$router.push({path:"/admin/markdown", query:{type:'jotting'}})
     },
     // 删除
-    handleDelete(row) {
-      this.$store.dispatch('deleteJotting', {_id:row._id})
+    async deleteJotting(row) {
+      const res =  await this.$store.dispatch('deleteJotting', {_id:row._id})
+      if (res.status === 200) {
+        this.$message.success(res.msg);
+      } else {
+        this.$message.error(res.msg);
+      }
       this.getData();
     },
     // 获取随笔
     getData() {
-      this.$store.dispatch('getJottingList');
+      this.$store.dispatch('getJottings');
     },
     // 修改文章状态
     async handlePublish(row) {
-      await this.$store.dispatch('changeJottingState', {_id: row._id});
+      const res =   await this.$store.dispatch('changeJottingState', {_id: row._id});
+      if (res.status === 200) {
+        this.$message.success(res.msg);
+      } else {
+        this.$message.error(res.msg);
+      }
       this.getData();
     }
   }

@@ -1,15 +1,12 @@
-const ArticlesModel = require('../model/blogs');
+const BlogsModel = require('../model/blogs');
 const JottingModel = require('../model/jottings');
 const ClassifyModel = require('../model/classifies');
 var path = require('path');
-//引入path模块，用来拼接地址的
-const multipart = require('connect-multiparty');
-const multipartMiddleware = multipart();
 var fs = require('fs');
 // 获取总文章数
 const getWebInfo = async (req, res, next) => {
-	let articleNums = await ArticlesModel.articleNums();
-	let jottingNums = await JottingModel.jottingNums();
+	let articleNums = await BlogsModel.getblogSums();
+	let jottingNums = await JottingModel.getJottingSums();
 	let count = jottingNums + articleNums;
 	if (count) {
 		res.send({
@@ -25,16 +22,16 @@ const getWebInfo = async (req, res, next) => {
 	}
 };
 const getSliderInfo = async (req, res, next) => {
-	let blogList = await ArticlesModel.publishArticles({});
-	let jottingList = await JottingModel.publishJottings({});
-	let classifies = await ClassifyModel.ClassifiesList();
-	if (blogList && jottingList && classifies) {
+	let blogs = await BlogsModel.getPublishBlogs();
+	let jottings = await JottingModel.getPublishJottings();
+	let classifies = await ClassifyModel.getClassifies();
+	if (blogs && blogs && classifies) {
 		res.send({
 			msg: '信息栏查询成功',
 			status: 200,
 			data: {
-				blogList,
-				jottingList,
+				blogs,
+				jottings,
 				classifies,
 			},
 		});
@@ -47,7 +44,7 @@ const getSliderInfo = async (req, res, next) => {
 };
 const searchArticle = async (req, res) => {
 	let { searchValue } = req.query;
-	let blogs = await ArticlesModel.searchBlogs(searchValue);
+	let blogs = await BlogsModel.searchBlogs(searchValue);
 	blogs.forEach(item => {
 		item.type = 'blog';
 	});
@@ -56,7 +53,7 @@ const searchArticle = async (req, res) => {
 		item.type = 'jotting';
 	});
 	let data = [...blogs, ...jottings];
-	if (data) {
+	if (data.length > 0) {
 		res.send({
 			msg: '搜索到文章',
 			status: 200,

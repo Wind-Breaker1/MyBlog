@@ -1,44 +1,58 @@
-import Vue from 'vue'
-import VueRouter from 'vue-router'
+import Vue from "vue";
+import VueRouter from "vue-router";
 
-Vue.use(VueRouter)
+Vue.use(VueRouter);
 
 const routes = [
   {
-    path: '/bloglist',
-    component: () => import('@/views/BlogList.vue')
+    path: "/bloglist",
+    component: () => import("@/views/Blogs.vue"),
   },
   {
-    path: '/jottinglist',
-    component: () => import('@/views/JottingList.vue')
+    path: "/jottinglist",
+    component: () => import("@/views/Jottings.vue"),
   },
   {
-    path: '/about',
-    component: () => import('@/views/About.vue')
+    path: "/about",
+    component: () => import("@/views/About.vue"),
   },
   {
-    path: '/article/:type/:id',
-    component: () => import('@/views/Article.vue')
+    path: "/article/:type/:id",
+    component: () => import("@/views/Article.vue"),
   },
   {
-    path: '/search',
-    component: () => import('@/views/Search.vue')
+    path: "/search",
+    component: () => import("@/views/Search.vue"),
   },
   {
-    path: '/',
-    redirect: '/bloglist'
-  }
-  
-]
+    path: "/",
+    redirect: "/bloglist",
+  },
+];
 
 const router = new VueRouter({
-  mode: 'history',
+  mode: "history",
   base: process.env.BASE_URL,
-  routes
-})
-// 重定向不报错 
-const routerPush = VueRouter.prototype.push
+  routes,
+  scrollBehavior: (to, from, savePosition) => {
+    // return 期望滚动到哪个的位置
+    //  to：跳转到哪个页面
+    // from：来自哪个页面
+    //savePosition:位置
+    // 常规的一种做法，直接禁止滚动行为，每个页面切换时自动回到顶部
+    if (savePosition) {
+      return {
+        savePosition,
+        behavior: "smooth",
+      };
+    } else {
+      return { behavior: "smooth", y: 0 };
+    }
+  },
+});
+// 重定向不报错
+const routerPush = VueRouter.prototype.push;
 VueRouter.prototype.push = function push(location) {
-  return routerPush.call(this, location).catch(error => error)
-}
-export default router
+  return routerPush.call(this, location).catch((error) => error);
+};
+export default router;

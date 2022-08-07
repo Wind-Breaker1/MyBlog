@@ -1,30 +1,40 @@
 <template>
   <div id="header">
-    <img src="@/assets/logo.png" alt="欢迎来Meditators的博客" class="logo">
-    <el-input placeholder="请输入关键字..." v-model="searchValue" class="input-with-select">
-      <el-button slot="append" icon="el-icon-search" @click="searchArticle"></el-button>
+    <img src="@/assets/logo.png" alt="欢迎来Meditators的博客" class="logo" />
+    <el-input
+      placeholder="请输入关键字..."
+      v-model="searchValue"
+      class="input-with-select"
+    >
+      <el-button
+        slot="append"
+        icon="el-icon-search"
+        @click="searchArticle"
+      ></el-button>
     </el-input>
   </div>
 </template>
 <script>
 export default {
-  data(){
-    return{
-      searchValue: ''
-    }
+  data() {
+    return {
+      searchValue: "",
+    };
   },
-  methods:{
+  methods: {
     async searchArticle() {
-      let result = await this.$api.search({searchValue:this.searchValue});
-      this.searchValue = '';
-      this.$store.commit('SAVESEARCHLIST', result.data);
-      this.$router.push('/search');
-    }
-  }
-}
+      try {
+        this.$router.push("/search?searchValue=" + this.searchValue);
+        this.searchValue = "";
+      } catch (err) {
+        this.$message.error(err);
+      }
+    },
+  },
+};
 </script>
 <style scoped lang="less">
-#header{
+#header {
   height: 60px;
   background-color: #545c64;
   position: fixed;
@@ -34,11 +44,11 @@ export default {
   padding-right: 11vw;
   line-height: 60px;
   z-index: 100;
-  .logo{
+  .logo {
     height: 65px;
     float: left;
   }
-  .input-with-select{
+  .input-with-select {
     width: 20vw;
     margin-top: 10px;
     float: right;

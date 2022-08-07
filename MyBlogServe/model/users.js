@@ -17,8 +17,12 @@ const addUser = data => {
 		.catch(() => false);
 };
 // 更新用户信息
-const updateUserInfo = (email, password, role) => {
-	return UserModel.updateOne({ email }, { $set: { password, role } });
+const updateUserInfo = (email, role, username) => {
+	return UserModel.updateOne({ email }, { $set: { username, role } });
+};
+// 更新用户信息
+const updatePassword = (email, password) => {
+	return UserModel.updateOne({ email }, { $set: { password } });
 };
 // 删除用户
 const deleteUser = email => {
@@ -38,4 +42,5 @@ module.exports = {
 	getUsers,
 	deleteUser,
 	getUser,
+	updatePassword,
 };

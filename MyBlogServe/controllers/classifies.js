@@ -2,21 +2,22 @@ const ClassifyModel = require('../model/classifies');
 const util = require('../utils');
 // 添加新专栏
 const addClassify = async (req, res) => {
+	const { title, digest } = req.body;
 	const result = await ClassifyModel.addClassify({
 		date: util.date(),
 		title,
 		digest,
-		bgColo: util.randomHex(),
+		bgColor: util.randomColor(),
 	});
 	if (result) {
 		res.send({
-			msg: '添加专栏成功',
+			msg: '专栏添加成功',
 			status: 200,
 		});
 	} else {
 		res.send({
-			msg: '添加专栏失败！',
-			status: -1,
+			msg: '专栏添加失败！',
+			status: 0,
 		});
 	}
 };
@@ -25,14 +26,14 @@ const getClassifies = async (req, res) => {
 	const result = await ClassifyModel.getClassifies();
 	if (result) {
 		res.send({
-			msg: '查询专栏成功',
+			msg: '专栏查询成功',
 			status: 200,
 			data: result,
 		});
 	} else {
 		res.send({
-			msg: '查询专栏失败',
-			status: -1,
+			msg: '专栏查询失败',
+			status: 0,
 		});
 	}
 };
@@ -49,7 +50,7 @@ const updateClassifyTitle = async (req, res) => {
 	} else {
 		res.send({
 			msg: '专栏编辑失败',
-			status: -1,
+			status: 0,
 		});
 	}
 };
@@ -61,20 +62,20 @@ const deleteClassify = async (req, res) => {
 	const { articleNum } = article;
 	if (articleNum != 0) {
 		res.send({
-			msg: '专栏文章不为零，无法删除专栏',
-			status: -1,
+			msg: '专栏博客不为零，无法删除专栏',
+			status: 0,
 		});
 	} else {
 		const result = await ClassifyModel.deleteClassify(_id);
 		if (result.deletedCount !== 0) {
 			res.send({
-				msg: '删除专栏成功',
+				msg: '专栏删除成功',
 				status: 200,
 			});
 		} else {
 			res.send({
-				msg: '删除专栏失败！',
-				status: -1,
+				msg: '专栏删除失败！',
+				status: 0,
 			});
 		}
 	}

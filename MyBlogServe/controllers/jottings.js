@@ -40,17 +40,17 @@ const changeState = async (req, res) => {
 };
 // 修改随笔内容
 const updateJotting = async (req, res, next) => {
-	let { content, _id } = req.body;
-	let result = await JottingModel.updateJotting(_id, content);
+	let { content, _id, title, digest } = req.body;
+	let result = await JottingModel.updateJotting(_id, { content, digest, title });
 	if (result.modifiedCount !== 0) {
 		res.send({
-			msg: '修改随笔成功',
+			msg: '随笔修改成功',
 			status: 200,
 		});
 	} else {
 		res.send({
-			msg: '修改随笔失败',
-			status: -1,
+			msg: '随笔修改失败',
+			status: 0,
 		});
 	}
 };
@@ -65,7 +65,7 @@ const getJottings = async (req, res, next) => {
 		});
 	} else {
 		res.send({
-			msg: '随笔查询失败',
+			msg: '博主正在加班加点的创作中，敬请谅解！',
 			status: 0,
 		});
 	}
@@ -73,8 +73,8 @@ const getJottings = async (req, res, next) => {
 // 获取已发布文章列表
 const getPublishJottings = async (req, res, next) => {
 	let { pageStart, pageSize } = req.query;
-	let jottingList = await JottingModel.getPublishJottings({ pageStart, pageSize });
-	let count = await JottingModel.jottingNums();
+	let jottingList = await JottingModel.getPublishJottings(pageStart, pageSize);
+	let count = await JottingModel.getJottingSums();
 	if (jottingList) {
 		res.send({
 			msg: '随笔查询成功',
@@ -83,7 +83,7 @@ const getPublishJottings = async (req, res, next) => {
 		});
 	} else {
 		res.send({
-			msg: '随笔查询失败',
+			msg: '博主正在加班加点的创作中，敬请谅解！',
 			status: 0,
 		});
 	}
@@ -94,13 +94,13 @@ const getJotting = async (req, res, next) => {
 	let jotting = await JottingModel.getJotting(_id);
 	if (jotting) {
 		res.send({
-			msg: '查询随笔详情成功',
+			msg: '随笔详情查询成功',
 			status: 200,
 			data: jotting,
 		});
 	} else {
 		res.send({
-			msg: '查询随笔详情失败',
+			msg: '随笔详情查询失败',
 			status: 0,
 		});
 	}
@@ -157,6 +157,23 @@ const addFavour = async (req, res) => {
 		});
 	}
 };
+
+// 增加浏览量
+const addJottingBrowse = async (req, res) => {
+	let { _id } = req.query;
+	let addBrowse = await JottingModel.addJottingBrowse(_id);
+	if (addBrowse.modifiedCount !== 0) {
+		res.send({
+			msg: '随笔浏览量增加成功',
+			status: 200,
+		});
+	} else {
+		res.send({
+			msg: '随笔浏览量增加失败',
+			status: 0,
+		});
+	}
+};
 module.exports = {
 	getJottings,
 	deleteJotting,
@@ -167,4 +184,5 @@ module.exports = {
 	getJotting,
 	addFavour,
 	addBrowse,
+	addJottingBrowse,
 };

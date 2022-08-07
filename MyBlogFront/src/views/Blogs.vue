@@ -1,43 +1,60 @@
 <template>
-  <div >
+  <div class="blog">
     <div class="blogtip">
       <h3>博客</h3>
     </div>
-  <!-- 博客列表元素 -->
-    <el-card v-for="item in blogList" :key="item._id" :style="{marginBottom: '2vh'}" :id="item._id">
-      <div @click="blogdetail('blog',item._id)">
-        <div slot="header" >
-          <h3>{{item.title}}</h3>
+    <!-- 博客列表元素 -->
+    <el-card
+      v-for="item in blogList"
+      shadow="hover"
+      :key="item._id"
+      :style="{ marginBottom: '2vh' }"
+      :id="item._id"
+    >
+      <div @click="blogdetail('blog', item._id)">
+        <div slot="header">
+          <h3>{{ item.title }}</h3>
         </div>
         <div class="content">
           <p class="desc">
-            <span style="font-size:16px;font-weight:bold">文章简介：</span>
+            <span style="font-size: 16px; font-weight: bold">文章简介：</span>
             {{ item.digest }}
           </p>
         </div>
       </div>
       <div class="footer">
-          <span class="favour">
-            <i class="iconfont icon-icon" style="margin-right: 10px;"></i>{{item.favour.length}}
-          </span>
-          <span class="brows">
-            <i class="el-icon-view" style="margin-right: 10px;"></i>{{item.browse}}
-          </span>
-          <span class="createtime">
-            <i class="iconfont icon-rili" style="margin-right: 10px;"></i>{{item.date}}
-          </span>
-        </div>
+        <span class="favour">
+          <i class="iconfont icon-icon" style="margin-right: 10px"></i
+          >{{ item.favour.length }}
+        </span>
+        <span class="brows">
+          <i class="el-icon-view" style="margin-right: 10px"></i
+          >{{ item.browse }}
+        </span>
+        <span class="createtime">
+          <i class="iconfont icon-rili" style="margin-right: 10px"></i
+          >{{ item.date }}
+        </span>
+      </div>
     </el-card>
     <!-- 分页 -->
     <div class="paginationWrap">
-      <el-pagination background layout="prev, pager, next" :total="count" class="pagination" :page-size="pageSize"  @current-change="handleCurrentChange" :hide-on-single-page="true">
+      <el-pagination
+        background
+        layout="prev, pager, next"
+        :total="count"
+        class="pagination"
+        :page-size="pageSize"
+        @current-change="handleCurrentChange"
+        :hide-on-single-page="true"
+      >
       </el-pagination>
     </div>
   </div>
 </template>
 
 <script>
-import {mapState} from 'vuex';
+import { mapState } from "vuex";
 export default {
   data() {
     return {
@@ -50,60 +67,58 @@ export default {
       // 页数
       page: 1,
       // 当前分页开始
-      pageStart: 0
-    }
+      pageStart: 0,
+    };
   },
   mounted() {
-    this.getBlogList(this.pageStart, this.pageSize)
+    this.getBlogs(this.pageStart, this.pageSize);
+  },
+  computed: {
+    ...mapState(["blogs"]),
   },
   watch: {
-    $route(){
-      if(this.$route.query.classification){
-        this.getBlogList()
+    $route() {
+      if (this.$route.query.classification) {
+        this.getBlogs();
       }
-    }
+    },
   },
   methods: {
     // 换页回调
     handleCurrentChange(val) {
       this.pageStart = this.pageSize * (val - 1);
-      this.getBlogList(this.pageStart, this.pageSize)
+      this.getBlogs(this.pageStart, this.pageSize);
     },
+
     // 获取博客列表数据
-    async getBlogList(pageStart, pageSize) {
+    async getBlogs(pageStart, pageSize) {
       try {
-        let {blogList} = {...mapState(['blogList'])};
         // 获取博客列表
         let res = null;
-        let {classification, type} = this.$route.query;
+        let { classification, type } = this.$route.query;
         // 判断发什么请求博客
-        if (type === 'blog'){
-          if (pageStart === 0 && blogList.length) {
-            this.blogList = blogList;
-            return ;
-          } else {
-            res = await this.$api.getBlogsOfClassify({classification});
-          }
+        if (type === "blog") {
+          res = await this.$api.getBlogsOfClassify({ classification });
         } else {
-          res = await this.$api.getArticleList({pageStart, pageSize});
+          res = await this.$api.getPublishBlogs({ pageStart, pageSize });
         }
         if (res.status === 200) {
           this.blogList = res.data.blogList;
           this.count = res.data.count;
           if (pageStart === 0) {
-            this.$store.commit('SAVEBLOG', res.data.blogList.slice(0,3));
+            this.$store.commit("SAVEBLOG", res.data.blogList.slice(0, 3));
           }
         } else {
-          this.$message.error('网络出错了,(ノへ￣、)！');
+          this.$message.error(res.msg);
         }
-      } catch (error) {
-        this.$message.error(error);
+      } catch (err) {
+        this.$message.error(err);
       }
     },
     // 获取博客详情
-    async blogdetail(type, _id) {
+    blogdetail(type, _id) {
       try {
-        // await this.$api.addBrowse({_id});
+        this.$api.addBlogBrowse({ _id });
         this.$router.push(`/article/${type}/${_id}`);
       } catch (error) {
         this.$message.error(error);
@@ -131,20 +146,14 @@ export default {
     //       this.$refs.md.$img2Url(pos, data.data.file.url)
     //   })
     // },
-  }
-
-}
+  },
+};
 </script>
 
 <style lang="less" scoped>
-.bloglist{
-  flex:1;
-  background-color: rgba(255, 255, 255, 0.7);
-  margin-top: 5px;
-  margin-bottom: 10px;
-  border-radius: 5px;
-  min-height: 100vh;
-  .blogtip{
+.blog {
+  animation: animate 2s;
+  .blogtip {
     // height: 8vh;
     line-height: 8vh;
     text-align: center;
@@ -153,21 +162,22 @@ export default {
     border-radius: 5px;
     margin-bottom: 2vh;
   }
-  .desc{
+  .desc {
     display: block;
     height: 10vh;
     text-overflow: ellipsis;
   }
-  .footer{
+  .footer {
     height: 4vh;
     color: gray;
     line-height: 4vh;
-    .favour, .brows{
+    .favour,
+    .brows {
       float: left;
       width: 100px;
     }
-    .createtime{
-      float:right;
+    .createtime {
+      float: right;
     }
   }
   .paginationWrap {
@@ -178,5 +188,14 @@ export default {
     }
   }
 }
-
+@keyframes animate {
+  0% {
+    opacity: 0;
+    transform: translateY(100px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
 </style>

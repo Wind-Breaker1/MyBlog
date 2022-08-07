@@ -4,8 +4,8 @@
     <div id="mainContainer">
       <Slideshow></Slideshow>
       <Nav></Nav>
-      <div class="bloglist" >
-        <router-view class="router_content"></router-view>
+      <div class="main-content">
+        <router-view></router-view>
       </div>
       <SiderInfo />
     </div>
@@ -13,19 +13,19 @@
   </div>
 </template>
 <script>
-import SiderInfo from '@/components/SiderInfo.vue'
-import Header from '@/components/Header.vue'
-import Nav from '@/components/Nav.vue'
-import Footer from '@/components/Footer.vue'
-import Slideshow from '@/components/Slideshow.vue'
-import {createFingerprint} from '@/util'
-import Fingerprint2 from 'fingerprintjs2'
+import SiderInfo from "@/components/SiderInfo.vue";
+import Header from "@/components/Header.vue";
+import Nav from "@/components/Nav.vue";
+import Footer from "@/components/Footer.vue";
+import Slideshow from "@/components/Slideshow.vue";
+import { createFingerprint } from "@/util";
+import Fingerprint2 from "fingerprintjs2";
 export default {
   data() {
     return {
-      activeIndex: '1',
-      activeIndex2: '1',
-      input3 :''
+      activeIndex: "1",
+      activeIndex2: "1",
+      input3: "",
     };
   },
   components: {
@@ -33,58 +33,50 @@ export default {
     Header,
     Nav,
     Footer,
-    Slideshow
+    Slideshow,
   },
-  mounted(){
+  mounted() {
     this.createBrowseID();
   },
   methods: {
     // 创建浏览ID
     createBrowseID() {
       // 如果未创建
-      if (!localStorage.getItem('browserId')) {
+      if (!localStorage.getItem("browserId")) {
         createFingerprint();
       }
-    }
-  	
-  }
-}
+    },
+  },
+};
 </script>
-<style lang="less" >
-*{
+<style lang="less">
+* {
   padding: 0;
   margin: 0;
 }
 
-  #mainContainer {
-    background: url('@/assets/img/meinv.jpg') no-repeat;
-    background-size: 100% 100%;
-    background-attachment:fixed;
-    width: 100%;
-    margin-top: 60px;
-    box-sizing: border-box;
-    padding-left: 10%;
-    padding-right: 10%;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    .bloglist{
-      flex:1;
-      background-color: rgba(255, 255, 255, 0.7);
-      margin-top: 5px;
-      margin-bottom: 10px;
-      border-radius: 5px;
-      min-height: 100vh;
-    }
+#mainContainer {
+  background: url("@/assets/img/meinv.jpg") no-repeat;
+  background-size: 100% 100%;
+  background-attachment: fixed;
+  width: 100%;
+  margin-top: 60px;
+  box-sizing: border-box;
+  padding-left: 10%;
+  padding-right: 10%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  .main-content {
+    flex: 1;
+    background-color: rgba(255, 255, 255, 0.7);
+    margin-top: 5px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    min-height: 100vh;
   }
-.router_content {
-    animation: animate 2s;
 }
 
-@keyframes animate {
-    0% { opacity: 0; transform: translateY(100px);}
-    100% { opacity: 1; transform: translateY(0);}
-}
 ::-webkit-scrollbar {
   /*滚动条整体样式*/
   width: 8px;
