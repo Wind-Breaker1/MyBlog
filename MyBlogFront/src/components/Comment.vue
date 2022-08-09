@@ -10,6 +10,7 @@
         v-model="context"
         class="input-with-select"
         type="textarea"
+        resize="none"
         size="mini"
         :maxlength="150"
         @focus="isShowReply(undefined)"
@@ -51,7 +52,7 @@
             >
             <i
               class="el-icon-delete"
-              @click="deleteCommentc(item._id, undefined)"
+              @click="deleteComment(item._id, undefined)"
               v-if="murmur === item.murmur"
             >
               删除</i
@@ -108,7 +109,7 @@
                 >
                 <i
                   class="el-icon-delete"
-                  @click="deleteCommentc(item._id, reply._id)"
+                  @click="deleteComment(item._id, reply._id)"
                   v-if="murmur === reply.murmur"
                   >删除</i
                 >
@@ -154,7 +155,7 @@
 <script>
 export default {
   props: {
-    blogId: {
+    keyId: {
       type: String,
     },
   },
@@ -172,63 +173,67 @@ export default {
       murmur: localStorage.getItem("browserId"),
     };
   },
-  // watch: {
-  //   // 监听到父组件传递过来的数据后，加工一下，
-  //   // 存到data中去，然后在页面上使用
-  //   blogId(newvalue, oldvalue) {
-  //     if (newvalue !== oldvalue) {
-  //       this.getComment();
-  //     }
-  //   },
-  // },
-  // created(){
-
-  // },
   mounted() {
     this.getCommentList();
   },
   methods: {
-    handleNodeClick(data) {
-      console.log(data);
-    },
     // 获取本篇文章所有评论
     async getCommentList() {
-      const res = await this.$api.getComments({ id: this.blogId });
-      this.comment = res.data;
+      try {
+        let res = null;
+        this.comment = [];
+        console.log(this.keyId);
+        if (this.keyId == "messageBoard") {
+        } else {
+          res = await this.$api.getComments({ id: this.blogId });
+        }
+        this.comment = res.data;
+      } catch (err) {
+        this.$message.error(err);
+      }
     },
     // 评论点赞
     async giveALike(replyId, _id) {
-      let res = null;
-      if (replyId) {
-        if (
-          this.comment
-            .find((item) => item._id === _id)
-            .replyInfo.find((item) => item._id === replyId)
-            .favour.includes(this.murmur)
-        ) {
-          alert("您已经点过赞了！");
-          return;
+      try {
+        let res = null;
+        if (replyId) {
+          if (
+            this.comment
+              .find((item) => item._id === _id)
+              .replyInfo.find((item) => item._id === replyId)
+              .favour.includes(this.murmur)
+          ) {
+            this.$message.info("您已经点过赞啦！");
+            return;
+          }
+          res = await this.$api.addsecondfavour({
+            replyId,
+            _id,
+            favourMurmur: this.murmur,
+          });
+        } else {
+          if (
+            this.comment
+              .find((item) => item._id === _id)
+              .favour.includes(this.murmur)
+          ) {
+            this.$message.info("您已经点过赞啦！");
+            return;
+          }
+          res = await this.$api.addfirstfavour({
+            _id,
+            favourMurmur: this.murmur,
+          });
         }
-        res = await this.$api.addsecondfavour({
-          replyId,
-          _id,
-          favourMurmur: this.murmur,
-        });
-      } else {
-        if (
-          this.comment
-            .find((item) => item._id === _id)
-            .favour.includes(this.murmur)
-        ) {
-          alert("您已经点过赞了！");
-          return;
+        if (res.status === 200) {
+          this.$message.success(res.msg);
+        } else {
+          this.$message.error(res, msg);
         }
-        res = await this.$api.addfirstfavour({
-          _id,
-          favourMurmur: this.murmur,
-        });
+        this.getCommentList();
+      } catch (err) {
+        this.$message.error(err);
       }
-      this.getCommentList();
     },
     // // 一级评论点赞
     // async giveALikeForFirst(replyId,_id) {
@@ -250,10 +255,18 @@ export default {
         this.isShow = this.isClickId = "";
       }
     },
-    async deleteCommentc(_id, replyId) {
+    async deleteComment(_id, replyId) {
       let res = null;
-      if (replyId) res = await this.$api.deletesecondcomment({ replyId, _id });
-      else res = await this.$api.deletefirstcomment({ _id });
+      if (replyId) {
+        res = await this.$api.deletesecondcomment({ replyId, _id });
+      } else {
+        res = await this.$api.deletefirstcomment({ _id });
+      }
+      if (res.status === 200) {
+        this.$message.success(res.msg);
+      } else {
+        this.$message.error(res, msg);
+      }
       this.getCommentList();
     },
     async addComment(id, replyId) {
@@ -277,6 +290,11 @@ export default {
           murmur: this.murmur,
         });
         this.context = "";
+      }
+      if (res.status === 200) {
+        this.$message.success(res.msg);
+      } else {
+        this.$message.error(res, msg);
       }
       this.isShow = this.isClickId = this.replyName = "";
       this.getCommentList();

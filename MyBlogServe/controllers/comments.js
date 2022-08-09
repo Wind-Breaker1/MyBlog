@@ -16,13 +16,13 @@ const addFirstComment = async (req, res, next) => {
 	});
 	if (result) {
 		res.send({
-			msg: '评论添加成功',
+			msg: '评论成功',
 			status: 200,
 			data: result,
 		});
 	} else {
 		res.send({
-			msg: '评论添加失败！',
+			msg: '评论失败！',
 			status: 0,
 		});
 	}
@@ -43,13 +43,13 @@ const addSecondComment = async (req, res, next) => {
 	});
 	if (result.modifiedCount !== 0) {
 		res.send({
-			msg: '评论添加成功',
+			msg: '评论成功',
 			status: 200,
 			data: result,
 		});
 	} else {
 		res.send({
-			msg: '评论添加失败！',
+			msg: '评论失败！',
 			status: 0,
 		});
 	}

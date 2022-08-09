@@ -54,12 +54,12 @@ const addSecondFavour = async (_id, replyId, favourMurmur) => {
 	return CommentModel.updateOne({ _id, replyInfo: { $elemMatch: { _id: replyId } } }, { $push: { 'replyInfo.$.favour': favourMurmur } });
 };
 // 删除一级评论
-const deleteFirstComment = id => {
-	return CommentModel.deleteOne(id);
+const deleteFirstComment = _id => {
+	return CommentModel.deleteOne({ _id });
 };
 // 删除次级评论
-const deleteSecondComment = (id, replyId) => {
-	return CommentModel.updateOne(id, { $pull: { replyInfo: { _id: replyId } } });
+const deleteSecondComment = (_id, replyId) => {
+	return CommentModel.updateOne({ _id }, { $pull: { replyInfo: { _id: replyId } } });
 };
 // 查询所有评论
 const getComments = _id => {

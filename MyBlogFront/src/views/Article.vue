@@ -25,7 +25,7 @@
       previewBackground="background-color: rgba(255, 255, 255, 0.7);"
       style="min-height: 100vh; z-index: 90"
     />
-    <Comment :blogId="this.article._id" v-if="content.length !== 0"></Comment>
+    <Comment :keyId="this.article._id"></Comment>
   </div>
 </template>
 

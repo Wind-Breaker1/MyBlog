@@ -52,24 +52,24 @@ export const getComments = (params) =>
 
 // 一级评论点赞
 export const addfirstfavour = (params) =>
-  requests.get("/comment/addfirstfavour", { params });
+  requests.get("/comments/addfirstfavour", { params });
 
 // 二级评论点赞
 export const addsecondfavour = (params) =>
-  requests.get("/comment/addsecondfavour", { params });
+  requests.get("/comments/addsecondfavour", { params });
 
 // 新增一级评论
 export const addfirstcomment = (data) =>
-  requests.post("/comment/addfirstcomment", data);
+  requests.post("/comments/addfirstcomment", data);
 
 // 新增二级评论
 export const addsecondcomment = (data) =>
-  requests.post("/comment/addsecondcomment", data);
+  requests.post("/comments/addsecondcomment", data);
 
 // 删除一级评论
 export const deletefirstcomment = (params) =>
-  requests.delete("/comment/deletefirstcomment", { params });
+  requests.delete("/comments/deletefirstcomment", { params });
 
 // 删除二级评论
 export const deletesecondcomment = (params) =>
-  requests.delete("/comment/deletesecondcomment", { params });
+  requests.delete("/comments/deletesecondcomment", { params });

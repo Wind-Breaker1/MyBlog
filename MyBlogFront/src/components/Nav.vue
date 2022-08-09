@@ -7,29 +7,27 @@
       active-text-color="#FFFFFF"
     >
       <router-link to="/bloglist">
-        <el-menu-item
-          index="/bloglist"
-          :class="$route.path === '/bloglist' ? 'active' : ''"
-          @click="active = 0"
-        >
+        <el-menu-item index="/bloglist">
           <i class="el-icon-menu"></i>博客
         </el-menu-item>
       </router-link>
       <router-link to="/jottinglist">
-        <el-menu-item
-          index="/jottinglist"
-          :class="$route.path === '/jottinglist' ? 'active' : ''"
-          @click="active = 1"
-        >
-          <i class="el-icon-s-opportunity"></i>随笔
+        <el-menu-item index="/jottinglist">
+          <i class="el-icon-s-opportunity"></i>心情日记
+        </el-menu-item>
+      </router-link>
+      <router-link to="/messageboard">
+        <el-menu-item index="/messageboard">
+          <i class="el-icon-user"></i>留言板
+        </el-menu-item>
+      </router-link>
+      <router-link to="/timeclue">
+        <el-menu-item index="/timeclue">
+          <i class="el-icon-user"></i>小站时间线
         </el-menu-item>
       </router-link>
       <router-link to="/about">
-        <el-menu-item
-          index="/about"
-          :class="$route.path === '/about' ? 'active' : ''"
-          @click="active = 2"
-        >
+        <el-menu-item index="/about">
           <i class="el-icon-user"></i>关于
         </el-menu-item>
       </router-link>
@@ -58,7 +56,6 @@ export default {
   .navbar {
     height: calc(100vh - 130px - 15vh);
     background-color: rgba(40, 40, 40, 0.7);
-    // opacity: 0.7;
     border: 0;
     border-radius: 5px;
     .el-menu-item {
@@ -70,7 +67,7 @@ export default {
     // .el-menu-item:focus {
     //   background-color: rgb(40, 40, 40);
     // }
-    .active {
+    .is-active {
       background-color: rgb(40, 40, 40);
     }
   }

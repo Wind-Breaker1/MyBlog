@@ -25,6 +25,14 @@ const routes = [
     component: () => import("@/views/Search.vue"),
   },
   {
+    path: "/timeclue",
+    component: () => import("@/views/TimeClue.vue"),
+  },
+  {
+    path: "/messageboard",
+    component: () => import("@/views/MessageBoard.vue"),
+  },
+  {
     path: "/",
     redirect: "/bloglist",
   },
