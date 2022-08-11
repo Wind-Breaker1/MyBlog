@@ -18,12 +18,12 @@
       </router-link>
       <router-link to="/messageboard">
         <el-menu-item index="/messageboard">
-          <i class="el-icon-user"></i>留言板
+          <i class="el-icon-chat-dot-round"></i>留言板
         </el-menu-item>
       </router-link>
       <router-link to="/timeclue">
         <el-menu-item index="/timeclue">
-          <i class="el-icon-user"></i>小站时间线
+          <i class="el-icon-stopwatch"></i>小站时间线
         </el-menu-item>
       </router-link>
       <router-link to="/about">

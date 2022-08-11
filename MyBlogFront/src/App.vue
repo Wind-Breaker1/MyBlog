@@ -4,9 +4,9 @@
     <div id="mainContainer">
       <Slideshow></Slideshow>
       <Nav></Nav>
-      <div class="main-content">
-        <router-view></router-view>
-      </div>
+      <!-- <div class="main-content"> -->
+      <router-view class="main-content"></router-view>
+      <!-- </div> -->
       <SiderInfo />
     </div>
     <Footer></Footer>

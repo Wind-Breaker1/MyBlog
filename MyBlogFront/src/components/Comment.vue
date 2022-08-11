@@ -6,21 +6,21 @@
         :size="40"
       ></el-avatar>
       <el-input
-        placeholder="请输入最多150字的评论..."
+        :placeholder="placeholderText"
         v-model="context"
         class="input-with-select"
         type="textarea"
         resize="none"
         size="mini"
-        :maxlength="150"
+        :maxlength="contentLength"
         @focus="isShowReply(undefined)"
       >
       </el-input>
       <el-button
         type="info"
         style="height: 40px"
-        @click="addComment(blogId, undefined)"
-        >评论</el-button
+        @click="addComment(keyId, undefined)"
+        >{{ buttonText }}</el-button
       >
     </div>
     <div class="comment-body" v-for="item in comment" :key="item._id">
@@ -146,16 +146,25 @@
       </el-pagination>
     </div>
     <!-- 暂无评论的空状态 -->
-    <el-empty
-      description="暂无评论，期待您的评论"
-      v-show="comment.length === 0"
-    ></el-empty>
+    <el-empty :description="emptyText" v-show="comment.length === 0"></el-empty>
   </div>
 </template>
 <script>
 export default {
   props: {
     keyId: {
+      type: String,
+    },
+    emptyText: {
+      type: String,
+    },
+    buttonText: {
+      type: String,
+    },
+    contentLength: {
+      type: Number,
+    },
+    placeholderText: {
       type: String,
     },
   },
@@ -185,7 +194,7 @@ export default {
         console.log(this.keyId);
         if (this.keyId == "messageBoard") {
         } else {
-          res = await this.$api.getComments({ id: this.blogId });
+          res = await this.$api.getComments({ id: this.keyId });
         }
         this.comment = res.data;
       } catch (err) {
@@ -196,16 +205,17 @@ export default {
     async giveALike(replyId, _id) {
       try {
         let res = null;
+        const temp = null;
         if (replyId) {
-          if (
-            this.comment
-              .find((item) => item._id === _id)
-              .replyInfo.find((item) => item._id === replyId)
-              .favour.includes(this.murmur)
-          ) {
+          // 暂存favour
+          temp = this.comment
+            .find((item) => item._id === _id)
+            .replyInfo.find((item) => item._id === replyId).favour;
+          if (temp.includes(this.murmur)) {
             this.$message.info("您已经点过赞啦！");
             return;
           }
+          console.log(temp);
           res = await this.$api.addsecondfavour({
             replyId,
             _id,
@@ -227,10 +237,11 @@ export default {
         }
         if (res.status === 200) {
           this.$message.success(res.msg);
+          temp.push(this.murmur);
+          // this.replyName
         } else {
           this.$message.error(res, msg);
         }
-        this.getCommentList();
       } catch (err) {
         this.$message.error(err);
       }

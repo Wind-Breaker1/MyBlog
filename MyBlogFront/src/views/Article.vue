@@ -25,7 +25,13 @@
       previewBackground="background-color: rgba(255, 255, 255, 0.7);"
       style="min-height: 100vh; z-index: 90"
     />
-    <Comment :keyId="this.article._id"></Comment>
+    <Comment
+      :keyId="$route.params.id"
+      emptyText="期待您的评论！"
+      buttonText="评论"
+      :contentLength="150"
+      placeholderText="请输入最多150字的评论..."
+    ></Comment>
   </div>
 </template>
 

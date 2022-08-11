@@ -63,6 +63,7 @@ const deleteSecondComment = (_id, replyId) => {
 };
 // 查询所有评论
 const getComments = _id => {
+	console.log(_id);
 	return CommentModel.find({ articleId: _id });
 };
 
