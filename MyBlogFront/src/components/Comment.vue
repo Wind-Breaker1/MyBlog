@@ -3,22 +3,16 @@
 		<div class="comment-header">
 			<div @click="uploadAvatar">
 				<input type="file" id="avatarInput" />
-				<el-avatar :src="avatar ? avatar : 'https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png'" :size="40"></el-avatar>
+				<el-avatar :src="avatar ? avatar : 'https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png'"
+					:size="40"></el-avatar>
 			</div>
 
-			<el-input
-				:placeholder="placeholderText"
-				v-model="context"
-				class="input-with-select"
-				type="textarea"
-				resize="none"
-				size="mini"
-				:maxlength="contentLength"
-				@focus="isShowSecReply(undefined)">
+			<el-input :placeholder="placeholderText" v-model="context" class="input-with-select" type="textarea" resize="none"
+				size="mini" :maxlength="contentLength" @focus="isShowSecReply(undefined)">
 			</el-input>
 			<el-button type="info" style="height: 40px" @click="submitInfo(keyId, undefined)">{{ buttonText }}</el-button>
 		</div>
-		<div class="comment-body" v-for="item in comment" :key="item._id">
+		<div class="comment-body" v-for="(item, index) in comments" :key="item.murmur + '' + index">
 			<!-- 一级评论 -->
 			<div class="first-comment">
 				<el-avatar :size="40"></el-avatar>
@@ -33,19 +27,21 @@
 					</p>
 					<!-- 一级评论评论点赞 -->
 					<div class="comment-right">
-						<i class="iconfont icon-icon" @click="giveALike(undefined, item._id)"> {{ item.favour.length }}</i>
-						<i class="el-icon-chat-dot-round" @click="isShowSecReply(item._id, item.username)"> 回复</i>
+						<i class="iconfont icon-icon" @click="giveALike(item, item._id)"
+							:class="item.favour.includes(murmur) ? 'active' : ''"></i>{{ item.favour.length }}
+						<i class="el-icon-chat-dot-round" @click="isShowSecReply(item._id)"> 回复</i>
 						<i class="el-icon-delete" @click="deleteComment(item._id, undefined)" v-if="murmur === item.murmur"> 删除</i>
 					</div>
 					<!-- 回复一级评论 -->
 					<div class="reply-comment" v-show="isShowSec === item._id">
 						<el-input placeholder="请输入最多150字的评论...." v-model="replyContext" :maxlength="150"> </el-input>
-						<el-button type="info" size="mini" class="reply-button" @click="submitInfo(item._id, item._id)">回复</el-button>
+						<el-button type="info" size="mini" class="reply-button" @click="submitInfo(item._id, item.username)">回复
+						</el-button>
 					</div>
 					<!-- 次级评论 -->
-					<div class="second-comment" v-for="reply in item.replyInfo" :key="reply._id">
+					<div class="second-comment" v-for="(reply, index) in item.replyInfo" :key="reply.murmur + '' + index">
 						<!-- 次级评论头像,该用户没有头像则显示默认头像 -->
-						<el-avatar :size="40"></el-avatar>
+						<el-avatar :size="40" :src="reply.avatar"></el-avatar>
 						<div class="content">
 							<!-- 次级评论用户昵称 -->
 							<h3>{{ reply.username }}</h3>
@@ -55,19 +51,22 @@
 							<p style="padding-right: 30px">
 								<span class="to_reply">{{ reply.username }}</span>
 								回复
-								<span class="to_reply">{{ reply.replyname }}</span
-								>：
+								<span class="to_reply">{{ reply.replyName }}</span>：
 								{{ reply.reply }}
 							</p>
 							<!-- 次级评论评论点赞 -->
 							<div class="comment-right">
-								<i class="iconfont icon-icon" @click="giveALike(reply._id, item._id)">{{ reply.favour ? reply.favour.length : 0 }}</i>
-								<i class="el-icon-chat-dot-round" @click="isShowSecReply(reply._id, reply.username)">回复</i>
-								<i class="el-icon-delete" @click="deleteComment(item._id, reply._id)" v-if="murmur === reply.murmur">删除</i>
+								<i class="iconfont icon-icon" @click="giveALike(reply, item._id)"
+									:class="reply.favour.includes(murmur) ? 'active' : ''">{{ reply.favour ? reply.favour.length : 0
+									}}</i>
+								<i class="el-icon-chat-dot-round" @click="isShowSecReply(reply._id)">回复</i>
+								<i class="el-icon-delete" @click="deleteComment(item._id, reply._id)"
+									v-if="murmur === reply.murmur">删除</i>
 							</div>
 							<div class="reply-comment" v-show="isShowSec === reply._id">
 								<el-input placeholder="请输入最多150字的评论...." v-model="replyContext" :maxlength="150"> </el-input>
-								<el-button type="info" size="mini" class="reply-button" @click="submitInfo(item._id, reply._id)">回复</el-button>
+								<el-button type="info" size="mini" class="reply-button" @click="submitInfo(item._id, reply.username)">回复
+								</el-button>
 							</div>
 						</div>
 					</div>
@@ -76,24 +75,15 @@
 		</div>
 		<!-- 页码 -->
 		<div class="pagenation">
-			<el-pagination background layout="prev, pager, next" :total="10" :hide-on-single-page="true" :page-size="pageSize"> </el-pagination>
+			<el-pagination background layout="prev, pager, next" :total="10" :hide-on-single-page="true"
+				:page-size="pageSize"> </el-pagination>
 		</div>
-		<!-- 第一次须填写信息 -->
-		<!-- <el-dialog :visible.sync="dialogVisible" width="30%" center>
-			<el-input v-model="username" placeholder="请输入用户名"></el-input>
-			<el-input type="file" v-model="avatar"></el-input>
-			<span slot="footer" class="dialog-footer">
-				<el-button @click="dialogVisible = false">取 消</el-button>
-				<el-button type="primary" @click="dialogVisible = false">确 定</el-button>
-			</span>
-		</el-dialog> -->
-
 		<!-- 暂无评论的空状态 -->
-		<el-empty :description="emptyText" v-show="comment.length === 0"></el-empty>
+		<el-empty :description="emptyText" v-show="comments.length === 0"></el-empty>
 	</div>
 </template>
 <script>
-import { pressImg, toBolb } from '../util';
+import { pressImg, toBolb, time } from '../util';
 export default {
 	props: {
 		keyId: {
@@ -114,7 +104,7 @@ export default {
 	},
 	data() {
 		return {
-			comment: [], // 获取得到的评论
+			comments: [], // 获取得到的评论
 			context: '', // 评论内容
 			replyContext: '', //一级评论回复
 			// Reply: '',// 次级评论回复
@@ -130,7 +120,6 @@ export default {
 			pageStart: 0,
 			username: '',
 			avatar: '',
-			dialogVisible: false,
 		};
 	},
 	mounted() {
@@ -145,7 +134,6 @@ export default {
 		uploadAvatar(e) {
 			const input = document.querySelector('#avatarInput');
 			input.click();
-			console.log(input);
 			const maxSize = 2 * 1024 * 1024;
 			this.loading = true;
 			const file = Array.prototype.slice.call(input.target.files)[0];
@@ -165,7 +153,6 @@ export default {
 							const formdata = new FormData();
 							formdata.append('file', blob);
 							const res = await this.$api.uploadImg(formdata);
-							console.log(res);
 						}
 					};
 				} else {
@@ -174,40 +161,37 @@ export default {
 					formdata.append('file', blob);
 					formdata.append('murmur', this.murmur);
 					const res = await this.$api.uploadImg(formdata);
-					console.log(res);
 				}
 			};
 		},
-		submitInfo(id, replyId) {
-			this.dialogVisible = !this.dialogVisible;
+		submitInfo(id, replyName) {
 			if (!this.username) {
 				this.$prompt('请输入用户名', {
 					confirmButtonText: '确定',
 					cancelButtonText: '取消',
-				})
-					.then(username => {
-						this.addComment(id, replyId, username.value);
-						this.$api.addMurmur({
-							murmur: this.murmur,
-							username: username.value,
-							avatar,
-						});
+				}).then(username => {
+					this.$api.addMurmur({
+						murmur: this.murmur,
+						username: username.value,
+					}).then((res) => {
+						this.addComment(id, replyName);
+						this.username = res.data.username;
 					})
-					.catch(() => {
-						this.$message({
-							type: 'info',
-							message: '取消输入',
-						});
+				}).catch(() => {
+					this.$message({
+						type: 'info',
+						message: '取消输入',
 					});
-			} else {
-				this.addComment(id, replyId, this.username);
+				});
+			} else{
+				this.addComment(id, replyName);
 			}
 		},
 		// 获取本篇文章所有评论
 		async getCommentList(pageStart, pageSize) {
 			try {
 				let res = null;
-				this.comment = [];
+				this.comments = [];
 				if (this.keyId == 'messageBoard') {
 					res = await this.$api.getComments({
 						id: 'messageBoard',
@@ -223,59 +207,48 @@ export default {
 						murmur: this.murmur,
 					});
 				}
-				this.comment = res.data.comment;
+				this.comments = res.data.comments;
 				this.username = res.data.user?.username;
+				this.avatar = res.data.user?.avatar;
 			} catch (err) {
 				this.$message.error(err);
 			}
 		},
 		// 评论点赞
-		async giveALike(replyId, _id) {
+		giveALike(item, _id) {
 			try {
 				let res = null;
-				let temp = null;
-				console.log(this.comment);
-				if (replyId) {
-					// 暂存favour
-					temp = this.comment.find(item => item._id === _id).replyInfo.find(item => item._id === replyId).favour;
-					if (temp.includes(this.murmur)) {
-						this.$message.info('您已经点过赞啦！');
-						return;
-					}
-					console.log(temp);
-					res = await this.$api.addsecondfavour({
-						replyId,
-						_id,
-						favourMurmur: this.murmur,
-					});
-				} else {
-					if (this.comment.find(item => item._id === _id).favour.includes(this.murmur)) {
-						this.$message.info('您已经点过赞啦！');
-						return;
-					}
-					res = await this.$api.addfirstfavour({
-						_id,
-						favourMurmur: this.murmur,
-					});
+				if (item.favour?.includes(this.murmur)) {
+					this.$message.info('您已经点过赞啦！');
+					return;
 				}
-				if (res.status === 200) {
-					this.$message.success(res.msg);
-					temp.push(this.murmur);
-					// this.replyName
+				if (item.replyName) {
+					this.$api.addsecondfavour({
+						replyId: item._id,
+						_id,
+						favourMurmur: this.murmur,
+					}).then((res) => {
+						this.$message.success(res.msg);
+						item.favour.push(this.murmur);
+					}).catch(() => {
+						this.$message.error(res.msg);
+					});
 				} else {
-					this.$message.error(res, msg);
+					this.$api.addfirstfavour({
+						_id,
+						favourMurmur: this.murmur,
+					}).then((res) => {
+						this.$message.success(res.msg);
+						item.favour.push(this.murmur);
+					}).catch(() => {
+						this.$message.error(res.msg);
+					});
 				}
 			} catch (err) {
 				this.$message.error(err);
 			}
 		},
-		// // 一级评论点赞
-		// async giveALikeForFirst(replyId,_id) {
-		//   this.comment = res.data;
-		//   console.log(this.comment)
-		//   console.log(this.blogId, res)
-		// },
-		isShowSecReply(id, name) {
+		isShowSecReply(id) {
 			if (id) {
 				this.isShowSec = id;
 				if (this.isClickId === this.isShowSec) {
@@ -284,45 +257,61 @@ export default {
 					this.isShowSec = id;
 				}
 				this.isClickId = this.isShowSec;
-				this.replyName = name;
+				// this.replyName = name;
 			} else {
 				this.isShowSec = this.isClickId = '';
 			}
 		},
-		async deleteComment(_id, replyId) {
+		deleteComment(_id, replyId) {
 			let res = null;
 			if (replyId) {
-				res = await this.$api.deletesecondcomment({ replyId, _id });
+				res = this.$api.deletesecondcomment({ replyId, _id }).then((res) => {
+					this.$message.success(res.msg);
+					const temp = this.comments.find(item => item._id == _id).replyInfo;
+					for (let i = 0; i < temp.length; i++) {
+						if (temp[i]._id == replyId) {
+							temp.splice(i, 1);
+							break;
+						}
+					}
+				}).catch(() => {
+					this.$message.error(res.msg);
+				});
+
 			} else {
-				res = await this.$api.deletefirstcomment({ _id });
+				res = this.$api.deletefirstcomment({ _id }).then((res) => {
+					this.$message.success(res.msg);
+					for (let i = 0; i < this.comments.length; i++) {
+						if (this.comments[i]._id == _id) {
+							this.comments.splice(i, 1);
+						}
+					}
+				}).catch(() => {
+					this.$message.error(res.msg);
+				});
+
 			}
-			if (res.status === 200) {
-				this.$message.success(res.msg);
-			} else {
-				this.$message.error(res, msg);
-			}
-			this.getCommentList();
 		},
-		async addComment(id, replyId, username) {
+		async addComment(id, replyName) {
 			let res = null;
-			// let username = "123";
-			if (replyId) {
+			if (replyName) {
 				res = await this.$api.addsecondcomment({
 					_id: id,
-					replyId,
 					reply: this.replyContext,
-					replyname: this.replyName,
-					username,
+					replyName,
 					murmur: this.murmur,
 				});
+				res.data.username = this.username;
+				this.comments.find(item => item._id == id).replyInfo.push(res.data)
 				this.replyContext = '';
 			} else {
 				res = await this.$api.addfirstcomment({
 					keyId: id,
-					username,
 					content: this.context,
 					murmur: this.murmur,
 				});
+				res.data.username = this.username;
+				this.comments.push(res.data)
 				this.context = '';
 			}
 			if (res.status === 200) {
@@ -330,8 +319,7 @@ export default {
 			} else {
 				this.$message.error(res, msg);
 			}
-			this.isShowSec = this.isClickId = this.replyName = '';
-			this.getCommentList();
+			this.isShowSec = this.isClickId = '';
 		},
 	},
 };
@@ -344,6 +332,11 @@ export default {
 	border-radius: 5px;
 	margin-top: 2px;
 	overflow: hidden;
+
+	.active {
+		color: red;
+	}
+
 	.comment-header {
 		position: relative;
 		height: 50px;
@@ -351,6 +344,7 @@ export default {
 		display: flex;
 		align-items: center;
 		background-color: rgb(247, 246, 246);
+
 		#avatarInput {
 			width: 10vh;
 			height: 10vh;
@@ -359,53 +353,65 @@ export default {
 			visibility: hidden;
 			z-index: 10;
 		}
+
 		.input-with-select {
 			margin-left: 10px;
 			margin-right: 20px;
 			flex: 1;
 		}
 	}
+
 	.comment-body {
 		min-height: 70px;
 		padding: 10px 20px;
 		font-size: 14px;
+
 		.first-comment {
 			display: flex;
+
 			i {
 				margin-right: 5px;
 				margin-left: 15px;
 				cursor: pointer;
+
 				&:nth-child(3) {
 					color: red;
 				}
 			}
+
 			.content {
 				margin-left: 10px;
 				position: relative;
 				flex: 1;
-				& > span {
+
+				&>span {
 					font-size: 12px;
 					color: rgb(130, 129, 129);
 				}
+
 				.comment-right {
 					position: absolute;
 					right: 0;
 					top: 0;
 				}
+
 				.reply-comment {
 					height: 60px;
 					display: flex;
 					align-items: center;
+
 					.reply-button {
 						margin-left: 20px;
 						height: 35px;
 					}
 				}
+
 				.second-comment {
 					display: flex;
 					padding: 10px 0 10px 5px;
 					background-color: rgb(248, 246, 246);
 					border-radius: 20px;
+
 					.to_reply {
 						color: rgb(126, 127, 128);
 					}
@@ -413,6 +419,7 @@ export default {
 			}
 		}
 	}
+
 	.pagenation {
 		float: right;
 		margin-top: 10px;

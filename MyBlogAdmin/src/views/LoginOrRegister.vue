@@ -1,7 +1,7 @@
 <template>
 	<div id="box">
 		<div
-			class="main-box"
+			class="login-main-box"
 			:style="{
 				height: isLogin ? '364px' : '520px',
 			}">
@@ -195,7 +195,7 @@ button {
 	position: relative;
 }
 
-.main-box {
+.login-main-box {
 	width: 400px;
 	height: 364px;
 	background-color: #0c1622;

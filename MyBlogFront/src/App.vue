@@ -1,16 +1,16 @@
 <template>
 	<div id="app">
-		<Header></Header>
+		<Header />
 		<div id="mainContainer">
 			<div></div>
-			<Slideshow :class="clip ? 'clip' : 'clip-reverse'"></Slideshow>
+			<Slideshow></Slideshow>
 			<Nav></Nav>
 			<!-- <div class="main-content"> -->
-			<router-view class="main-content"></router-view>
+			<router-view class="main-box"></router-view>
 			<!-- </div> -->
 			<SiderInfo />
 		</div>
-		<Footer></Footer>
+		<Footer />
 		<!-- <button class="show1" @click="clip = !clip">收齐</button> -->
 	</div>
 </template>
@@ -35,7 +35,7 @@ export default {
 		Footer,
 		Slideshow,
 	},
-	mounted() {
+	created() {
 		this.createBrowseID();
 	},
 	methods: {
@@ -291,7 +291,7 @@ export default {
 	flex-wrap: wrap;
 	justify-content: space-between;
 
-	.main-content {
+	.main-box {
 		z-index: 99;
 		flex: 1;
 		background-color: rgba(255, 255, 255, 0.7);

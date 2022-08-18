@@ -106,3 +106,13 @@ export const toBolb = (basestr, type) => {
 	}
 	return blob;
 };
+export const time = (basestr, type) => {
+	const date = new Date();
+	const year = date.getFullYear();
+	const month = date.getMonth() + 1;
+	const day = date.getDate();
+	const hour = date.getHours();
+	const minutes = date.getMinutes();
+	// if () 
+	return year + '-' + month + '-' + day + ' ' + hour + ':' + minutes;
+};

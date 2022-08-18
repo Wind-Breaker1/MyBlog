@@ -3,7 +3,7 @@ const CommentSchema = new mongoose.Schema({
 	//创建博客模型
 	date: { type: String, require: true }, //创建日期
 	keyId: { type: String, require: true }, // 评论的文章id
-	username: { type: String, require: true },
+	// username: { type: String, require: true },
 	favour: [
 		{
 			type: String,
@@ -16,8 +16,8 @@ const CommentSchema = new mongoose.Schema({
 			date: { type: String, require: true }, //创建日期
 			// replymurmur: { type: String, require: true },// 回复的指纹
 			// replyId: { type: mongoose.Types.ObjectId, require: true }, // 回复的id
-			replyname: { type: String, require: true },
-			username: { type: String, require: true },
+			replyName: { type: String, require: true },
+			// username: { type: String, require: true },
 			favour: [
 				{
 					type: String,
@@ -28,15 +28,14 @@ const CommentSchema = new mongoose.Schema({
 		},
 	],
 });
+
 const CommentModel = mongoose.model('comment', CommentSchema);
 // 新增一级评论
 const addFirstComment = data => {
 	let comment = new CommentModel(data);
 	return comment
 		.save()
-		.then(res => {
-			return true;
-		})
+		.then(res => res)
 		.catch(err => {
 			return false;
 		});
@@ -63,8 +62,11 @@ const deleteSecondComment = (_id, replyId) => {
 };
 // 查询所有评论
 const getComments = (_id, pageSize = 5, pageStart = 0) => {
-	console.log(_id);
-	return CommentModel.find({ keyId: _id }).skip(pageStart).limit(pageSize);
+	return CommentModel.find({ keyId: _id }).skip(pageStart).limit(pageSize).lean();
+};
+// 查询某一个评论
+const getCommentReplyLast = (id) => {
+	return CommentModel.findById(id);
 };
 
 module.exports = {
@@ -75,4 +77,5 @@ module.exports = {
 	deleteSecondComment,
 	getComments,
 	addSecondFavour,
+	getCommentReplyLast
 };

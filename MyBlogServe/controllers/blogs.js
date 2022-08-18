@@ -1,5 +1,6 @@
 const BlogsModel = require('../model/blogs');
 const ClassifyModel = require('../model/classifies');
+const CommentModel = require('../model/comments');
 const util = require('../utils');
 // 添加新博客
 const addBlog = async (req, res) => {
@@ -122,7 +123,7 @@ const getBlog = async (req, res) => {
 		res.send({
 			msg: '博客查找成功',
 			status: 200,
-			data: blog,
+			data: blog
 		});
 	} else {
 		res.send({

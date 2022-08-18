@@ -89,7 +89,7 @@ const requests = axios.create({
 requests.interceptors.request.use(config => {
 	// config:配置对象，对象信息里边有一个重要信息，请求头headers
 	// 进度条开始
-	console.log(config, 'config');
+	// console.log(config, 'config');
 	// if (store.state.detail.uuid) {
 	//   config.headers.userTempId = store.state.detail.uuid;
 	// }

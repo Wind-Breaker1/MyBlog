@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const ClassifiesModel = require('./classifies');
 const BlogSchema = new mongoose.Schema({
 	//创建博客模型
 	date: { type: String }, //创建日期
@@ -42,7 +41,7 @@ const deleteBlog = _id => {
 };
 // 查询某一博客
 const getBlog = id => {
-	return BlogModel.findById(id);
+	return BlogModel.findById(id).lean();
 };
 // 查询所有文章
 const getBlogs = () => {

@@ -4,12 +4,11 @@ const util = require('../utils');
 // 添加新一级评论
 const addFirstComment = async (req, res, next) => {
 	// 获取时间字符串
-	const time = util.time();
-	const { keyId, username, content, murmur, replyInfo = [] } = req.body;
+	const { keyId, date, content, murmur, replyInfo = [] } = req.body;
 	const result = await CommentModel.addFirstComment({
-		date: time,
+		date: util.time(),
 		keyId,
-		username,
+		// username,
 		content,
 		murmur,
 		replyInfo,
@@ -30,22 +29,22 @@ const addFirstComment = async (req, res, next) => {
 // 添加新次级评论
 const addSecondComment = async (req, res, next) => {
 	// 获取时间字符串
-	const time = util.date();
-	const { _id, username, reply, murmur, replyname, replyId } = req.body;
+	const { _id, date, reply, murmur, replyName, replyId } = req.body;
 	const result = await CommentModel.addSecondComment(_id, {
-		date: time,
+		date: util.time(),
 		// replymurmur,
 		replyId,
-		username,
+		// username,
 		reply,
 		murmur,
-		replyname,
+		replyName,
 	});
 	if (result.modifiedCount !== 0) {
+		const comment = await CommentModel.getCommentReplyLast(_id);
 		res.send({
 			msg: '评论成功',
 			status: 200,
-			data: result,
+			data: comment.replyInfo.splice(-1).pop(),
 		});
 	} else {
 		res.send({
@@ -92,13 +91,13 @@ const deleteFirstComment = async (req, res, next) => {
 	const result = await CommentModel.deleteFirstComment(_id);
 	if (result.deletedCount !== 0) {
 		res.send({
-			msg: '评论删除成功',
+			msg: '删除成功',
 			status: 200,
 			data: result,
 		});
 	} else {
 		res.send({
-			msg: '评论删除失败',
+			msg: '删除失败',
 			status: 0,
 		});
 	}
@@ -109,12 +108,12 @@ const deleteSecondComment = async (req, res, next) => {
 	const result = await CommentModel.deleteSecondComment(_id, replyId);
 	if (result.modifiedCount !== 0) {
 		res.send({
-			msg: '评论删除成功',
+			msg: '删除成功',
 			status: 200,
 		});
 	} else {
 		res.send({
-			msg: '评论删除失败',
+			msg: '删除失败',
 			status: 0,
 		});
 	}
@@ -123,17 +122,19 @@ const deleteSecondComment = async (req, res, next) => {
 const getComments = async (req, res) => {
 	const { id, pageSize, pageStart, murmur } = req.query;
 	// 这里必须要await
-	const comment = await CommentModel.getComments(id, pageSize, pageStart);
+	let comments = await CommentModel.getComments(id, pageSize, pageStart);
+	const murmurInfo = await MurmruModel.getMurmurs();
 	const user = await MurmruModel.getMurmur(murmur);
-	if (comment) {
+	comments = util.manageMurmurComments(murmurInfo, comments);
+	if (comments) {
 		res.send({
-			msg: '评论查询成功',
+			msg: '查询成功',
 			status: 200,
-			data: { comment, user },
+			data: { comments, user },
 		});
 	} else {
 		res.send({
-			msg: '评论查询失败',
+			msg: '查询失败',
 			status: 0,
 		});
 	}

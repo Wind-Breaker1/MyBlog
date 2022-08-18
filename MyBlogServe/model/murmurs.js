@@ -11,7 +11,7 @@ const addMurmur = data => {
 	const murmur = new MurmurModel(data);
 	return murmur
 		.save()
-		.then(() => true)
+		.then(res => res)
 		.catch(() => false);
 };
 // 更新用户信息
@@ -31,12 +31,13 @@ const getMurmur = murmur => {
 	return MurmurModel.findOne({ murmur }, 'username avatar');
 };
 // 查询所有用户
-// const getMurmurs = () => {
-// 	return MurmurModel.find();
-// };
+const getMurmurs = () => {
+	return MurmurModel.find();
+};
 module.exports = {
 	addMurmur,
 	getMurmur,
 	updateMurmurUsername,
 	updateMurmurAvatar,
+	getMurmurs
 };

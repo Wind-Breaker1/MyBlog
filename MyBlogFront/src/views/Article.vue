@@ -2,36 +2,19 @@
   <div>
     <div class="blogtip">
       <h2>{{ article.title }}</h2>
-      <el-tag class="bookmark" v-show="isBlog">{{ classifyName }}</el-tag>
+      <el-tag class="bookmark" v-show="isBlog">{{ <article class=""></article>classifyName }}</el-tag>
       <div class="opration">
-        <i
-          class="iconfont icon-icon"
-          @click="giveALike(article._id)"
-          :class="isGiveALiked ? 'active' : ''"
-        ></i
-        >{{ favourList.length }} <i class="el-icon-view"></i
-        >{{ article.browse }}
+        <i class="iconfont icon-icon" @click="giveALike(article._id)" :class="isGiveALiked ? 'active' : ''"></i>{{
+            favourList.length
+        }} <i class="el-icon-view"></i>{{ article.browse }}
         <i class="iconfont icon-rili"> 写于 {{ article.date }}</i>
       </div>
     </div>
-    <mavon-editor
-      v-model="content"
-      ref="md"
-      :toolbarsFlag="false"
-      :subfield="false"
-      defaultOpen="preview"
-      :ishljs="true"
-      codeStyle="rainbow"
-      previewBackground="background-color: rgba(255, 255, 255, 0.7);"
-      style="min-height: 100vh; z-index: 90"
-    />
-    <Comment
-      :keyId="$route.params.id"
-      emptyText="期待您的评论！"
-      buttonText="评论"
-      :contentLength="150"
-      placeholderText="请输入最多150字的评论..."
-    ></Comment>
+    <mavon-editor v-model="article.content" ref="md" :toolbarsFlag="false" :subfield="false" defaultOpen="preview"
+      :ishljs="true" codeStyle="rainbow" previewBackground="background-color: rgba(255, 255, 255, 0.7);"
+      style="min-height: 100vh; z-index: 90" />
+    <Comment :keyId="$route.params.id" emptyText="期待您的评论！" buttonText="评论" :contentLength="150"
+      placeholderText="请输入最多150字的评论..."></Comment>
   </div>
 </template>
 
@@ -43,9 +26,9 @@ export default {
   data() {
     return {
       article: {},
-      content: "",
+      // content: "",
       favourList: [],
-      classifyName: "",
+      // classifyName: "",
       isBlog: true,
       isGiveALiked: false,
     };
@@ -83,9 +66,11 @@ export default {
           } else {
             this.isBlog = false;
           }
+          console.log('res', res);
+
           this.article = res.data;
-          this.content = res.data.content;
-          this.classifyName = res.data.classifyName;
+          // this.content = res.data.content;
+          // this.classifyName = res.data.classifyName;
           this.favourList = res.data.favour;
           const murmur = localStorage.getItem("browserId");
           this.isGiveALiked = this.favourList.includes(murmur) ? true : false;
@@ -137,6 +122,7 @@ export default {
 .active {
   color: red;
 }
+
 .blogtip {
   min-height: 18vh;
   font-size: 14px;
@@ -145,41 +131,50 @@ export default {
   background-color: rgb(255, 255, 255);
   border-radius: 5px;
   margin-bottom: 2vh;
+
   .bookmark {
     margin-top: 20px;
   }
+
   .opration {
     line-height: 40px;
     position: absolute;
     bottom: 0;
     width: 95%;
+
     i {
       margin-right: 10px;
       cursor: pointer;
     }
-    & > i:nth-child(2) {
+
+    &>i:nth-child(2) {
       margin-left: 25px;
     }
-    & > i:nth-child(3) {
+
+    &>i:nth-child(3) {
       margin-left: 25px;
       float: right;
     }
   }
 }
+
 .desc {
   display: block;
   height: 10vh;
   text-overflow: ellipsis;
 }
+
 .show {
   height: 4vh;
   color: gray;
   line-height: 4vh;
+
   .favour,
   .brows {
     float: left;
     width: 100px;
   }
+
   .createtime {
     float: right;
   }

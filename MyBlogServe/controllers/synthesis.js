@@ -6,11 +6,13 @@ var path = require('path');
 var fs = require('fs');
 const addMurmur = async (req, res) => {
 	const { murmur, username, avatar } = req.body;
-	const result = MurmruModel.addMurmur({ murmur, username, avatar });
+	const result = await MurmruModel.addMurmur({ murmur, username, avatar });
+	console.log(result)
 	if (result) {
 		res.send({
 			msg: '新增浏览器指纹成功',
 			status: 200,
+			data: result
 		});
 	} else {
 		res.send({

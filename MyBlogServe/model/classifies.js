@@ -1,6 +1,6 @@
 // 专栏数据模型
-let mongoose = require('mongoose');
-let UserSchema = new mongoose.Schema({
+const mongoose = require('mongoose');
+const ClassifySchema = new mongoose.Schema({
 	//创建表
 	date: { type: String },
 	title: { type: String },
@@ -8,10 +8,10 @@ let UserSchema = new mongoose.Schema({
 	articleNum: { type: Number, default: 0 }, // 文章数量
 	bgColor: { type: String },
 });
-let ClassifyModel = mongoose.model('classify', UserSchema);
+const ClassifyModel = mongoose.model('classify', ClassifySchema);
 // 新增专栏
-let addClassify = data => {
-	let Classify = new ClassifyModel(data);
+const addClassify = data => {
+	const Classify = new ClassifyModel(data);
 	return Classify.save()
 		.then(() => {
 			return true;
@@ -21,23 +21,23 @@ let addClassify = data => {
 		});
 };
 // 查询某一书签信息
-var getClassify = id => {
+const getClassify = id => {
 	return ClassifyModel.findById(id);
 };
 // 删除专栏
-var deleteClassify = _id => {
+const deleteClassify = _id => {
 	return ClassifyModel.deleteOne({ _id });
 };
 // 更新某一专栏文章数量
-var updateClassifySum = (_id, num) => {
+const updateClassifySum = (_id, num) => {
 	return ClassifyModel.updateOne({ _id }, { $inc: { articleNum: num } });
 };
 // 更新某一专栏
-var updateClassifyTitle = (_id, title, digest) => {
+const updateClassifyTitle = (_id, title, digest) => {
 	return ClassifyModel.updateOne({ _id }, { $set: { title, digest } });
 };
 // 查询所有专栏
-var getClassifies = () => {
+const getClassifies = () => {
 	return ClassifyModel.find();
 };
 

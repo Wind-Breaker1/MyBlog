@@ -1,5 +1,5 @@
 <template>
-  <div class="main-box">
+  <div class="about-box">
     <div class="avatar">
       <img
         class="avatar"
@@ -47,7 +47,7 @@
   </div>
 </template>
 <style lang="less" scoped>
-.main-box {
+.about-box {
   flex: 1;
   background-color: rgba(255, 255, 255, 0.7);
   border-radius: 5px;
