@@ -51,7 +51,6 @@
   flex: 1;
   background-color: rgba(255, 255, 255, 0.7);
   border-radius: 5px;
-  height: 100%;
   // animation: rotate-center 0.6s ease-in-out both;
   .avatar {
     width: 10vw;

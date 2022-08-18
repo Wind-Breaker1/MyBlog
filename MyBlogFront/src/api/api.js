@@ -45,6 +45,11 @@ export const getSliderInfo = () => requests.get("/synthesis/getsliderinfo");
 // 搜索
 export const search = (params) =>
   requests.get("/synthesis/searcharticle", { params });
+// 新增murmur
+export const addMurmur = (data) => requests.post("/synthesis/addmurmur", data);
+// 修改murmur
+export const updateMurmur = (data) =>
+  requests.post("/synthesis/updatemurmur", data);
 
 // 获取某篇文章的所有评论
 export const getComments = (params) =>
@@ -73,3 +78,8 @@ export const deletefirstcomment = (params) =>
 // 删除二级评论
 export const deletesecondcomment = (params) =>
   requests.delete("/comments/deletesecondcomment", { params });
+// 上传图片
+export const uploadImg = (data) =>
+  requests.post("/synthesis/uploadimg", data, {
+    headers: { "content-type": "multipart/form-data" },
+  });

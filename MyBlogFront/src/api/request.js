@@ -1,5 +1,5 @@
 // 引入axios进行二次封装
-import axios from "axios";
+import axios from 'axios';
 // 进度条
 // 引入进度条样式
 // export default function $axios(options) {
@@ -41,7 +41,6 @@ import axios from "axios";
 
 //     )
 
-
 //     //response 拦截器
 //     instance.interceptors.response.use(
 //       res => {
@@ -80,31 +79,35 @@ import axios from "axios";
 //   })
 // }
 const requests = axios.create({
-  // 配置对象
-  // 基础路径
-  baseURL: "/api",
-  // 请求超时的时间限 制
-  timeout: 5000
-})
+	// 配置对象
+	// 基础路径
+	baseURL: '/api',
+	// 请求超时的时间限 制
+	timeout: 5000,
+});
 // 请求拦截器：在请求发出去之前做处理
 requests.interceptors.request.use(config => {
-  // config:配置对象，对象信息里边有一个重要信息，请求头headers
-  // 进度条开始
-  // if (store.state.detail.uuid) {
-  //   config.headers.userTempId = store.state.detail.uuid;
-  // }
-  // // 需要携带token带给服务器
-  // if (store.state.user.token) {
-  //   config.headers.token = store.state.user.token;
-  // }
-  return config;
-})
+	// config:配置对象，对象信息里边有一个重要信息，请求头headers
+	// 进度条开始
+	console.log(config, 'config');
+	// if (store.state.detail.uuid) {
+	//   config.headers.userTempId = store.state.detail.uuid;
+	// }
+	// // 需要携带token带给服务器
+	// if (store.state.user.token) {
+	//   config.headers.token = store.state.user.token;
+	// }
+	return config;
+});
 // 响应拦截器
-requests.interceptors.response.use(res => {
-  // 进度条结束
-  return res.data;
-}, err => {
-  return err;
-})
+requests.interceptors.response.use(
+	res => {
+		// 进度条结束
+		return res.data;
+	},
+	err => {
+		return err;
+	}
+);
 
-export default requests
+export default requests;

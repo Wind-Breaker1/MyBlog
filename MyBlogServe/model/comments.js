@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const CommentSchema = new mongoose.Schema({
 	//创建博客模型
 	date: { type: String, require: true }, //创建日期
-	articleId: { type: mongoose.Types.ObjectId, require: true }, // 评论的文章id
+	keyId: { type: String, require: true }, // 评论的文章id
 	username: { type: String, require: true },
 	favour: [
 		{
@@ -15,7 +15,7 @@ const CommentSchema = new mongoose.Schema({
 		{
 			date: { type: String, require: true }, //创建日期
 			// replymurmur: { type: String, require: true },// 回复的指纹
-			replyId: { type: mongoose.Types.ObjectId, require: true }, // 回复的id
+			// replyId: { type: mongoose.Types.ObjectId, require: true }, // 回复的id
 			replyname: { type: String, require: true },
 			username: { type: String, require: true },
 			favour: [
@@ -62,9 +62,9 @@ const deleteSecondComment = (_id, replyId) => {
 	return CommentModel.updateOne({ _id }, { $pull: { replyInfo: { _id: replyId } } });
 };
 // 查询所有评论
-const getComments = _id => {
+const getComments = (_id, pageSize = 5, pageStart = 0) => {
 	console.log(_id);
-	return CommentModel.find({ articleId: _id });
+	return CommentModel.find({ keyId: _id }).skip(pageStart).limit(pageSize);
 };
 
 module.exports = {

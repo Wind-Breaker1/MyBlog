@@ -69,7 +69,7 @@ export default {
 	methods: {
 		// 将图片上传到服务器，返回地址替换到md中
 		async img(pos, file) {
-			let _this = this;
+			// let _this = this;
 			const formData = new FormData();
 			formData.append("file", file);
 			// console.log(formData);
@@ -78,7 +78,7 @@ export default {
 			// console.log(formData.get("file"));
 			let res = await uploadImg(formData);
 			if (res.status === 200) {
-				_this.$refs.md.$img2Url(pos, res.url);
+				this.$refs.md.$img2Url(pos, res.url);
 			}
 			console.log(res);
 			console.log(res);

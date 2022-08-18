@@ -23,4 +23,6 @@ router.get('/getwebinfo', synthesisControll.getWebInfo);
 router.get('/getsliderinfo', synthesisControll.getSliderInfo);
 router.get('/searcharticle', synthesisControll.searchArticle);
 router.post('/uploadimg', upload.single('file'), synthesisControll.uploadImg);
+router.post('/updatemurmur', synthesisControll.updateMurmur);
+router.post('/addmurmur', synthesisControll.addMurmur);
 module.exports = router;

@@ -38,6 +38,15 @@ exports.date = () => {
 	const day = date.getDate();
 	return year + '-' + month + '-' + day;
 };
+exports.time = () => {
+	const date = new Date();
+	const year = date.getFullYear();
+	const month = date.getMonth() + 1;
+	const day = date.getDate();
+	const hour = date.getHours();
+	const minutes = date.getMinutes();
+	return year + '-' + month + '-' + day + ' ' + hour + ':' + minutes;
+};
 // 生成随机颜色
 exports.randomColor = function () {
 	return (

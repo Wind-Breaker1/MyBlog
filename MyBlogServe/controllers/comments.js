@@ -1,14 +1,14 @@
 const CommentModel = require('../model/comments');
-const ClassifyModel = require('../model/classifies');
+const MurmruModel = require('../model/murmurs');
 const util = require('../utils');
 // 添加新一级评论
 const addFirstComment = async (req, res, next) => {
 	// 获取时间字符串
-	const time = util.date();
-	const { articleId, username, content, murmur, replyInfo = [] } = req.body;
+	const time = util.time();
+	const { keyId, username, content, murmur, replyInfo = [] } = req.body;
 	const result = await CommentModel.addFirstComment({
 		date: time,
-		articleId,
+		keyId,
 		username,
 		content,
 		murmur,
@@ -60,12 +60,12 @@ const addFirstFavour = async (req, res) => {
 	const result = await CommentModel.addFirstFavour(_id, favourMurmur);
 	if (result.modifiedCount !== 0) {
 		res.send({
-			msg: '评论点赞成功',
+			msg: '点赞成功',
 			status: 200,
 		});
 	} else {
 		res.send({
-			msg: '评论点赞失败',
+			msg: '点赞失败',
 			status: 0,
 		});
 	}
@@ -76,12 +76,12 @@ const addSecondFavour = async (req, res) => {
 	const result = await CommentModel.addSecondFavour(_id, replyId, favourMurmur);
 	if (result.modifiedCount !== 0) {
 		res.send({
-			msg: '评论点赞成功',
+			msg: '点赞成功',
 			status: 200,
 		});
 	} else {
 		res.send({
-			msg: '评论点赞失败',
+			msg: '点赞失败',
 			status: 0,
 		});
 	}
@@ -121,14 +121,15 @@ const deleteSecondComment = async (req, res, next) => {
 };
 // 查询所有评论
 const getComments = async (req, res) => {
-	const { id } = req.query;
+	const { id, pageSize, pageStart, murmur } = req.query;
 	// 这里必须要await
-	const result = await CommentModel.getComments(id);
-	if (result) {
+	const comment = await CommentModel.getComments(id, pageSize, pageStart);
+	const user = await MurmruModel.getMurmur(murmur);
+	if (comment) {
 		res.send({
 			msg: '评论查询成功',
 			status: 200,
-			data: result,
+			data: { comment, user },
 		});
 	} else {
 		res.send({

@@ -1,8 +1,40 @@
 const BlogsModel = require('../model/blogs');
 const JottingModel = require('../model/jottings');
 const ClassifyModel = require('../model/classifies');
+const MurmruModel = require('../model/murmurs');
 var path = require('path');
 var fs = require('fs');
+const addMurmur = async (req, res) => {
+	const { murmur, username, avatar } = req.body;
+	const result = MurmruModel.addMurmur({ murmur, username, avatar });
+	if (result) {
+		res.send({
+			msg: '新增浏览器指纹成功',
+			status: 200,
+		});
+	} else {
+		res.send({
+			msg: '新增浏览器指纹失败',
+			status: 0,
+		});
+	}
+};
+// 获取总文章数
+const updateMurmur = async (req, res, next) => {
+	const { murmur, username, avatar } = req.body;
+	let result = await MurmruModel.updateMurmur(murmur, username, avatar);
+	if (result.modifiedCount != 0) {
+		res.send({
+			msg: '查询文章总数成功',
+			status: 200,
+		});
+	} else {
+		res.send({
+			msg: '查询文章总数失败',
+			status: 0,
+		});
+	}
+};
 // 获取总文章数
 const getWebInfo = async (req, res, next) => {
 	let articleNums = await BlogsModel.getblogSums();
@@ -66,54 +98,39 @@ const searchArticle = async (req, res) => {
 		});
 	}
 };
-editSelf = (data, callback) => {
-	const img = fs.createReadStream(data.path);
-	const nono = fs.createWriteStream('./assets/asas.jpg');
-	img.pipe(nono); //这一步就是管道流传输
-	//读取文件发生错误事件
-	img.on('error', err => {
-		console.log('发生异常:', err);
-	});
-	//已打开要读取的文件事件
-	img.on('open', fd => {
-		console.log('文件已打开:', fd);
-	});
-	//文件已经就位，可用于读取事件
-	img.on('ready', () => {
-		callback(img);
-
-		console.log('文件已准备好..');
-	});
-
-	//文件读取中事件·····
-	img.on('data', chunk => {
-		console.log('读取文件数据:', chunk);
-	});
-
-	//文件读取完成事件
-	img.on('end', () => {
-		console.log('读取已完成..');
-	});
-
-	//文件已关闭事件
-	img.on('close', () => {
-		console.log('文件已关闭！');
-	});
-};
-
+// 上传图片
 const uploadImg = async (req, res) => {
-	const file = req.file; //这个就是前端传来的文件
-	editSelf(file, response => {
+	const { murmur } = req.body; //这个就是前端传来的文件
+	const file = req.file;
+	console.log(req.body);
+	const imgUrl = 'http://127.0.0.1:3001/images/' + file.filename;
+	if (murmur) {
+		const result = await MurmruModel.updateMurmurAvatar(murmur, imgUrl);
+		if (result.modifiedCount != 0) {
+			res.send({
+				avatarUrl,
+				status: 200,
+				msg: '头像上传成功',
+			});
+		} else {
+			res.send({
+				status: 0,
+				msg: '图片上传失败',
+			});
+		}
+	} else {
 		res.send({
-			url: 'http://127.0.0.1:3001/images/' + file.filename,
+			imgUrl,
 			status: 200,
 			msg: '图片上传成功',
 		});
-	});
+	}
 };
 module.exports = {
 	getWebInfo,
 	getSliderInfo,
 	searchArticle,
 	uploadImg,
+	addMurmur,
+	updateMurmur,
 };

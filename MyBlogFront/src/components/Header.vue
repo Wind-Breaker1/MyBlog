@@ -5,6 +5,7 @@
       placeholder="请输入关键字..."
       v-model="searchValue"
       class="input-with-select"
+      :border="false"
     >
       <el-button
         slot="append"
@@ -24,6 +25,10 @@ export default {
   methods: {
     async searchArticle() {
       try {
+        if (!this.searchValue) {
+          this.$message.warning("还没有输入搜索内容呢");
+          return;
+        }
         this.$router.push("/search?searchValue=" + this.searchValue);
         this.searchValue = "";
       } catch (err) {
@@ -52,6 +57,9 @@ export default {
     width: 20vw;
     margin-top: 10px;
     float: right;
+    /deep/ .el-input__inner {
+      border: none;
+    }
   }
 }
 </style>
