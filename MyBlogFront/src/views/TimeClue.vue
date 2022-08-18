@@ -75,7 +75,7 @@ export default {
 .timeclue-box {
 	padding: 2vw;
 	border-radius: 5px;
-	background-color: rgba(250, 250, 250, 1);
+	background-color: rgba(250, 250, 250, 0.4);
 	box-sizing: border-box;
 	/deep/.el-timeline-item__timestamp {
 		color: #333333;

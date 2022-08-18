@@ -6,21 +6,15 @@
 			</el-carousel-item>
 		</el-carousel>
 		<div class="info">
-			<div class="info-front">
-				<img :src="infoBgUrl" alt="头像" />
-				<!-- <div class="infodesc"></div> -->
+			<div>
+				<img :src="infoBgUrl" alt="" />
+				<el-avatar :src="avatarUrl" class="user-img" :size="50"></el-avatar>
 			</div>
-			<div class="info-back">
-				<div>
-					<img :src="infoBgUrl" alt="" />
-					<el-avatar :src="avatarUrl" class="user-img"></el-avatar>
-				</div>
-				<div>
-					<span
-						>文章总数:<span style="font-weight: 1000; margin-left: 3px">{{ count }}</span></span
-					>
-					<!-- <span>浏览量:<span style="font-weight:1000;margin-left: 3px;">55</span></span> -->
-				</div>
+			<div>
+				<span
+					>文章总数:<span style="font-weight: 1000; margin-left: 3px">{{ count }}</span></span
+				>
+				<span>浏览量:<span style="font-weight: 1000; margin-left: 3px">55</span></span>
 			</div>
 		</div>
 		<div class="tip">欢迎来到我的小站！</div>
@@ -31,8 +25,8 @@ import slideBgUrl1 from '@/assets/img/slideBg/slidebg1.jpg';
 // import slideBgUrl2 from "@/assets/img/slideBg/slidebg2.jpg";
 import slideBgUrl3 from '@/assets/img/slideBg/slidebg3.jpg';
 import slideBgUrl4 from '@/assets/img/slideBg/slidebg4.jpg';
-import infoBgUrl from '@/assets/img/bg3.jpg';
-import avatarUrl from '@/assets/img/avatar.jpg';
+import infoBgUrl from '@/assets/img/7.png';
+import avatarUrl from '@/assets/img/6.png';
 export default {
 	data() {
 		return {
@@ -76,21 +70,20 @@ export default {
 	.cart-img {
 		height: 93%;
 	}
-	.info-back {
-		transform: rotateX(180deg);
+	.info {
 		background-color: white;
 		& > div:nth-child(1) {
 			height: 50%;
 			.user-img {
 				position: absolute;
 				left: 50%;
-				top: 50%;
+				top: 40%;
 				transform: translate(-50%, -50%);
 			}
 		}
 		& > div:nth-child(2) {
 			height: 50%;
-			font-size: 12px;
+			font-size: 14px;
 			display: flex;
 			justify-content: center;
 			span {
@@ -100,17 +93,14 @@ export default {
 		}
 	}
 
-	.info-front,
-	.info-back {
+	.info {
 		height: 25vh;
 		width: 13vw;
 		position: absolute;
 		left: 5%;
 		bottom: 2%;
 		z-index: 90;
-		transition: all 1s ease-in-out;
 		border-radius: 5px;
-		backface-visibility: hidden;
 		// .infodesc{
 		//   height: 150px;
 		//   width: 150px;
@@ -122,12 +112,6 @@ export default {
 			height: 100%;
 			border-radius: 5px;
 		}
-	}
-	.info:hover .info-front {
-		transform: rotateX(180deg);
-	}
-	.info:hover .info-back {
-		transform: rotateX(0deg);
 	}
 	.tip {
 		height: 7%;

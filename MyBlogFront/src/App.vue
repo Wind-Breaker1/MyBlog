@@ -2,12 +2,9 @@
 	<div id="app">
 		<Header />
 		<div id="mainContainer">
-			<div></div>
 			<Slideshow></Slideshow>
 			<Nav></Nav>
-			<!-- <div class="main-content"> -->
 			<router-view class="main-box"></router-view>
-			<!-- </div> -->
 			<SiderInfo />
 		</div>
 		<Footer />
@@ -279,7 +276,7 @@ export default {
 // 	}
 // }
 #mainContainer {
-	background: url('@/assets/img/bg6.jpg') no-repeat;
+	background: url('@/assets/img/1.jpg') no-repeat;
 	background-size: 100% 100%;
 	background-attachment: fixed;
 	width: 100%;
@@ -294,7 +291,7 @@ export default {
 	.main-box {
 		z-index: 99;
 		flex: 1;
-		background-color: rgba(255, 255, 255, 0.7);
+		// background-color: rgba(255, 255, 255, 0.7);
 		margin-top: 5px;
 		margin-bottom: 10px;
 		border-radius: 5px;
