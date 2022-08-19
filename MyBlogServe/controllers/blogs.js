@@ -1,6 +1,6 @@
 const BlogsModel = require('../model/blogs');
 const ClassifyModel = require('../model/classifies');
-const CommentModel = require('../model/comments');
+const TagModel = require('../model/tag');
 const util = require('../utils');
 // 添加新博客
 const addBlog = async (req, res) => {
@@ -117,6 +117,8 @@ const getBlog = async (req, res) => {
 	// 这里必须要await
 	const blog = await BlogsModel.getBlog(_id);
 	const classify = await ClassifyModel.getClassify(blog.classification);
+	
+	
 	blog.classifyName = classify?.title;
 	// 查询博客所属书签
 	if (blog) {

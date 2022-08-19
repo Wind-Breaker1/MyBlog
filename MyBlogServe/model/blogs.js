@@ -9,6 +9,12 @@ const BlogSchema = new mongoose.Schema({
 			type: String,
 		},
 	], //点赞的浏览器指纹数组
+	tags: [
+		{
+			type: String,
+			require: true
+		},
+	],
 	browse: { type: Number, default: 0 },
 	content: { type: String, require: true },
 	digest: { type: String }, // 描述信息
@@ -68,7 +74,7 @@ const getFavour = _id => {
 	return BlogModel.findById(_id, 'favour');
 };
 // 增加浏览量
-const addBlogBrowse = (_id, murmur) => {
+const addBlogBrowse = (_id) => {
 	return BlogModel.updateOne({ _id }, { $inc: { browse: 1 } });
 };
 // 模糊查询所有文章

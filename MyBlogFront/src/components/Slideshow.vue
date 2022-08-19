@@ -6,15 +6,13 @@
 			</el-carousel-item>
 		</el-carousel>
 		<div class="info">
+			<img :src="infoBgUrl" alt="avatar" />
+			<el-avatar :src="avatarUrl" class="avatar" :size="50"></el-avatar>
 			<div>
-				<img :src="infoBgUrl" alt="" />
-				<el-avatar :src="avatarUrl" class="user-img" :size="50"></el-avatar>
-			</div>
-			<div>
-				<span
-					>文章总数:<span style="font-weight: 1000; margin-left: 3px">{{ count }}</span></span
-				>
-				<span>浏览量:<span style="font-weight: 1000; margin-left: 3px">55</span></span>
+				<div>博客<span>{{ count }}</span></div>
+				<div>心情<span>55</span></div>
+				<div>专栏<span>55</span></div>
+				<div>标签<span>55</span></div>
 			</div>
 		</div>
 		<div class="tip">欢迎来到我的小站！</div>
@@ -67,62 +65,47 @@ export default {
 	border-radius: 5px;
 	background: rgba(255, 255, 255, 0.7);
 	position: relative;
+	font-size: 12px;
 	.cart-img {
 		height: 93%;
 	}
-	.info {
-		background-color: white;
-		& > div:nth-child(1) {
-			height: 50%;
-			.user-img {
-				position: absolute;
-				left: 50%;
-				top: 40%;
-				transform: translate(-50%, -50%);
-			}
-		}
-		& > div:nth-child(2) {
-			height: 50%;
-			font-size: 14px;
-			display: flex;
-			justify-content: center;
-			span {
-				margin-top: 25%;
-				text-align: center;
-			}
-		}
-	}
 
 	.info {
-		height: 25vh;
-		width: 13vw;
+		background-color: white;
 		position: absolute;
+		height: 25vh;
+		width: 15vw;
 		left: 5%;
 		bottom: 2%;
 		z-index: 90;
 		border-radius: 5px;
-		// .infodesc{
-		//   height: 150px;
-		//   width: 150px;
-		//   background: white;
-		// }
 
-		img {
+		&>img {
+			height: 50%;
 			width: 100%;
-			height: 100%;
 			border-radius: 5px;
 		}
-	}
-	.tip {
-		height: 7%;
-		display: block;
-		text-align: center;
-	}
-	.el-carousel__item {
-		border-radius: 5px;
-		img {
-			width: 100%;
-			height: 100%;
+
+		.avatar {
+			position: absolute;
+			left: 50%;
+			top: 40%;
+			transform: translate(-50%, -45%);
+		}
+		& > div{
+			margin-top: 1vh;
+			display: flex;
+			height: 10vh;
+			justify-content: space-around;
+			align-items: center;
+			div{
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				span{
+					margin-top: 5px;
+				}
+			}
 		}
 	}
 }

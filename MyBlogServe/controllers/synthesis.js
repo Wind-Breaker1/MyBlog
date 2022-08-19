@@ -2,41 +2,80 @@ const BlogsModel = require('../model/blogs');
 const JottingModel = require('../model/jottings');
 const ClassifyModel = require('../model/classifies');
 const MurmruModel = require('../model/murmurs');
+const util = require('../utils');
 var path = require('path');
 var fs = require('fs');
-const addMurmur = async (req, res) => {
-	const { murmur, username, avatar } = req.body;
-	const result = await MurmruModel.addMurmur({ murmur, username, avatar });
-	console.log(result)
-	if (result) {
-		res.send({
-			msg: '新增浏览器指纹成功',
+//新增标签
+ const addTag = async (req, res, next) => {
+	const {title} = req.body;
+	const tag = await TagModel.addTag({title, date: util.date()});
+	if (tag) {
+		res.send({	
+			msg: '新增标签成功',
 			status: 200,
-			data: result
+			data: tag
 		});
 	} else {
 		res.send({
-			msg: '新增浏览器指纹失败',
+			msg: '新增标签失败',
 			status: 0,
 		});
 	}
 };
-// 获取总文章数
-const updateMurmur = async (req, res, next) => {
-	const { murmur, username, avatar } = req.body;
-	let result = await MurmruModel.updateMurmur(murmur, username, avatar);
-	if (result.modifiedCount != 0) {
+
+//删除标签
+const deleteTag = async (req, res, next) => {
+	const {_id} = req.query;
+	const tag = await TagModel.deleteTag(_id);
+	if (tag) {
 		res.send({
-			msg: '查询文章总数成功',
+			msg: '删除标签成功',
 			status: 200,
+			data: tag
 		});
 	} else {
 		res.send({
-			msg: '查询文章总数失败',
+			msg: '删除标签失败',
 			status: 0,
 		});
 	}
 };
+
+//查找某一个标签
+const getTag = async (req, res, next) => {
+	const {_id} = req.query;
+	const tag = await TagModel.getTag(_id);
+	if (tag) {
+		res.send({
+			msg: '查询标签成功',
+			status: 200,
+			data: tag
+		});
+	} else {
+		res.send({
+			msg: '查询标签成功',
+			status: 0,
+		});
+	}
+};
+
+//获取所有标签
+const getTags = async (req, res, next) => {
+	const tags = await TagModel.getTags();
+	if (tags) {
+		res.send({
+			msg: '获取标签列表成功',
+			status: 200,
+			data: tags
+		});
+	} else {
+		res.send({
+			msg: '获取标签列表失败',
+			status: 0,
+		});
+	}
+};
+
 // 获取总文章数
 const getWebInfo = async (req, res, next) => {
 	let articleNums = await BlogsModel.getblogSums();
@@ -102,22 +141,25 @@ const searchArticle = async (req, res) => {
 };
 // 上传图片
 const uploadImg = async (req, res) => {
-	const { murmur } = req.body; //这个就是前端传来的文件
-	const file = req.file;
-	console.log(req.body);
+	const { murmur } = req.body; 
+	const file = req.file;//这个就是前端传来的文件
 	const imgUrl = 'http://127.0.0.1:3001/images/' + file.filename;
 	if (murmur) {
+		const murmurInfo = await MurmruModel.getMurmurInfo(murmur);
+		if (murmurInfo.avatarUrl) {
+			deleteImg(murmurInfo.avatarUrl);
+		}
 		const result = await MurmruModel.updateMurmurAvatar(murmur, imgUrl);
 		if (result.modifiedCount != 0) {
 			res.send({
-				avatarUrl,
+				avatarUrl: imgUrl,
 				status: 200,
 				msg: '头像上传成功',
 			});
 		} else {
 			res.send({
 				status: 0,
-				msg: '图片上传失败',
+				msg: '头像上传失败',
 			});
 		}
 	} else {
@@ -133,6 +175,8 @@ module.exports = {
 	getSliderInfo,
 	searchArticle,
 	uploadImg,
-	addMurmur,
-	updateMurmur,
+	addTag,
+	deleteTag,
+	getTag,
+	getTags
 };

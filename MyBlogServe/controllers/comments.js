@@ -124,7 +124,7 @@ const getComments = async (req, res) => {
 	// 这里必须要await
 	let comments = await CommentModel.getComments(id, pageSize, pageStart);
 	const murmurInfo = await MurmruModel.getMurmurs();
-	const user = await MurmruModel.getMurmur(murmur);
+	const user = await MurmruModel.getMurmurInfo(murmur);
 	comments = util.manageMurmurComments(murmurInfo, comments);
 	if (comments) {
 		res.send({

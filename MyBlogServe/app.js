@@ -1,21 +1,22 @@
-var createError = require('http-errors');
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
-var session = require('express-session');
+const createError = require('http-errors');
+const express = require('express');
+const path = require('path');
+const cookieParser = require('cookie-parser');
+const logger = require('morgan');
+const session = require('express-session');
 // 数据库
-var db = require('./db/connect');
+const db = require('./db/connect');
 
 // 引入路由
-var usersRouter = require('./routes/users');
-var arrticlesRouter = require('./routes/blogs');
-var jottingsRouter = require('./routes/jottings');
-var classifiesRouter = require('./routes/classifies');
-var synthesisRouter = require('./routes/synthesis');
-var commentRouter = require('./routes/comments');
-const routeRouter = require('./routes/routes')
-var app = express();
+const usersRouter = require('./routes/users');
+const arrticlesRouter = require('./routes/blogs');
+const jottingsRouter = require('./routes/jottings');
+const classifiesRouter = require('./routes/classifies');
+const synthesisRouter = require('./routes/synthesis');
+const commentRouter = require('./routes/comments');
+const routeRouter = require('./routes/routes');
+const murmurRouter = require('./routes/murmur');
+const app = express();
 
 app.use(session({
   secret: '####',
@@ -43,6 +44,7 @@ app.use('/api/classifies', classifiesRouter);
 app.use('/api/synthesis', synthesisRouter);
 app.use('/api/comments', commentRouter);
 app.use('/api/routes', routeRouter);
+app.use('/api/murmur', murmurRouter);
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));
