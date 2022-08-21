@@ -1,8 +1,17 @@
 <template>
 	<div>
-		<div class="blogtip">
-			<h2>{{ article.title }}</h2>
-			<el-tag class="bookmark" v-show="isBlog">{{ article.classifyName }}</el-tag>
+		<div class="article-info" :style="`${cartBg}`">
+			<h1 class="article-title">{{ article.title }}</h1>
+			<div class="article-class" v-show="isBlog">
+				<div>
+					专栏：<el-tag size="small">{{ article.classifyName }}</el-tag>
+				</div>
+				<div class="tag">
+					<span> 武切维奇</span>
+					<span> 武切维奇</span>
+					<span> 武切维奇</span>
+				</div>
+			</div>
 			<div class="opration">
 				<i class="iconfont icon-icon" @click="giveALike(article._id)" :class="isGiveALiked ? 'active' : ''"></i>{{ favourList.length }}
 				<i class="el-icon-view"></i>{{ article.browse }}
@@ -17,8 +26,8 @@
 			defaultOpen="preview"
 			:ishljs="true"
 			codeStyle="rainbow"
-			previewBackground="background-color: rgba(255, 255, 255, 0.7);"
-			style="min-height: 100vh; z-index: 90" />
+			:class="!isLight ? 'markDown-night' : ''"
+			style="min-height: 100vh; z-index: 5" />
 		<Comment
 			:keyId="$route.params.id"
 			emptyText="期待您的评论！"
@@ -32,6 +41,7 @@
 import { mavonEditor } from 'mavon-editor';
 import 'mavon-editor/dist/css/index.css';
 import Comment from '@/components/Comment.vue';
+import { mapState, mapGetters } from 'vuex';
 export default {
 	data() {
 		return {
@@ -50,6 +60,12 @@ export default {
 	created() {
 		this.getArticle();
 	},
+	computed: {
+		...mapState({
+			isLight: state => state.theme.isLight,
+		}),
+		...mapGetters(['color', 'cartBg']),
+	},
 	watch: {
 		$route() {
 			if (this.$route.params.id) {
@@ -61,6 +77,7 @@ export default {
 		// 获取文章详细信息
 		async getArticle() {
 			try {
+				this.$loading.show('加载中...');
 				let { id, type } = this.$route.params;
 				let res = {};
 				this.favourList = [];
@@ -77,7 +94,7 @@ export default {
 						this.isBlog = false;
 					}
 					console.log('res', res);
-
+					this.$loading.hide();
 					this.article = res.data;
 					// this.content = res.data.content;
 					// this.classifyName = res.data.classifyName;
@@ -132,26 +149,39 @@ export default {
 .active {
 	color: red;
 }
-
-.blogtip {
-	min-height: 18vh;
+.markDown-night {
+	/deep/.v-show-content {
+		background-color: rgb(50, 50, 50) !important;
+		color: #ffffff;
+	}
+}
+.article-info {
+	min-height: 20vh;
 	font-size: 14px;
 	padding: 15px;
 	position: relative;
 	background-color: rgb(255, 255, 255);
 	border-radius: 5px;
 	margin-bottom: 2vh;
-
-	.bookmark {
+	.article-title {
+		text-align: center;
+	}
+	.article-class {
 		margin-top: 20px;
+		text-align: center;
+		.tag {
+			margin-top: 10px;
+			display: flex;
+			justify-content: center;
+		}
 	}
 
 	.opration {
 		line-height: 40px;
 		position: absolute;
+		left: 10%;
 		bottom: 0;
-		width: 95%;
-
+		width: 80%;
 		i {
 			margin-right: 10px;
 			cursor: pointer;

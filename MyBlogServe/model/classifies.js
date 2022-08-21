@@ -40,7 +40,10 @@ const updateClassifyTitle = (_id, title, digest) => {
 const getClassifies = () => {
 	return ClassifyModel.find();
 };
-
+// 查询所有专栏的数量
+const getClassifySums = () => {
+	return ClassifyModel.count();
+};
 module.exports = {
 	addClassify,
 	deleteClassify,
@@ -48,4 +51,5 @@ module.exports = {
 	updateClassifySum,
 	getClassify,
 	updateClassifyTitle,
+	getClassifySums,
 };

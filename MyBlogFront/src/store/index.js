@@ -1,34 +1,14 @@
-import Vue from "vue";
-import Vuex from "vuex";
+import Vue from 'vue';
+import Vuex from 'vuex';
+import synthesis from './synthesis';
+import theme from './theme';
 
 Vue.use(Vuex);
 
 export default new Vuex.Store({
-  state: {
-    blogs: [],
-    jottings: [],
-    blogsOfClassify: [],
-    classifies: [],
-    searchs: [],
-  },
-  getters: {},
-  mutations: {
-    SAVEBLOG(state, blogs) {
-      state.blogs = blogs;
-    },
-    SAVEJOTTING(state, jottings) {
-      state.jottings = jottings;
-    },
-    SAVEBLOGSOFCLASSIFY(state, blogsOfClassify) {
-      state.blogsOfClassify = blogsOfClassify;
-    },
-    SAVECLASSIFIES(state, classifies) {
-      state.classifies = classifies;
-    },
-    SAVESEARCHLIST(state, searchs) {
-      state.searchs = searchs;
-    },
-  },
-  actions: {},
-  modules: {},
+	// vuex实现模块化开发,每个模块存放自己的数据
+	modules: {
+		synthesis,
+		theme,
+	},
 });

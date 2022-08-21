@@ -23,8 +23,8 @@ const addTag = data => {
  * @param {string} murmur 浏览器指纹
  * @param {string} username 浏览器指纹对应用户名
  */
-const deleteTag = (_id) => {
-	return TagModel.deleteOne({_id});
+const deleteTag = _id => {
+	return TagModel.deleteOne({ _id });
 };
 
 /**
@@ -44,9 +44,14 @@ const getTags = () => {
 	return TagModel.find();
 };
 
+const getTagSums = () => {
+	return TagModel.count();
+};
+
 module.exports = {
 	getTags,
-  getTag,
-  deleteTag,
-  addTag
+	getTag,
+	deleteTag,
+	addTag,
+	getTagSums,
 };

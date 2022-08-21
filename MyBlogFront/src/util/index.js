@@ -88,6 +88,7 @@ export const pressImg = img => {
 	console.log('压缩率：' + ~~((100 * (initSize - pressImgData.length)) / initSize) + '%');
 	return pressImgData;
 };
+// 图片转为二进制
 export const toBolb = (basestr, type) => {
 	const text = window.atob(basestr.split(',')[1]);
 	const buffer = new ArrayBuffer(text.length);
@@ -106,13 +107,13 @@ export const toBolb = (basestr, type) => {
 	}
 	return blob;
 };
-export const time = (basestr, type) => {
-	const date = new Date();
-	const year = date.getFullYear();
-	const month = date.getMonth() + 1;
-	const day = date.getDate();
-	const hour = date.getHours();
-	const minutes = date.getMinutes();
-	// if () 
-	return year + '-' + month + '-' + day + ' ' + hour + ':' + minutes;
-};
+// export const time = (basestr, type) => {
+// 	const date = new Date();
+// 	const year = date.getFullYear();
+// 	const month = date.getMonth() + 1;
+// 	const day = date.getDate();
+// 	const hour = date.getHours();
+// 	const minutes = date.getMinutes();
+// 	// if ()
+// 	return year + '-' + month + '-' + day + ' ' + hour + ':' + minutes;
+// };

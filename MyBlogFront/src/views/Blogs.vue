@@ -1,23 +1,20 @@
 <template>
 	<div class="blog">
-		<div class="blogtip">
-			<h3>博客</h3>
+		<div class="blogtip" :style="`${cartBg}`">
+			<h2>博客</h2>
 		</div>
 		<!-- 博客列表元素 -->
-		<el-card v-for="item in blogList" shadow="hover" :key="item._id" :style="{ marginBottom: '2vh' }" :id="item._id">
+		<el-card v-for="item in blogList" shadow="hover" class="blogs-item" :key="item._id" :style="`${color};${cartBg}`" :id="item._id">
 			<div @click="blogdetail('blog', item._id)">
 				<div slot="header">
-					<h3>{{ item.title }}</h3>
+					<h2>{{ item.title }}</h2>
 				</div>
-				<div class="content">
-					<p class="desc">
-						<span style="font-size: 16px; font-weight: bold">文章简介：</span>
-						{{ item.digest }}
-					</p>
-				</div>
+				<p class="desc">文章简介{{ item.digest }}</p>
 			</div>
 			<div class="footer">
-				<span class="favour"> <i class="iconfont icon-icon" style="margin-right: 10px"></i>{{ item.favour.length }} </span>
+				<span class="favour">
+					<i class="iconfont icon-icon" :class="item.favour.includes(murmur) ? 'active' : ''" style="margin-right: 10px"></i>{{ item.favour.length }}
+				</span>
 				<span class="brows"> <i class="el-icon-view" style="margin-right: 10px"></i>{{ item.browse }} </span>
 				<span class="createtime"> <i class="iconfont icon-rili" style="margin-right: 10px"></i>{{ item.date }} </span>
 			</div>
@@ -38,7 +35,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapState, mapGetters } from 'vuex';
 export default {
 	data() {
 		return {
@@ -52,13 +49,17 @@ export default {
 			page: 1,
 			// 当前分页开始
 			pageStart: 0,
+			murmur: localStorage.getItem('browserId'),
 		};
 	},
 	mounted() {
 		this.getBlogs(this.pageStart, this.pageSize);
 	},
 	computed: {
-		...mapState(['blogs']),
+		...mapState({
+			blogs: state => state.synthesis.blogs,
+		}),
+		...mapGetters(['color', 'cartBg']),
 	},
 	watch: {
 		$route() {
@@ -77,6 +78,7 @@ export default {
 		// 获取博客列表数据
 		async getBlogs(pageStart, pageSize) {
 			try {
+				this.$loading.show('加载中...');
 				// 获取博客列表
 				let res = null;
 				let { classification, type } = this.$route.query;
@@ -95,8 +97,10 @@ export default {
 				} else {
 					this.$message.error(res.msg);
 				}
+				this.$loading.hide();
 			} catch (err) {
 				this.$message.error(err);
+				this.$loading.hide();
 			}
 		},
 		// 获取博客详情
@@ -108,28 +112,6 @@ export default {
 				this.$message.error(error);
 			}
 		},
-		// // 图片上传
-		// async $imgAdd (pos, $file) {
-		//   // 第一步，将图片上传到服务器
-		//   let formdata = new FormData();
-		//   formdata.append('file', $file);
-		//   // console.log($file, formdata)
-		//   axios({
-		//       url: `${this.$store.state.baseURL}/admin/uploadCover`,
-		//       method: 'post',
-		//       data: formdata,
-		//       headers: {'Content-Type': 'multipart/form-data'},
-		//   }).then((data) => {
-		//       // 第二部，将返回的url替换到文本原位置![...](0) -> ![...](url)
-		//       /**
-		//        * $vm 指为mavonEditor实例，可以通过如下两种方式获取
-		//        * 1. 通过引入对象获取: `import {mavonEditor} from ...` 等方式引入后，`$vm`为`mavonEditor`
-		//        * 2. 通过$refs获取: html声明ref : `<mavon-editor ref=md ></mavon-editor>，`$vm`为 `this.$refs.md`
-		//        */
-		//       // console.log(pos)
-		//       this.$refs.md.$img2Url(pos, data.data.file.url)
-		//   })
-		// },
 	},
 };
 </script>
@@ -137,18 +119,27 @@ export default {
 <style lang="less" scoped>
 .blog {
 	animation: animate 2s;
+	.active {
+		color: rgb(202, 4, 4);
+	}
+	.blogs-item {
+		border: none;
+		margin-bottom: 2vh;
+	}
 	.blogtip {
 		// height: 8vh;
 		line-height: 8vh;
 		text-align: center;
 		background-color: rgb(255, 255, 255);
-		border-color: transparent red;
 		border-radius: 5px;
 		margin-bottom: 2vh;
 	}
 	.desc {
+		font-size: 14px;
 		display: block;
 		height: 10vh;
+		overflow: hidden;
+		white-space: overflow;
 		text-overflow: ellipsis;
 	}
 	.footer {
@@ -172,6 +163,7 @@ export default {
 		}
 	}
 }
+
 @keyframes animate {
 	0% {
 		opacity: 0;

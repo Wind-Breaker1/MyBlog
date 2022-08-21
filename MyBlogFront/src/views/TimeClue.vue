@@ -9,9 +9,10 @@
 				:color="timeNode.color"
 				:size="timeNode.size"
 				:timestamp="timeNode.timestamp"
+				:class="isLight ? 'time-moon' : ''"
 				placement="top">
-				<el-card>
-					<h4>{{ timeNode.title }}</h4>
+				<el-card :style="`${color};${cartBg}`">
+					<h3>{{ timeNode.title }}</h3>
 					<p>{{ timeNode.content }}</p>
 				</el-card>
 			</el-timeline-item>
@@ -19,6 +20,7 @@
 	</div>
 </template>
 <script>
+import { mapState, mapGetters } from 'vuex';
 export default {
 	data() {
 		return {
@@ -69,16 +71,27 @@ export default {
 			],
 		};
 	},
+	computed: {
+		...mapState({
+			isLight: state => state.synthesis.isLight,
+		}),
+		...mapGetters(['color', 'cartBg']),
+	},
 };
 </script>
 <style lang="less" scoped>
 .timeclue-box {
 	padding: 2vw;
 	border-radius: 5px;
-	background-color: rgba(250, 250, 250, 0.4);
+	// background-color: rgba(250, 250, 250, 0.4);
 	box-sizing: border-box;
-	/deep/.el-timeline-item__timestamp {
-		color: #333333;
+	p {
+		margin-top: 5px;
+	}
+	.time-moon {
+		/deep/.el-timeline-item__timestamp {
+			color: #333333;
+		}
 	}
 }
 </style>

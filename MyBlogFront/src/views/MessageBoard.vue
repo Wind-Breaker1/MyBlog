@@ -10,9 +10,9 @@
 					留给我的只是一堆遗憾罢了。
 				</p>
 				<br />
-				<p>现在，在这稍纵即逝的青春的尾巴上，我被生活裹挟着向梦想的远方疾驰，希望能够留下些沿途的风景，于是有了在这个博客。</p>
+				<p>现在，在这稍纵即逝的青春的尾巴上，我被生活裹挟着向前疾驰，希望能够留下些沿途的风景，于是有了在这个博客。</p>
 				<br />
-				<!-- <p>我在这里记录人生片段，你也可以留下你的真情实感！</p> -->
+				<p>这些是我想说的话，你想对我说些什么呢？</p>
 			</div>
 		</transition>
 		<transition name="el-zoom-in-top">
@@ -39,6 +39,7 @@ export default {
 			showMian: false,
 		};
 	},
+
 	mounted() {
 		setTimeout(() => {
 			this.showTip = true;
@@ -52,12 +53,9 @@ export default {
 .message-box {
 	min-height: 100%;
 	width: 100%;
-	padding: 2%;
 	box-sizing: border-box;
-	// background-color: #ffffff;
 	border-radius: 5px;
 	.tip-box {
-		background-color: rgba(255, 255, 255, 0.8);
 		border-radius: 5px;
 		padding: 5%;
 		font-size: 18px;

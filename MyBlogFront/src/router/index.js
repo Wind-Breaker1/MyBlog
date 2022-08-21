@@ -36,10 +36,10 @@ const routes = [
 	// 	path: '/photo',
 	// 	component: () => import('@/views/PhotoWall.vue'),
 	// },
-	{
-		path: '/loading',
-		component: () => import('@/components/Loading.vue'),
-	},
+	// {
+	// 	path: '/loading',
+	// 	component: () => import('@/components/Loading.vue'),
+	// },
 	{
 		path: '/',
 		redirect: '/bloglist',
@@ -50,27 +50,27 @@ const router = new VueRouter({
 	mode: 'history',
 	base: process.env.BASE_URL,
 	routes,
-	// scrollBehavior: (to, from, savePosition) => {
-	// 	// return 期望滚动到哪个的位置
-	// 	//  to：跳转到哪个页面
-	// 	// from：来自哪个页面
-	// 	//savePosition:位置
-	// 	// 常规的一种做法，直接禁止滚动行为，每个页面切换时自动回到顶部
-	// 	if (savePosition) {
-	// 		return {
-	// 			savePosition,
-	// 			behavior: 'smooth',
-	// 		};
-	// 	} else {
-	// 		return { behavior: 'smooth', y: 0 };
-	// 	}
-	// 	// return {
-	// 	// 	// 也可以这么写
-	// 	// 	el: document.getElementById('main-content'),
-	// 	// 	// el: "#main-content",
-	// 	// 	y: 0,
-	// 	// };
-	// },
+	scrollBehavior: (to, from, savePosition) => {
+		// 	// return 期望滚动到哪个的位置
+		// 	//  to：跳转到哪个页面
+		// 	// from：来自哪个页面
+		// 	//savePosition:位置
+		// 	// 常规的一种做法，直接禁止滚动行为，每个页面切换时自动回到顶部
+		// 	if (savePosition) {
+		// 		return {
+		// 			savePosition,
+		// 			behavior: 'smooth',
+		// 		};
+		// 	} else {
+		// 		return { behavior: 'smooth', y: 0 };
+		// 	}
+		return {
+			// 也可以这么写
+			// el: document.getElementById('main-content'),
+			// el: "#main-content",
+			y: 0,
+		};
+	},
 });
 // 重定向不报错
 const routerPush = VueRouter.prototype.push;

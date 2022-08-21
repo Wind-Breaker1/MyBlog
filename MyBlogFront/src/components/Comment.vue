@@ -1,14 +1,21 @@
 <template>
-	<div class="comment">
-		<div class="comment-header">
-			<div @click="uploadAvatar">
-				<input type="file" id="avatarInput" />
-				<el-avatar :src="avatar ? avatar : 'https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png'"
-					:size="40"></el-avatar>
+	<div class="comment" :style="`${mainBg}`">
+		<div class="comment-header" :style="`${cartBg}`">
+			<div @click="handleClick">
+				<input type="file" id="avatarInput" @change="uploadAvatar" />
+				<el-avatar :src="avatarUrl ? avatarUrl : 'https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png'" :size="40"></el-avatar>
 			</div>
 
-			<el-input :placeholder="placeholderText" v-model="context" class="input-with-select" type="textarea" resize="none"
-				size="mini" :maxlength="contentLength" @focus="isShowSecReply(undefined)">
+			<el-input
+				:placeholder="placeholderText"
+				v-model="context"
+				class="input"
+				type="textarea"
+				resize="none"
+				size="mini"
+				:maxlength="contentLength"
+				:class="!isLight ? 'input-night' : ''"
+				@focus="isShowSecReply(undefined)">
 			</el-input>
 			<el-button type="info" style="height: 40px" @click="submitInfo(keyId, undefined)">{{ buttonText }}</el-button>
 		</div>
@@ -27,19 +34,24 @@
 					</p>
 					<!-- 一级评论评论点赞 -->
 					<div class="comment-right">
-						<i class="iconfont icon-icon" @click="giveALike(item, item._id)"
-							:class="item.favour.includes(murmur) ? 'active' : ''"></i>{{ item.favour.length }}
+						<i class="iconfont icon-icon" @click="giveALike(item, item._id)" :class="item.favour.includes(murmur) ? 'active' : ''"></i
+						>{{ item.favour.length || 0 }}
 						<i class="el-icon-chat-dot-round" @click="isShowSecReply(item._id)"> 回复</i>
 						<i class="el-icon-delete" @click="deleteComment(item._id, undefined)" v-if="murmur === item.murmur"> 删除</i>
 					</div>
 					<!-- 回复一级评论 -->
 					<div class="reply-comment" v-show="isShowSec === item._id">
-						<el-input placeholder="请输入最多150字的评论...." v-model="replyContext" :maxlength="150"> </el-input>
-						<el-button type="info" size="mini" class="reply-button" @click="submitInfo(item._id, item.username)">回复
-						</el-button>
+						<el-input
+							placeholder="请输入最多150字的评论...."
+							class="input"
+							v-model="replyContext"
+							:maxlength="150"
+							:class="!isLight ? 'input-night' : ''">
+						</el-input>
+						<el-button type="info" size="mini" class="reply-button" @click="submitInfo(item._id, item.username)">回复 </el-button>
 					</div>
 					<!-- 次级评论 -->
-					<div class="second-comment" v-for="(reply, index) in item.replyInfo" :key="reply.murmur + '' + index">
+					<div class="second-comment" v-for="(reply, index) in item.replyInfo" :key="reply.murmur + '' + index" :style="`${cartBg}`">
 						<!-- 次级评论头像,该用户没有头像则显示默认头像 -->
 						<el-avatar :size="40" :src="reply.avatar"></el-avatar>
 						<div class="content">
@@ -51,22 +63,26 @@
 							<p style="padding-right: 30px">
 								<span class="to_reply">{{ reply.username }}</span>
 								回复
-								<span class="to_reply">{{ reply.replyName }}</span>：
+								<span class="to_reply">{{ reply.replyName }}</span
+								>：
 								{{ reply.reply }}
 							</p>
 							<!-- 次级评论评论点赞 -->
 							<div class="comment-right">
-								<i class="iconfont icon-icon" @click="giveALike(reply, item._id)"
-									:class="reply.favour.includes(murmur) ? 'active' : ''">{{ reply.favour ? reply.favour.length : 0
-									}}</i>
+								<i class="iconfont icon-icon" @click="giveALike(reply, item._id)" :class="reply.favour.includes(murmur) ? 'active' : ''"></i
+								>{{ reply.favour ? reply.favour.length : 0 }}
 								<i class="el-icon-chat-dot-round" @click="isShowSecReply(reply._id)">回复</i>
-								<i class="el-icon-delete" @click="deleteComment(item._id, reply._id)"
-									v-if="murmur === reply.murmur">删除</i>
+								<i class="el-icon-delete" @click="deleteComment(item._id, reply._id)" v-if="murmur === reply.murmur">删除</i>
 							</div>
 							<div class="reply-comment" v-show="isShowSec === reply._id">
-								<el-input placeholder="请输入最多150字的评论...." v-model="replyContext" :maxlength="150"> </el-input>
-								<el-button type="info" size="mini" class="reply-button" @click="submitInfo(item._id, reply.username)">回复
-								</el-button>
+								<el-input
+									placeholder="请输入最多150字的评论...."
+									class="input"
+									v-model="replyContext"
+									:maxlength="150"
+									:class="!isLight ? 'input-night' : ''">
+								</el-input>
+								<el-button type="info" size="mini" class="reply-button" @click="submitInfo(item._id, reply.username)">回复 </el-button>
 							</div>
 						</div>
 					</div>
@@ -75,15 +91,15 @@
 		</div>
 		<!-- 页码 -->
 		<div class="pagenation">
-			<el-pagination background layout="prev, pager, next" :total="10" :hide-on-single-page="true"
-				:page-size="pageSize"> </el-pagination>
+			<el-pagination background layout="prev, pager, next" :total="10" :hide-on-single-page="true" :page-size="pageSize"> </el-pagination>
 		</div>
 		<!-- 暂无评论的空状态 -->
 		<el-empty :description="emptyText" v-show="comments.length === 0"></el-empty>
 	</div>
 </template>
 <script>
-import { pressImg, toBolb, time } from '../util';
+import { pressImg, toBolb } from '../util';
+import { mapGetters, mapState } from 'vuex';
 export default {
 	props: {
 		keyId: {
@@ -102,6 +118,12 @@ export default {
 			type: String,
 		},
 	},
+	computed: {
+		...mapState({
+			isLight: state => state.theme.isLight,
+		}),
+		...mapGetters(['mainBg', 'cartBg']),
+	},
 	data() {
 		return {
 			comments: [], // 获取得到的评论
@@ -119,7 +141,7 @@ export default {
 			// 当前分页开始
 			pageStart: 0,
 			username: '',
-			avatar: '',
+			avatarUrl: '',
 		};
 	},
 	mounted() {
@@ -131,12 +153,15 @@ export default {
 			this.pageStart = this.pageSize * (val - 1);
 			this.getCommentList(this.pageStart, this.pageSize);
 		},
-		uploadAvatar(e) {
+		// 唤起文件选择
+		handleClick() {
 			const input = document.querySelector('#avatarInput');
 			input.click();
+		},
+		uploadAvatar(e) {
 			const maxSize = 2 * 1024 * 1024;
 			this.loading = true;
-			const file = Array.prototype.slice.call(input.target.files)[0];
+			const file = Array.prototype.slice.call(e.target.files)[0];
 			const render = new FileReader();
 			render.readAsDataURL(file);
 			render.onload = async e => {
@@ -152,7 +177,9 @@ export default {
 							blob = toBolb(data, 'image/jpeg', file.name);
 							const formdata = new FormData();
 							formdata.append('file', blob);
+							formdata.append('murmur', this.murmur);
 							const res = await this.$api.uploadImg(formdata);
+							this.avatarUrl = res.avatarUrl;
 						}
 					};
 				} else {
@@ -161,55 +188,66 @@ export default {
 					formdata.append('file', blob);
 					formdata.append('murmur', this.murmur);
 					const res = await this.$api.uploadImg(formdata);
+					this.avatarUrl = res.avatarUrl;
 				}
 			};
 		},
 		submitInfo(id, replyName) {
 			if (!this.username) {
-				this.$prompt('请输入用户名', {
+				this.$prompt('请输入你的名字', {
 					confirmButtonText: '确定',
 					cancelButtonText: '取消',
-				}).then(username => {
-					this.$api.addMurmur({
-						murmur: this.murmur,
-						username: username.value,
-					}).then((res) => {
-						this.addComment(id, replyName);
-						this.username = res.data.username;
+				})
+					.then(username => {
+						if (!username.value) {
+							throw new Error();
+						}
+						this.$api
+							.addMurmur({
+								murmur: this.murmur,
+								username: username.value,
+							})
+							.then(res => {
+								this.addComment(id, replyName);
+								this.username = res.data.username;
+							});
 					})
-				}).catch(() => {
-					this.$message({
-						type: 'info',
-						message: '取消输入',
+					.catch(err => {
+						if (err == 'cancel') {
+							this.$message({
+								type: 'info',
+								message: '取消输入',
+							});
+						} else {
+							this.$message.warning({
+								message: '名字不能为空哦！',
+							});
+						}
 					});
-				});
-			} else{
+			} else {
 				this.addComment(id, replyName);
 			}
 		},
 		// 获取本篇文章所有评论
 		async getCommentList(pageStart, pageSize) {
 			try {
-				let res = null;
 				this.comments = [];
+				let id = '';
 				if (this.keyId == 'messageBoard') {
-					res = await this.$api.getComments({
-						id: 'messageBoard',
-						pageSize,
-						pageStart,
-						murmur: this.murmur,
-					});
+					id = 'messageBoard';
 				} else {
-					res = await this.$api.getComments({
-						id: this.keyId,
-						pageSize,
-						pageStart,
-						murmur: this.murmur,
-					});
+					id = this.keyId;
 				}
-				this.comments = res.data.comments;
+				const res = await this.$api.getComments({
+					id,
+					pageSize,
+					pageStart,
+					murmur: this.murmur,
+				});
+				this.comments = res.data?.comments;
+				console.log(res);
 				this.username = res.data.user?.username;
-				this.avatar = res.data.user?.avatar;
+				this.avatarUrl = res.data.user?.avatarUrl;
 			} catch (err) {
 				this.$message.error(err);
 			}
@@ -223,26 +261,32 @@ export default {
 					return;
 				}
 				if (item.replyName) {
-					this.$api.addsecondfavour({
-						replyId: item._id,
-						_id,
-						favourMurmur: this.murmur,
-					}).then((res) => {
-						this.$message.success(res.msg);
-						item.favour.push(this.murmur);
-					}).catch(() => {
-						this.$message.error(res.msg);
-					});
+					this.$api
+						.addsecondfavour({
+							replyId: item._id,
+							_id,
+							favourMurmur: this.murmur,
+						})
+						.then(res => {
+							this.$message.success(res.msg);
+							item.favour.push(this.murmur);
+						})
+						.catch(() => {
+							this.$message.error(res.msg);
+						});
 				} else {
-					this.$api.addfirstfavour({
-						_id,
-						favourMurmur: this.murmur,
-					}).then((res) => {
-						this.$message.success(res.msg);
-						item.favour.push(this.murmur);
-					}).catch(() => {
-						this.$message.error(res.msg);
-					});
+					this.$api
+						.addfirstfavour({
+							_id,
+							favourMurmur: this.murmur,
+						})
+						.then(res => {
+							this.$message.success(res.msg);
+							item.favour.push(this.murmur);
+						})
+						.catch(() => {
+							this.$message.error(res.msg);
+						});
 				}
 			} catch (err) {
 				this.$message.error(err);
@@ -265,36 +309,44 @@ export default {
 		deleteComment(_id, replyId) {
 			let res = null;
 			if (replyId) {
-				res = this.$api.deletesecondcomment({ replyId, _id }).then((res) => {
-					this.$message.success(res.msg);
-					const temp = this.comments.find(item => item._id == _id).replyInfo;
-					for (let i = 0; i < temp.length; i++) {
-						if (temp[i]._id == replyId) {
-							temp.splice(i, 1);
-							break;
+				res = this.$api
+					.deletesecondcomment({ replyId, _id })
+					.then(res => {
+						this.$message.success(res.msg);
+						const temp = this.comments.find(item => item._id == _id).replyInfo;
+						for (let i = 0; i < temp.length; i++) {
+							if (temp[i]._id == replyId) {
+								temp.splice(i, 1);
+								break;
+							}
 						}
-					}
-				}).catch(() => {
-					this.$message.error(res.msg);
-				});
-
+					})
+					.catch(() => {
+						this.$message.error(res.msg);
+					});
 			} else {
-				res = this.$api.deletefirstcomment({ _id }).then((res) => {
-					this.$message.success(res.msg);
-					for (let i = 0; i < this.comments.length; i++) {
-						if (this.comments[i]._id == _id) {
-							this.comments.splice(i, 1);
+				res = this.$api
+					.deletefirstcomment({ _id })
+					.then(res => {
+						this.$message.success(res.msg);
+						for (let i = 0; i < this.comments.length; i++) {
+							if (this.comments[i]._id == _id) {
+								this.comments.splice(i, 1);
+							}
 						}
-					}
-				}).catch(() => {
-					this.$message.error(res.msg);
-				});
-
+					})
+					.catch(() => {
+						this.$message.error(res.msg);
+					});
 			}
 		},
 		async addComment(id, replyName) {
 			let res = null;
 			if (replyName) {
+				if (!this.replyContext) {
+					this.$message.warning('评论或留言不能为空哦！');
+					return;
+				}
 				res = await this.$api.addsecondcomment({
 					_id: id,
 					reply: this.replyContext,
@@ -302,16 +354,20 @@ export default {
 					murmur: this.murmur,
 				});
 				res.data.username = this.username;
-				this.comments.find(item => item._id == id).replyInfo.push(res.data)
+				this.comments.find(item => item._id == id).replyInfo.push(res.data);
 				this.replyContext = '';
 			} else {
+				if (!this.context) {
+					this.$message.warning('评论或留言不能为空哦！');
+					return;
+				}
 				res = await this.$api.addfirstcomment({
 					keyId: id,
 					content: this.context,
 					murmur: this.murmur,
 				});
 				res.data.username = this.username;
-				this.comments.push(res.data)
+				this.comments.push(res.data);
 				this.context = '';
 			}
 			if (res.status === 200) {
@@ -328,13 +384,20 @@ export default {
 <style lang="less" scoped>
 .comment {
 	min-height: 26vh;
-	background-color: rgb(255, 255, 255);
+	// background-color: rgb(255, 255, 255);
 	border-radius: 5px;
 	margin-top: 2px;
 	overflow: hidden;
 
 	.active {
-		color: red;
+		color: rgb(202, 4, 4);
+	}
+	.input-night {
+		/deep/.el-textarea__inner,
+		/deep/.el-input__inner {
+			background-color: rgb(50, 50, 50);
+			color: #ffffff;
+		}
 	}
 
 	.comment-header {
@@ -343,7 +406,7 @@ export default {
 		padding: 10px 5px;
 		display: flex;
 		align-items: center;
-		background-color: rgb(247, 246, 246);
+		// background-color: rgb(247, 246, 246);
 
 		#avatarInput {
 			width: 10vh;
@@ -354,10 +417,13 @@ export default {
 			z-index: 10;
 		}
 
-		.input-with-select {
+		.input {
 			margin-left: 10px;
 			margin-right: 20px;
 			flex: 1;
+			/deep/.el-input__inner:focus {
+				border-color: #dcdfe6;
+			}
 		}
 	}
 
@@ -368,14 +434,18 @@ export default {
 
 		.first-comment {
 			display: flex;
-
+			.input {
+				/deep/.el-input__inner:focus {
+					border-color: #dcdfe6;
+				}
+			}
 			i {
 				margin-right: 5px;
 				margin-left: 15px;
 				cursor: pointer;
 
 				&:nth-child(3) {
-					color: red;
+					color: rgb(202, 4, 4);
 				}
 			}
 
@@ -384,7 +454,7 @@ export default {
 				position: relative;
 				flex: 1;
 
-				&>span {
+				& > span {
 					font-size: 12px;
 					color: rgb(130, 129, 129);
 				}

@@ -1,30 +1,39 @@
 <template>
-	<div id="slideshow">
-		<el-carousel class="cart-img" direction="vertical" height="100%" indicator-position="none">
+	<div id="slideshow-box" :style="`${color};${mainBg}`">
+		<el-carousel class="cart-img" direction="vertical" indicator-position="none" height="100%">
 			<el-carousel-item v-for="item in slideBg" :key="item">
-				<img :src="item" alt="" />
+				<img :src="item" alt="加载失败" />
 			</el-carousel-item>
 		</el-carousel>
-		<div class="info">
+		<div class="info" :style="`${infoBgColor}`">
 			<img :src="infoBgUrl" alt="avatar" />
 			<el-avatar :src="avatarUrl" class="avatar" :size="50"></el-avatar>
-			<div>
-				<div>博客<span>{{ count }}</span></div>
-				<div>心情<span>55</span></div>
-				<div>专栏<span>55</span></div>
-				<div>标签<span>55</span></div>
+			<div class="my-name">面谱人生</div>
+			<div class="info-detail">
+				<div>
+					博客<span>{{ webInfo.blogNums || 0 }}</span>
+				</div>
+				<div>
+					心情<span>{{ webInfo.jottingNums || 0 }}</span>
+				</div>
+				<div>
+					专栏<span>{{ webInfo.classifyNums || 0 }}</span>
+				</div>
+				<div>
+					标签<span>{{ webInfo.tagNums || 0 }}</span>
+				</div>
 			</div>
 		</div>
 		<div class="tip">欢迎来到我的小站！</div>
 	</div>
 </template>
 <script>
-import slideBgUrl1 from '@/assets/img/slideBg/slidebg1.jpg';
-// import slideBgUrl2 from "@/assets/img/slideBg/slidebg2.jpg";
-import slideBgUrl3 from '@/assets/img/slideBg/slidebg3.jpg';
-import slideBgUrl4 from '@/assets/img/slideBg/slidebg4.jpg';
-import infoBgUrl from '@/assets/img/7.png';
-import avatarUrl from '@/assets/img/6.png';
+import slideBgUrl1 from '@/assets/img/slideBg/slideBg1.jpg';
+import slideBgUrl3 from '@/assets/img/slideBg/slideBg2.jpg';
+import slideBgUrl4 from '@/assets/img/slideBg/slideBg3.jpg';
+import infoBgUrl from '@/assets/img/infoBg.jpg';
+import avatarUrl from '@/assets/img/avatar.png';
+import { mapGetters, mapState } from 'vuex';
 export default {
 	data() {
 		return {
@@ -33,24 +42,37 @@ export default {
 			// 头像地址
 			avatarUrl,
 			infoBgUrl,
-			count: 0,
+			webInfo: {},
+			styleObj: {},
 		};
 	},
+	computed: {
+		...mapState({
+			isLight: state => state.isLight,
+		}),
+		...mapGetters(['color', 'infoBgColor', 'mainBg']),
+	},
 	mounted() {
+		// console.log(this.color, this.infoBgColor);
+		// this.styleObj.color = this.color;
+		// this.styleObj.backgroundColor = this.infoBgColor;
 		this.getInfo();
 	},
 	methods: {
 		// 请求文章数和浏览数
 		async getInfo() {
 			try {
-				let res = await this.$api.getWebInfo();
+				this.$loading.show('加载中...');
+				const res = await this.$api.getWebInfo();
 				if (res.status === 200) {
-					this.count = res.count;
+					this.webInfo = res.data;
 				} else {
 					this.$message.error('网络出错了,(ノへ￣、)！');
 				}
+				this.$loading.hide();
 			} catch (err) {
 				this.$message.error(err);
+				this.$loading.hide();
 			}
 		},
 	},
@@ -58,30 +80,33 @@ export default {
 </script>
 
 <style scoped lang="less">
-#slideshow {
+#slideshow-box {
 	height: 45vh;
 	width: 100%;
 	margin-top: 1%;
 	border-radius: 5px;
-	background: rgba(255, 255, 255, 0.7);
 	position: relative;
-	font-size: 12px;
+
 	.cart-img {
-		height: 93%;
+		height: 42vh;
+		border-radius: 5px;
+		img {
+			height: 100%;
+			width: 100%;
+		}
 	}
 
 	.info {
-		background-color: white;
 		position: absolute;
 		height: 25vh;
-		width: 15vw;
+		width: 13vw;
 		left: 5%;
 		bottom: 2%;
-		z-index: 90;
+		z-index: 5;
 		border-radius: 5px;
 
-		&>img {
-			height: 50%;
+		& > img {
+			height: 45%;
 			width: 100%;
 			border-radius: 5px;
 		}
@@ -92,20 +117,42 @@ export default {
 			top: 40%;
 			transform: translate(-50%, -45%);
 		}
-		& > div{
-			margin-top: 1vh;
+		.my-name {
+			margin-top: 3vh;
+			text-align: center;
+			font-size: 20px;
+		}
+		.info-detail {
 			display: flex;
-			height: 10vh;
+			height: 7vh;
 			justify-content: space-around;
 			align-items: center;
-			div{
+			font-size: 14px;
+			div {
 				display: flex;
 				flex-direction: column;
 				align-items: center;
-				span{
+				span {
 					margin-top: 5px;
 				}
 			}
+		}
+	}
+	.tip {
+		height: 3vh;
+		line-height: 3vh;
+		text-align: center;
+	}
+}
+@media screen and (max-width: 1000px) {
+	#slideshow-box {
+		height: 35vh;
+		font-size: 12px;
+		.cart-img {
+			height: 32vh;
+		}
+		.info {
+			width: 140px;
 		}
 	}
 }

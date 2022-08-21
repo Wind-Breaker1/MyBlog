@@ -1,41 +1,42 @@
 <template>
-	<div id="siderInfo">
-		<el-card class="box-card">
-			<div slot="header">
-				<h3><i class="el-icon-edit-outline" style="margin-right: 10px"></i>书签</h3>
-			</div>
-			<el-tag v-for="item in classifyList" :key="item._id" class="bookmark" :id="item._id" type="info" @click="getBlogsOfClassify($event)">{{
-				item.title
-			}}</el-tag>
+	<div id="siderInfo-box">
+		<el-card class="box-card" :style="`${color};${mainBg}`">
+			<div slot="header"><i class="el-icon-edit-outline" style="margin-right: 10px"></i>书签</div>
+			<el-tag
+				v-for="item in classifyList"
+				:key="item._id"
+				class="bookmark"
+				:style="`${color};${mainBg}`"
+				:id="item._id"
+				type="info"
+				@click="getBlogsOfClassify($event)"
+				>{{ item.title }}</el-tag
+			>
 		</el-card>
-		<el-card class="box-card">
-			<div slot="header">
-				<h3><i class="el-icon-medal" style="margin-right: 10px"></i>最新随笔</h3>
-			</div>
+		<el-card class="box-card" :style="`${color};${mainBg}`">
+			<div slot="header"><i class="el-icon-medal" style="margin-right: 10px"></i>最新随笔</div>
 			<div class="content" v-for="item in jottingList" :key="item._id" @click="showdetail('jotting', item._id)">
 				{{ item.title }}
 			</div>
 		</el-card>
-		<el-card class="box-card">
-			<div slot="header">
-				<h3><i class="el-icon-document" style="margin-right: 10px"></i>最新博客</h3>
-			</div>
+		<el-card class="box-card" :style="`${color};${mainBg}`">
+			<div slot="header"><i class="el-icon-document" style="margin-right: 10px"></i>最新博客</div>
 			<div class="content" v-for="item in blogList" :key="item._id" @click="showdetail('blog', item._id)">
 				{{ item.title }}
 			</div>
 		</el-card>
-		<el-calendar v-model="time" class="calendar"> </el-calendar>
-		<div class="like-context">
-			<h3><i class="el-icon-alarm-clock" style="margin-right: 10px"></i>年轻人，你怎么睡的着啊！</h3>
+		<el-calendar v-model="time" class="calendar box-card" :class="isLight ? 'calendar-moon' : 'calendar-night'"> </el-calendar>
+		<div class="like-context box-card" :style="`${color};${mainBg}`">
+			<i class="el-icon-alarm-clock" style="margin-right: 10px"></i>年轻人，你怎么睡的着啊！
 		</div>
-		<div class="like-context">
-			<h3><i class="el-icon-aim" style="margin-right: 10px"></i>瞄准目标，坚定地走下去！</h3>
+		<div class="like-context box-card" :style="`${color};${mainBg}`">
+			<i class="el-icon-aim" style="margin-right: 10px"></i>瞄准目标，坚定地走下去！
 		</div>
 	</div>
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapState, mapGetters } from 'vuex';
 export default {
 	data() {
 		return {
@@ -49,13 +50,20 @@ export default {
 		this.getBaseInfo();
 	},
 	computed: {
-		...mapState(['blogs', 'jottings', 'classifies']),
+		...mapState({
+			blogs: state => state.synthesis.blogs,
+			jottings: state => state.synthesis.jottings,
+			classifies: state => state.synthesis.classifies,
+			isLight: state => state.theme.isLight,
+		}),
+		...mapGetters(['mainBg', 'color']),
 	},
 	methods: {
 		// 获取基本信息
 		async getBaseInfo() {
 			try {
-				if (this.blogs.length > 0 && this.jottings.length > 0 && this.classifies.length > 0) {
+				this.$loading.show('加载中...');
+				if (this.blogs?.length > 0 && this.jottings?.length > 0 && this.classifies?.length > 0) {
 					this.classifyList = this.classifies;
 					this.blogList = this.blogs;
 					this.jottingList = this.jottings;
@@ -72,8 +80,10 @@ export default {
 						this.$message.error('网络出错了,(ノへ￣、)！');
 					}
 				}
+				this.$loading.hide();
 			} catch (error) {
 				this.$message.error(error);
+				this.$loading.hide();
 			}
 		},
 		// 获取某一书签下所有博客
@@ -92,21 +102,18 @@ export default {
 </script>
 
 <style scoped lang="less">
-#siderInfo {
+#siderInfo-box {
 	height: 100%;
 	width: 265px;
 	margin-left: 1vw;
 	margin-top: 5px;
 	margin-bottom: 1vh;
 	border-radius: 5px;
-	// background-color: rgba(220, 220, 220, 0.6);
-	z-index: 99;
+	font-size: 18px;
 	.box-card {
-		background-color: rgba(245, 245, 245, 0.8);
 		margin-bottom: 2vh;
-		/deep/.el-card__header {
-			border-color: #c5c4c4;
-		}
+		border: 1px solid #c5c4c4;
+
 		.bookmark {
 			margin: 5px 5px;
 			// color: white;
@@ -116,19 +123,37 @@ export default {
 			padding: 10px;
 			text-overflow: ellipsis;
 			overflow: hidden;
+			font-size: 14px;
 			cursor: pointer;
 		}
 	}
+	.box-card:hover {
+		box-shadow: 5px 5px 15px 3px rgb(145, 144, 144);
+	}
 	//
 	.calendar {
+		font-size: 15px;
 		border-radius: 5px;
-		background: rgba(255, 255, 255, 0.8);
 		/deep/ .el-button {
 			padding: 5px;
 		}
 		/deep/ .el-calendar-day {
 			border: 0;
 			height: 30px;
+		}
+	}
+	.calendar-moon {
+		background-color: rgba(255, 255, 255, 0.6);
+	}
+	.calendar-night {
+		background-color: rgba(50, 50, 50, 0.6);
+		color: #ffffff;
+		/deep/ .el-calendar__title {
+			color: #ffffff;
+		}
+		/deep/ .el-button {
+			background-color: gray;
+			color: #ffffff;
 		}
 	}
 	.like-context {
@@ -143,6 +168,11 @@ export default {
 	}
 	.like-context:hover {
 		box-shadow: 0 16px 16px 0 rgba(0, 0, 0, 0.3);
+	}
+}
+@media screen and (max-width: 768px) {
+	#siderInfo-box {
+		display: none;
 	}
 }
 </style>

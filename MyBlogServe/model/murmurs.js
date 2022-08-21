@@ -1,12 +1,11 @@
 const mongoose = require('mongoose');
 const MurmurSchema = new mongoose.Schema({
-	date: {type: String, require: true},
+	date: { type: String, require: true },
 	username: { type: String, require: true },
 	murmur: { type: String, require: true, unique: true },
 	avatarUrl: { type: String },
 });
 const MurmurModel = mongoose.model('murmur', MurmurSchema);
-
 
 /**
  *新增浏览器指纹信息
@@ -21,7 +20,6 @@ const addMurmur = data => {
 		.catch(() => false);
 };
 
-
 /**
  *修改浏览器指纹对应用户名
  * @param {string} murmur 浏览器指纹
@@ -30,7 +28,6 @@ const addMurmur = data => {
 const updateMurmurUsername = (murmur, username) => {
 	return MurmurModel.updateOne({ murmur }, { $set: { username } });
 };
-
 
 /**
  *更新用户头像
@@ -41,7 +38,6 @@ const updateMurmurAvatar = (murmur, avatarUrl) => {
 	return MurmurModel.updateOne({ murmur }, { $set: { avatarUrl } });
 };
 
-
 // // 删除用户
 // const deleteMurmur = email => {
 // 	return MurmurModel.deleteOne({ email });
@@ -50,10 +46,10 @@ const updateMurmurAvatar = (murmur, avatarUrl) => {
 
 /**
  * @param {string} murmur 浏览器指纹
- * @return {object} 查找到的指纹信息 
+ * @return {object} 查找到的指纹信息
  */
 const getMurmurInfo = murmur => {
-	return MurmurModel.findOne({ murmur }, 'username avatar');
+	return MurmurModel.findOne({ murmur });
 };
 
 /**
@@ -68,5 +64,5 @@ module.exports = {
 	getMurmurInfo,
 	updateMurmurUsername,
 	updateMurmurAvatar,
-	getMurmurInfos
+	getMurmurInfos,
 };

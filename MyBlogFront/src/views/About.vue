@@ -1,7 +1,7 @@
 <template>
 	<div class="main-box">
 		<div class="avatar">
-			<img class="avatar" src="https://t7.baidu.com/it/u=1595072465,3644073269&fm=193&f=GIF" alt="错误" />
+			<img class="avatar" src="../assets/img/avatar.png" alt="错误" />
 		</div>
 		<div class="about-content">
 			<p>WeiPengFei 男 在校大学生（即将毕业啦！）</p>
@@ -11,12 +11,12 @@
 			<p>乐观看待生活，努力改变人生！</p>
 			<br />
 			<div class="like">
-				<div class="like-bg">
+				<div class="like-bg" :style="`${animateBg}`">
 					<span>成长就是你主观世界遇到客观世界之间的那条沟，你掉进去了，叫挫折，爬出来了，叫成长。 ——罗振宇</span>
 				</div>
 				<div class="drops">
-					<div class="drop1"></div>
-					<div class="drop2"></div>
+					<div class="drop1" :style="`${animateBg}`"></div>
+					<div class="drop2" :style="`${animateBg}`"></div>
 				</div>
 			</div>
 			<svg xmlns="http://www.w3.org/2000/svg" version="1.1">
@@ -30,9 +30,16 @@
 		</div>
 	</div>
 </template>
+<script>
+import { mapGetters } from 'vuex';
+export default {
+	computed: {
+		...mapGetters(['animateBg']),
+	},
+};
+</script>
 <style lang="less" scoped>
 .main-box {
-	flex: 1;
 	background-color: rgba(255, 255, 255, 0.6);
 	border-radius: 5px;
 	// animation: rotate-center 0.6s ease-in-out both;
@@ -51,55 +58,55 @@
 		font-weight: 800;
 		line-height: 50px;
 		position: relative;
-	}
-}
-
-.like {
-	width: 80%;
-	margin: auto;
-
-	font-family: sans-serif;
-	color: #ffffff;
-	font-size: 20px;
-	span {
-		z-index: 3;
-	}
-	.like-bg {
-		background-color: #10a7c1;
-		padding-bottom: 40px;
-		border-radius: 5px;
-		z-index: 2;
-		animation: wave 1s ease-out forwards;
-	}
-	.drops {
-		filter: url('#liquid');
-		position: relative;
-		animation: fade-in 0.1s linear 0.4s forwards;
-		.drop1,
-		.drop2 {
-			width: 21px;
-			height: 24px;
-			border-radius: 50%;
-			position: absolute;
-			left: 0;
-			right: 0;
-			bottom: 0;
+		.like {
+			width: 80%;
 			margin: auto;
-			background-color: #10a7c1;
-		}
 
-		.drop1 {
-			width: 90px;
-			height: 16px;
-			bottom: 2px;
-			border-radius: 0;
-		}
+			font-family: sans-serif;
+			color: #ffffff;
+			font-size: 20px;
+			span {
+				z-index: 3;
+			}
+			.like-bg {
+				// background-color: #777777;
+				padding-bottom: 40px;
+				border-radius: 5px;
+				z-index: 2;
+				animation: wave 1s ease-out forwards;
+			}
+			.drops {
+				filter: url('#liquid');
+				position: relative;
+				animation: fade-in 0.1s linear 0.4s forwards;
+				.drop1,
+				.drop2 {
+					width: 21px;
+					height: 24px;
+					border-radius: 50%;
+					position: absolute;
+					left: 0;
+					right: 0;
+					bottom: 0;
+					margin: auto;
+					// background-color: #777777;
+				}
 
-		.drop2 {
-			animation: drop 1.3s cubic-bezier(1, 0.19, 0.66, 0.12) 0.5s infinite;
+				.drop1 {
+					width: 90px;
+					height: 16px;
+					bottom: 2px;
+					border-radius: 0;
+				}
+
+				.drop2 {
+					animation: drop 1.3s cubic-bezier(1, 0.19, 0.66, 0.12) 0.5s infinite;
+				}
+			}
 		}
 	}
 }
+
 @keyframes fade-in {
 	0% {
 		opacity: 0;
@@ -166,6 +173,11 @@
 		-webkit-transform-origin: top;
 		transform-origin: top;
 		opacity: 1;
+	}
+}
+@media screen and (max-width: 1000px) {
+	#mainContainer {
+		padding: 3vw;
 	}
 }
 </style>

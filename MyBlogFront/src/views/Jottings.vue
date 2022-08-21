@@ -1,23 +1,20 @@
 <template>
 	<div class="jotting">
-		<div class="jotting-tip">
-			<h3>心情日记</h3>
+		<div class="jotting-tip" :style="`${cartBg}`">
+			<h2>心情</h2>
 		</div>
 		<!-- 博客列表元素 -->
-		<el-card v-for="(item, index) in jottingList" :key="index" :style="{ marginBottom: '2vh' }">
+		<el-card v-for="(item, index) in jottingList" :key="index" class="jottings-item" :style="`${color};${cartBg}`">
 			<div @click="blogdetail('jotting', item._id)">
 				<div slot="header">
-					<h3><i class="iconfont icon-wenzhang"></i>{{ item.title }}</h3>
+					<h2>{{ item.title }}</h2>
 				</div>
-				<div class="content">
-					<p class="desc">
-						<span style="font-size: 16px; font-weight: bold">文章简介：</span>
-						{{ item.digest }}
-					</p>
-				</div>
+				<p class="desc">文章简介：{{ item.digest }}</p>
 			</div>
 			<div class="show">
-				<span class="favour"> <i class="iconfont icon-icon" style="margin-right: 10px"></i>{{ item.favour.length }} </span>
+				<span class="favour">
+					<i class="iconfont icon-icon" :class="item.favour.includes(murmur) ? 'active' : ''" style="margin-right: 10px"></i>{{ item.favour.length }}
+				</span>
 				<span class="brows"> <i class="el-icon-view" style="margin-right: 10px"></i>{{ item.browse }} </span>
 				<span class="createtime"> <i class="iconfont icon-rili" style="margin-right: 10px"></i>{{ item.date }} </span>
 			</div>
@@ -38,7 +35,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapState, mapGetters } from 'vuex';
 export default {
 	data() {
 		return {
@@ -49,13 +46,17 @@ export default {
 			// 每页数量
 			pageSize: 5,
 			pageStart: 0,
+			murmur: localStorage.getItem('browserId'),
 		};
 	},
 	mounted() {
 		this.getJottingList(this.pageStart, this.pageSize);
 	},
 	computed: {
-		...mapState(['jottings']),
+		...mapState({
+			jottings: state => state.synthesis.jottings,
+		}),
+		...mapGetters(['color', 'cartBg']),
 	},
 	methods: {
 		// 分页改变事件
@@ -65,6 +66,7 @@ export default {
 		},
 		// 获取博客列表
 		async getJottingList(pageStart, pageSize) {
+			this.$loading.show('加载中...');
 			try {
 				// 获取博客列表
 				let res = await this.$api.getPublishJottings({ pageStart, pageSize });
@@ -74,9 +76,10 @@ export default {
 				} else {
 					this.$message.error('网络出错了,(ノへ￣、)！');
 				}
-				// 获取博客列表
+				this.$loading.hide();
 			} catch (error) {
 				this.$message.error(error);
+				this.$loading.hide();
 			}
 		},
 		async blogdetail(type, _id) {
@@ -104,6 +107,13 @@ export default {
 }
 .jotting {
 	animation: animate 2s;
+	.jottings-item {
+		border: none;
+		margin-bottom: 2vh;
+	}
+	.active {
+		color: rgb(202, 4, 4);
+	}
 	.jotting-tip {
 		line-height: 8vh;
 		text-align: center;
@@ -113,8 +123,11 @@ export default {
 		margin-bottom: 2vh;
 	}
 	.desc {
+		font-size: 14px;
 		display: block;
 		height: 10vh;
+		overflow: hidden;
+		white-space: overflow;
 		text-overflow: ellipsis;
 	}
 	.show {
