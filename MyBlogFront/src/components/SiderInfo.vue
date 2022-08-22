@@ -16,13 +16,15 @@
 		<el-card class="box-card" :style="`${color};${mainBg}`">
 			<div slot="header"><i class="el-icon-medal" style="margin-right: 10px"></i>最新随笔</div>
 			<div class="content" v-for="item in jottingList" :key="item._id" @click="showdetail('jotting', item._id)">
-				{{ item.title }}
+				<span>{{ item.title }}</span
+				><span>{{ item.date }}</span>
 			</div>
 		</el-card>
 		<el-card class="box-card" :style="`${color};${mainBg}`">
 			<div slot="header"><i class="el-icon-document" style="margin-right: 10px"></i>最新博客</div>
 			<div class="content" v-for="item in blogList" :key="item._id" @click="showdetail('blog', item._id)">
-				{{ item.title }}
+				<span>{{ item.title }}</span
+				><span>{{ item.date }}</span>
 			</div>
 		</el-card>
 		<el-calendar v-model="time" class="calendar box-card" :class="isLight ? 'calendar-moon' : 'calendar-night'"> </el-calendar>
@@ -121,9 +123,19 @@ export default {
 		}
 		.content {
 			padding: 10px;
-			text-overflow: ellipsis;
-			overflow: hidden;
+			display: flex;
+			justify-content: space-between;
+
 			font-size: 14px;
+			& > span:nth-child(1) {
+				width: 130px;
+				white-space: overflow;
+				text-overflow: ellipsis;
+				overflow: hidden;
+			}
+			& > span:nth-child(2) {
+				width: 65px;
+			}
 			cursor: pointer;
 		}
 	}

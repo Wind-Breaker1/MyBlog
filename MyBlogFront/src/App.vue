@@ -8,7 +8,7 @@
 			<SiderInfo />
 		</div>
 		<Footer />
-		<button>切换</button>
+		<button @click="changTheme" style="position: fixed; bottom: 30px; right: 30px">切换</button>
 	</div>
 </template>
 <script>
@@ -47,7 +47,11 @@ export default {
 	mounted() {
 		clickSpecialEffect();
 		bgSpecialEffect();
-		console.log(this.isLight);
+	},
+	methods: {
+		changTheme() {
+			this.$store.commit('CHANGETHEME');
+		},
 	},
 };
 </script>
@@ -71,7 +75,6 @@ export default {
 
 	.main-box {
 		flex: 1;
-		// background-color: rgba(255, 255, 255, 0.7);
 		margin-top: 5px;
 		margin-bottom: 10px;
 		border-radius: 5px;
@@ -82,7 +85,7 @@ export default {
 	background: url('@/assets/img/lightBg.png') no-repeat;
 }
 .night {
-	background: url('@/assets/img/nightBg.gif') center;
+	background: url('@/assets/img/nightBg.jpg') no-repeat;
 }
 @media screen and (max-width: 768px) {
 	#mainContainer {

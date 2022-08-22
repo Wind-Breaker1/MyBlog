@@ -10,6 +10,7 @@ const state = {
 	mainBg: 'rgba(50,50,50,0.6)',
 	cartBg: 'rgb(100,100,100)',
 	animateBg: '#0088b5',
+	headFootBg: '#545c64',
 };
 const getters = {
 	color(state) {
@@ -52,10 +53,18 @@ const getters = {
 		}
 		return 'background-color:' + state.animateBg;
 	},
+	headFootBg(state) {
+		if (state.isLight) {
+			state.headFootBg = '#545c64';
+		} else {
+			state.headFootBg = 'rgb(50, 50, 50)';
+		}
+		return 'background-color:' + state.headFootBg;
+	},
 };
 const mutations = {
-	CHANGETHEME(state, isLight) {
-		state.isLight = isLight;
+	CHANGETHEME(state) {
+		state.isLight = !state.isLight;
 	},
 };
 const actions = {};
