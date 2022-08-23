@@ -1,7 +1,14 @@
 <template>
 	<div id="siderInfo-box">
 		<el-card class="box-card" :style="`${color};${mainBg}`">
-			<div slot="header"><i class="el-icon-edit-outline" style="margin-right: 10px"></i>书签</div>
+			<div slot="header"><i class="el-icon-edit-outline" style="margin-right: 10px"></i>专栏</div>
+			<div class="content" v-for="item in classifyList" :key="item._id" @click="showdetail('jotting', item._id)">
+				<span>{{ item.title }}</span
+				><span>{{ item.date }}</span>
+			</div>
+		</el-card>
+		<el-card class="box-card" :style="`${color};${mainBg}`">
+			<div slot="header"><i class="el-icon-price-tag" style="margin-right: 10px"></i>书签</div>
 			<el-tag
 				v-for="item in classifyList"
 				:key="item._id"
@@ -64,7 +71,6 @@ export default {
 		// 获取基本信息
 		async getBaseInfo() {
 			try {
-				this.$loading.show('加载中...');
 				if (this.blogs?.length > 0 && this.jottings?.length > 0 && this.classifies?.length > 0) {
 					this.classifyList = this.classifies;
 					this.blogList = this.blogs;
@@ -82,10 +88,8 @@ export default {
 						this.$message.error('网络出错了,(ノへ￣、)！');
 					}
 				}
-				this.$loading.hide();
 			} catch (error) {
 				this.$message.error(error);
-				this.$loading.hide();
 			}
 		},
 		// 获取某一书签下所有博客

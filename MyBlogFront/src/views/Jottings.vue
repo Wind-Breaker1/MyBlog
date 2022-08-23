@@ -107,6 +107,7 @@ export default {
 }
 .jotting {
 	animation: animate 2s;
+	transition: background-color 0.6s;
 	.jottings-item {
 		border: none;
 		margin-bottom: 2vh;
@@ -117,10 +118,10 @@ export default {
 	.jotting-tip {
 		line-height: 8vh;
 		text-align: center;
-		background-color: rgb(255, 255, 255);
 		border-color: transparent red;
 		border-radius: 5px;
 		margin-bottom: 2vh;
+		transition: background-color 0.6s;
 	}
 	.desc {
 		font-size: 14px;

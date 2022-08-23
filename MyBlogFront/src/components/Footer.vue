@@ -18,5 +18,6 @@ export default {
 	color: #ffffff;
 	line-height: 60px;
 	text-align: center;
+	transition: background-color 0.7s;
 }
 </style>

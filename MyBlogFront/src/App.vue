@@ -72,7 +72,6 @@ export default {
 	display: flex;
 	flex-wrap: wrap;
 	justify-content: space-between;
-
 	.main-box {
 		flex: 1;
 		margin-top: 5px;

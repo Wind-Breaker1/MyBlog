@@ -70,7 +70,7 @@ const depComments = (hashMurmur, comments) => {
 	comments?.forEach(item => {
 		const murValue = hashMurmur.get(item.murmur);
 		item.username = murValue.username;
-		item.avatar = murValue.avatar;
+		item.avatarUrl = murValue.avatarUrl;
 		if (item.replyInfo) {
 			depComments(hashMurmur, item.replyInfo);
 		}
@@ -105,15 +105,11 @@ exports.deleteImg = function (imgUrl) {
 		console.log('给定的路径不存在，请给出正确的路径');
 	}
 };
-// // 生成随机颜色
-// exports.randomColor = function () {
-// 	return (
-// 		'#' +
-// 		(function (color) {
-// 			return (color += '5678956789defdef'[Math.floor(Math.random() * 16)]) && color.length == 6 ? color : arguments.callee(color);
-// 		})('')
-// 	);
-// };
+// 生成随机颜色
+exports.randomColor = () => {
+	const colorList = ['#ffcc00', '#66CDAA', '#acc2e6', '#d7b0d8', '#95abe6', '#ffc47b', '#b6d288', '#f49586', '#bcaf7a', '#c6c5c1'];
+	return colorList[Math.floor(Math.random() * 10)];
+};
 // // 生成随机颜色
 // exports.randomHex = () =>
 // 	`#${Math.floor(Math.random() * 0xffffff)

@@ -41,7 +41,6 @@ export default {
 <style scoped lang="less">
 #header-box {
 	height: 50px;
-	background-color: rgb(50, 50, 50);
 	position: fixed;
 	top: 0;
 	width: 79vw;
@@ -49,6 +48,7 @@ export default {
 	padding-right: 11vw;
 	line-height: 50px;
 	z-index: 8;
+	transition: background-color 0.7s;
 	.input-night {
 		/deep/.el-input__inner {
 			background-color: rgb(100, 100, 100);
@@ -62,10 +62,12 @@ export default {
 	.search {
 		width: 20vw;
 		float: right;
+
 		/deep/ .el-icon-search {
 			margin-right: 10px;
 		}
 		/deep/ .el-input__inner {
+			transition: background-color 0.7s;
 			border: none;
 		}
 	}

@@ -119,6 +119,8 @@ export default {
 <style lang="less" scoped>
 .blog {
 	animation: animate 2s;
+	transition: background-color 0.6s;
+
 	.active {
 		color: rgb(202, 4, 4);
 	}
@@ -130,9 +132,9 @@ export default {
 		// height: 8vh;
 		line-height: 8vh;
 		text-align: center;
-		background-color: rgb(255, 255, 255);
 		border-radius: 5px;
 		margin-bottom: 2vh;
+		transition: background-color 0.6s;
 	}
 	.desc {
 		font-size: 14px;

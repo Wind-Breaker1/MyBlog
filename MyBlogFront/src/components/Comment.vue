@@ -22,7 +22,7 @@
 		<div class="comment-body" v-for="(item, index) in comments" :key="item.murmur + '' + index">
 			<!-- 一级评论 -->
 			<div class="first-comment">
-				<el-avatar :size="40"></el-avatar>
+				<el-avatar :size="40" :src="item.avatarUrl"></el-avatar>
 				<div class="content">
 					<!-- 一级评论用户昵称 -->
 					<h3>{{ item.username }}</h3>
@@ -53,7 +53,7 @@
 					<!-- 次级评论 -->
 					<div class="second-comment" v-for="(reply, index) in item.replyInfo" :key="reply.murmur + '' + index" :style="`${cartBg}`">
 						<!-- 次级评论头像,该用户没有头像则显示默认头像 -->
-						<el-avatar :size="40" :src="reply.avatar"></el-avatar>
+						<el-avatar :size="40" :src="reply.avatarUrl"></el-avatar>
 						<div class="content">
 							<!-- 次级评论用户昵称 -->
 							<h3>{{ reply.username }}</h3>
@@ -160,7 +160,6 @@ export default {
 		},
 		uploadAvatar(e) {
 			const maxSize = 2 * 1024 * 1024;
-			this.loading = true;
 			const file = Array.prototype.slice.call(e.target.files)[0];
 			const render = new FileReader();
 			render.readAsDataURL(file);
@@ -384,11 +383,10 @@ export default {
 <style lang="less" scoped>
 .comment {
 	min-height: 26vh;
-	// background-color: rgb(255, 255, 255);
 	border-radius: 5px;
 	margin-top: 2px;
 	overflow: hidden;
-
+	transition: background-color 0.6s;
 	.active {
 		color: rgb(202, 4, 4);
 	}
@@ -406,8 +404,7 @@ export default {
 		padding: 10px 5px;
 		display: flex;
 		align-items: center;
-		// background-color: rgb(247, 246, 246);
-
+		transition: background-color 0.6s;
 		#avatarInput {
 			width: 10vh;
 			height: 10vh;
@@ -421,6 +418,11 @@ export default {
 			margin-left: 10px;
 			margin-right: 20px;
 			flex: 1;
+			transition: background-color 0.6s;
+			// /deep/.el-input__inner,
+			// .el-textarea__inner {
+			// 	transition: background-color 0.6s;
+			// }
 			/deep/.el-input__inner:focus {
 				border-color: #dcdfe6;
 			}
@@ -431,7 +433,7 @@ export default {
 		min-height: 70px;
 		padding: 10px 20px;
 		font-size: 14px;
-
+		transition: background-color 0.6s;
 		.first-comment {
 			display: flex;
 			.input {
@@ -479,9 +481,8 @@ export default {
 				.second-comment {
 					display: flex;
 					padding: 10px 0 10px 5px;
-					background-color: rgb(248, 246, 246);
 					border-radius: 20px;
-
+					transition: background-color 0.6s;
 					.to_reply {
 						color: rgb(126, 127, 128);
 					}

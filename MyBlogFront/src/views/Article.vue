@@ -3,13 +3,11 @@
 		<div class="article-info" :style="`${cartBg}`">
 			<h1 class="article-title">{{ article.title }}</h1>
 			<div class="article-class" v-show="isBlog">
-				<div>
-					专栏：<el-tag size="small">{{ article.classifyName }}</el-tag>
-				</div>
-				<div class="tag">
-					<span> 武切维奇</span>
-					<span> 武切维奇</span>
-					<span> 武切维奇</span>
+				<div>专栏：{{ article.classifyName }}</div>
+				<div class="tag night-tag">
+					<div><i class="el-icon-price-tag"></i> 武切维奇</div>
+					<div><i class="el-icon-price-tag"></i> 武切维奇</div>
+					<div><i class="el-icon-price-tag"></i> 武切维奇</div>
 				</div>
 			</div>
 			<div class="opration">
@@ -153,6 +151,7 @@ export default {
 	/deep/.v-show-content {
 		background-color: rgb(50, 50, 50) !important;
 		color: #ffffff;
+		transition: background-color 0.6s;
 	}
 }
 .article-info {
@@ -160,9 +159,9 @@ export default {
 	font-size: 14px;
 	padding: 15px;
 	position: relative;
-	background-color: rgb(255, 255, 255);
 	border-radius: 5px;
 	margin-bottom: 2vh;
+	transition: background-color 0.6s;
 	.article-title {
 		text-align: center;
 	}
@@ -173,6 +172,20 @@ export default {
 			margin-top: 10px;
 			display: flex;
 			justify-content: center;
+			& > div {
+				line-height: 20px;
+				padding: 3px;
+				background-color: red;
+				margin-right: 10px;
+			}
+			& > div:last-child {
+				margin-right: 0;
+			}
+		}
+		.night-tag {
+			& > div {
+				background-color: #ffcc00;
+			}
 		}
 	}
 

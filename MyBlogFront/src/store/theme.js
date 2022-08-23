@@ -4,7 +4,7 @@ import Vuex from 'vuex';
 Vue.use(Vuex);
 
 const state = {
-	isLight: false,
+	isLight: true,
 	color: '#FFFFFF',
 	infoBgColor: 'rgba(255,255,255,0.6)',
 	mainBg: 'rgba(50,50,50,0.6)',
@@ -55,7 +55,7 @@ const getters = {
 	},
 	headFootBg(state) {
 		if (state.isLight) {
-			state.headFootBg = '#545c64';
+			state.headFootBg = 'rgb(128 136 110)';
 		} else {
 			state.headFootBg = 'rgb(50, 50, 50)';
 		}

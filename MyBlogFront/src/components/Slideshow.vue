@@ -62,17 +62,14 @@ export default {
 		// 请求文章数和浏览数
 		async getInfo() {
 			try {
-				this.$loading.show('加载中...');
 				const res = await this.$api.getWebInfo();
 				if (res.status === 200) {
 					this.webInfo = res.data;
 				} else {
 					this.$message.error('网络出错了,(ノへ￣、)！');
 				}
-				this.$loading.hide();
 			} catch (err) {
 				this.$message.error(err);
-				this.$loading.hide();
 			}
 		},
 	},
@@ -86,6 +83,7 @@ export default {
 	margin-top: 1%;
 	border-radius: 5px;
 	position: relative;
+	transition: background-color 0.7s;
 
 	.cart-img {
 		height: 42vh;
@@ -104,6 +102,7 @@ export default {
 		bottom: 2%;
 		z-index: 5;
 		border-radius: 5px;
+		transition: background-color 0.6s;
 
 		& > img {
 			height: 45%;
