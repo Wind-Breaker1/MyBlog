@@ -1,5 +1,5 @@
 // 引入axios进行二次封装
-import axios from 'axios';
+// import axios from 'axios';
 const requests = axios.create({
 	// 配置对象
 	// 基础路径

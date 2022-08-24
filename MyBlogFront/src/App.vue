@@ -7,8 +7,24 @@
 			<router-view class="main-box" :style="`${color};${mainBg}`"></router-view>
 			<SiderInfo />
 		</div>
-		<Footer />
+		<!-- <Footer /> -->
 		<button @click="changTheme" style="position: fixed; bottom: 30px; right: 30px">切换</button>
+		<el-backtop target="#app">
+			<div
+				style="
+					 {
+						height: 100%;
+						width: 100%;
+						background-color: #f2f5f6;
+						box-shadow: 0 0 6px rgba(0, 0, 0, 0.12);
+						text-align: center;
+						line-height: 40px;
+						color: #1989fa;
+					}
+				">
+				UP
+			</div></el-backtop
+		>
 	</div>
 </template>
 <script>

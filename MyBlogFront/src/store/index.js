@@ -1,4 +1,4 @@
-import Vue from 'vue';
+// import Vue from 'vue';
 import Vuex from 'vuex';
 import synthesis from './synthesis';
 import theme from './theme';

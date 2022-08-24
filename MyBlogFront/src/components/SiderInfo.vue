@@ -2,9 +2,11 @@
 	<div id="siderInfo-box">
 		<el-card class="box-card" :style="`${color};${mainBg}`">
 			<div slot="header"><i class="el-icon-edit-outline" style="margin-right: 10px"></i>专栏</div>
-			<div class="content" v-for="item in classifyList" :key="item._id" @click="showdetail('jotting', item._id)">
-				<span>{{ item.title }}</span
-				><span>{{ item.date }}</span>
+			<div v-loading="loading" element-loading-text="拼命加载中" element-loading-spinner="el-icon-loading">
+				<div class="content" v-for="item in classifyList" :key="item._id" @click="showdetail('jotting', item._id)">
+					<span>{{ item.title }}</span>
+					<span>{{ item.date }}</span>
+				</div>
 			</div>
 		</el-card>
 		<el-card class="box-card" :style="`${color};${mainBg}`">
@@ -53,6 +55,7 @@ export default {
 			jottingList: [],
 			blogList: [],
 			time: new Date(),
+			loading: true,
 		};
 	},
 	mounted() {
@@ -129,7 +132,6 @@ export default {
 			padding: 10px;
 			display: flex;
 			justify-content: space-between;
-
 			font-size: 14px;
 			& > span:nth-child(1) {
 				width: 130px;
@@ -144,7 +146,7 @@ export default {
 		}
 	}
 	.box-card:hover {
-		box-shadow: 5px 5px 15px 3px rgb(145, 144, 144);
+		box-shadow: 5px 5px 10px 2px rgb(130, 130, 130);
 	}
 	//
 	.calendar {
@@ -183,7 +185,7 @@ export default {
 		transition-duration: 1s;
 	}
 	.like-context:hover {
-		box-shadow: 0 16px 16px 0 rgba(0, 0, 0, 0.3);
+		box-shadow: 0 16px 16px 0 rgba(145, 144, 144 0.3);
 	}
 }
 @media screen and (max-width: 768px) {

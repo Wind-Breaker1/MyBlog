@@ -23,7 +23,7 @@ export default {
 		...mapGetters(['color', 'headFootBg']),
 	},
 	methods: {
-		async searchArticle() {
+		searchArticle() {
 			try {
 				if (!this.searchValue) {
 					this.$message.warning('还没有输入搜索内容呢');

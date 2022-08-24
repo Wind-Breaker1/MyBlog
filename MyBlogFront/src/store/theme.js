@@ -1,8 +1,3 @@
-import Vue from 'vue';
-import Vuex from 'vuex';
-
-Vue.use(Vuex);
-
 const state = {
 	isLight: true,
 	color: '#FFFFFF',
@@ -55,7 +50,7 @@ const getters = {
 	},
 	headFootBg(state) {
 		if (state.isLight) {
-			state.headFootBg = 'rgb(128 136 110)';
+			state.headFootBg = 'rgb(130, 130, 130)';
 		} else {
 			state.headFootBg = 'rgb(50, 50, 50)';
 		}
@@ -67,6 +62,7 @@ const mutations = {
 		state.isLight = !state.isLight;
 	},
 };
+
 const actions = {};
 
 export default {

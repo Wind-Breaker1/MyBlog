@@ -58,13 +58,13 @@
 							<!-- 次级评论用户昵称 -->
 							<h3>{{ reply.username }}</h3>
 							<!-- 次级评论评论时间 -->
-							<span>{{ reply.date }}</span>
+							<span>{{ reply.date }} </span>
 							<!-- 次级评论内容 xxx回复xxx：评论内容-->
-							<p style="padding-right: 30px">
-								<span class="to_reply">{{ reply.username }}</span>
-								回复
-								<span class="to_reply">{{ reply.replyName }}</span
-								>：
+							<span class="to_reply">{{ reply.username }}</span>
+							回复
+							<span class="to_reply">{{ reply.replyName }}</span
+							>:
+							<p style="padding-right: 20px">
 								{{ reply.reply }}
 							</p>
 							<!-- 次级评论评论点赞 -->
