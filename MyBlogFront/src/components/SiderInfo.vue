@@ -2,25 +2,26 @@
 	<div id="siderInfo-box">
 		<el-card class="box-card" :style="`${color};${mainBg}`">
 			<div slot="header"><i class="el-icon-edit-outline" style="margin-right: 10px"></i>专栏</div>
-			<div v-loading="loading" element-loading-text="拼命加载中" element-loading-spinner="el-icon-loading">
 				<div class="content" v-for="item in classifyList" :key="item._id" @click="showdetail('jotting', item._id)">
 					<span>{{ item.title }}</span>
-					<span>{{ item.date }}</span>
+					<span>{{ item.articleNum }}</span>
 				</div>
-			</div>
+				<el-empty description="还没有专栏呢！"></el-empty>
 		</el-card>
 		<el-card class="box-card" :style="`${color};${mainBg}`">
 			<div slot="header"><i class="el-icon-price-tag" style="margin-right: 10px"></i>书签</div>
+
 			<el-tag
-				v-for="item in classifyList"
+				v-for="item in tagList"
 				:key="item._id"
 				class="bookmark"
-				:style="`${color};${mainBg}`"
+				:style="isLight?item.bg:`${color};${mainBg}`"
 				:id="item._id"
 				type="info"
 				@click="getBlogsOfClassify($event)"
 				>{{ item.title }}</el-tag
 			>
+			<el-empty description="先去别的地方看看吧！"></el-empty>
 		</el-card>
 		<el-card class="box-card" :style="`${color};${mainBg}`">
 			<div slot="header"><i class="el-icon-medal" style="margin-right: 10px"></i>最新随笔</div>
@@ -28,6 +29,7 @@
 				<span>{{ item.title }}</span
 				><span>{{ item.date }}</span>
 			</div>
+			<el-empty description="博主正在加班创作中！"></el-empty>
 		</el-card>
 		<el-card class="box-card" :style="`${color};${mainBg}`">
 			<div slot="header"><i class="el-icon-document" style="margin-right: 10px"></i>最新博客</div>
@@ -35,6 +37,7 @@
 				<span>{{ item.title }}</span
 				><span>{{ item.date }}</span>
 			</div>
+			<el-empty description="再等等吧！"></el-empty>
 		</el-card>
 		<el-calendar v-model="time" class="calendar box-card" :class="isLight ? 'calendar-moon' : 'calendar-night'"> </el-calendar>
 		<div class="like-context box-card" :style="`${color};${mainBg}`">
@@ -54,6 +57,7 @@ export default {
 			classifyList: [],
 			jottingList: [],
 			blogList: [],
+			tagList: [],
 			time: new Date(),
 			loading: true,
 		};
@@ -85,6 +89,7 @@ export default {
 						this.classifyList = res.data.classifies;
 						if (res.data.blogs.length > 0) this.blogList = res.data.blogs.slice(0, 3);
 						if (res.data.jottings.length > 0) this.jottingList = res.data.jottings.slice(0, 3);
+						this.tagList = res.tags;
 						this.$store.commit('SAVECLASSIFIES', this.classifies);
 						this.$store.commit('SAVEBLOG', res.data.blogs);
 					} else {

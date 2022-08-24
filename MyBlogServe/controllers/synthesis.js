@@ -7,9 +7,9 @@ const util = require('../utils');
 var path = require('path');
 var fs = require('fs');
 //新增标签
-const addTag = async (req, res, next) => {
+const addTag = async (req, res) => {
 	const { title } = req.body;
-	const tag = await TagModel.addTag({ title, date: util.date() });
+	const tag = await TagModel.addTag({ title, date: util.date(),bg: util.randomColor() });
 	if (tag) {
 		res.send({
 			msg: '新增标签成功',
@@ -25,7 +25,7 @@ const addTag = async (req, res, next) => {
 };
 
 //删除标签
-const deleteTag = async (req, res, next) => {
+const deleteTag = async (req, res) => {
 	const { _id } = req.query;
 	const tag = await TagModel.deleteTag(_id);
 	if (tag) {
@@ -43,7 +43,7 @@ const deleteTag = async (req, res, next) => {
 };
 
 //查找某一个标签
-const getTag = async (req, res, next) => {
+const getTag = async (req, res) => {
 	const { _id } = req.query;
 	const tag = await TagModel.getTag(_id);
 	if (tag) {
@@ -61,7 +61,7 @@ const getTag = async (req, res, next) => {
 };
 
 //获取所有标签
-const getTags = async (req, res, next) => {
+const getTags = async (req, res) => {
 	const tags = await TagModel.getTags();
 	if (tags) {
 		res.send({
@@ -83,30 +83,23 @@ const getWebInfo = async (req, res, next) => {
 	const jottingNums = await JottingModel.getJottingSums();
 	const tagNums = await TagModel.getTagSums();
 	const classifyNums = await ClassifyModel.getClassifySums();
-	console.log(blogNums, jottingNums, tagNums, classifyNums);
-	if (blogNums ?? jottingNums ?? tagNums ?? classifyNums) {
-		res.send({
-			msg: '查询文章总数成功',
-			status: 200,
-			data: {
-				blogNums,
-				jottingNums,
-				tagNums,
-				classifyNums,
-			},
-		});
-	} else {
-		res.send({
-			msg: '查询文章总数失败',
-			status: 0,
-		});
-	}
+	res.send({
+		msg: '查询文章总数成功',
+		status: 200,
+		data: {
+			blogNums,
+			jottingNums,
+			tagNums,
+			classifyNums,
+		},
+	});
 };
 const getSliderInfo = async (req, res, next) => {
-	let blogs = await BlogsModel.getPublishBlogs();
-	let jottings = await JottingModel.getPublishJottings();
-	let classifies = await ClassifyModel.getClassifies();
-	if (blogs && blogs && classifies) {
+	const blogs = await BlogsModel.getPublishBlogs();
+	const jottings = await JottingModel.getPublishJottings();
+	const classifies = await ClassifyModel.getClassifies();
+	const tags = await TagModel.getTags();
+	if (blogs && blogs && classifies && tags) {
 		res.send({
 			msg: '信息栏查询成功',
 			status: 200,
@@ -114,6 +107,7 @@ const getSliderInfo = async (req, res, next) => {
 				blogs,
 				jottings,
 				classifies,
+				tags
 			},
 		});
 	} else {
