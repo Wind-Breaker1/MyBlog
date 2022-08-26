@@ -10,11 +10,16 @@ export default {
 </script>
 
 <style lang="less">
-body {
+#app {
+	
+	
+	a {
+		text-decoration: none;
+	}
+}
+
+* {
 	margin: 0;
 	padding: 0;
-}
-a {
-	text-decoration: none;
 }
 </style>
