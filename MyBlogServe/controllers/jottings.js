@@ -1,13 +1,14 @@
 const JottingModel = require('../model/jottings');
 const util = require('../utils');
 const addJotting = async (req, res, next) => {
-	let { title, content, digest, state, _id } = req.body;
+	let { title, content, digest, state, tags } = req.body;
 	let result = await JottingModel.addJotting({
 		date: util.date(),
 		title,
 		content,
 		digest,
 		state,
+		tags,
 	});
 	if (result) {
 		res.send({
@@ -40,8 +41,8 @@ const changeState = async (req, res) => {
 };
 // 修改随笔内容
 const updateJotting = async (req, res, next) => {
-	let { content, _id, title, digest } = req.body;
-	let result = await JottingModel.updateJotting(_id, { content, digest, title });
+	let { content, _id, title, digest, tags } = req.body;
+	let result = await JottingModel.updateJotting(_id, { content, digest, title, tags });
 	if (result.modifiedCount !== 0) {
 		res.send({
 			msg: '随笔修改成功',

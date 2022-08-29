@@ -10,6 +10,12 @@ const JottingSchema = new mongoose.Schema({
 			default: 0,
 		},
 	],
+	tags: [
+		{
+			type: mongoose.Types.ObjectId,
+			require: true,
+		},
+	],
 	browse: { type: Number, default: 0 },
 	content: { type: String, require: true },
 	digest: { type: String }, // 描述信息
@@ -29,8 +35,8 @@ const addJotting = data => {
 		});
 };
 // 更新随笔
-const updateJotting = (_id, { content, digest, title }) => {
-	return JottingModel.updateOne({ _id }, { $set: { content, digest, title } });
+const updateJotting = (_id, { content, digest, title, tags }) => {
+	return JottingModel.updateOne({ _id }, { $set: { content, digest, title, tags } });
 };
 // 修改随笔状态
 const changeJottingState = (state, _id) => {

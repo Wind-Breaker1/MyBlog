@@ -5,31 +5,31 @@ export const routes = [
 		component: () => import("@/views/Admin.vue"),
 		children: [
 			{
-				path: "blogs",
-				name: "blogs",
-				component: () => import("../views/Blogs.vue"),
+				path: "article",
+				name: "article",
+				component: () => import("../views/Article.vue"),
 			},
-			{
-				path: "classify",
-				name: "classify",
-				component: () => import("../views/Classification.vue"),
-			},
+			// {
+			// 	path: "classify",
+			// 	name: "classify",
+			// 	component: () => import("../views/Classification.vue"),
+			// },
 			{
 				path: "markdown",
 				name: "markdown",
-				component: () => import("../views/Markdown"),
+				component: () => import("../views/Markdown.vue"),
 			},
-			{
-				path: "jottings",
-				name: "jottings",
-				component: () => import("../views/Jottings"),
-			},
-			{
-				path: "routingmanage",
-				name: "routingmanage",
-				component: () => import("../views/route.vue"),
-				limits: ["管理员"],
-			},
+			// {
+			// 	path: "jottings",
+			// 	name: "jottings",
+			// 	component: () => import("../views/Jottings.vue"),
+			// },
+			// {
+			// 	path: "routingmanage",
+			// 	name: "routingmanage",
+			// 	component: () => import("../views/Route.vue"),
+			// 	limits: ["管理员"],
+			// },
 			{
 				path: "user",
 				name: "user",

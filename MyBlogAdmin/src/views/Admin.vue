@@ -8,26 +8,26 @@
 	</div>
 </template>
 <script>
-import Head from '@/components/Head.vue'
-import Foot from '@/components/Foot.vue'
-import Nav from '@/components/Nav.vue';
+import Head from "@/components/Head.vue";
+import Foot from "@/components/Foot.vue";
+import Nav from "@/components/Nav.vue";
 export default {
-    components: { Head, Nav }
+	components: { Head, Nav },
 };
 </script>
 
 <style lang="less" scoped>
-.manage-box{
+.manage-box {
 	height: 100vh;
 	width: 100vw;
 	overflow: hidden;
-	.main-box{
-  	margin-top: 45px;
+	.main-box {
+		margin-top: 45px;
 		height: calc(100vh - 45px);
 		display: flex;
 		background-color: #000;
-		.sythies-style{
-			flex:1;
+		.sythies-style {
+			flex: 1;
 		}
 	}
 }

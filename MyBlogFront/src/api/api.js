@@ -56,7 +56,7 @@ export const deletefirstcomment = params => requests.delete('/comments/deletefir
 // 删除二级评论
 export const deletesecondcomment = params => requests.delete('/comments/deletesecondcomment', { params });
 // 上传图片
-export const uploadImg = data =>
-	requests.post('/synthesis/uploadimg', data, {
+export const uploadAvatar = data =>
+	requests.post('/synthesis/uploadavatar', data, {
 		headers: { 'content-type': 'multipart/form-data' },
 	});

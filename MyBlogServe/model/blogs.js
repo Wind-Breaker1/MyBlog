@@ -11,8 +11,8 @@ const BlogSchema = new mongoose.Schema({
 	], //点赞的浏览器指纹数组
 	tags: [
 		{
-			type: String,
-			require: true
+			type: mongoose.Types.ObjectId,
+			require: true,
 		},
 	],
 	browse: { type: Number, default: 0 },
@@ -34,8 +34,9 @@ const addblog = data => {
 		});
 };
 // 更新博客内容
-const updateBlog = (_id, { content, title, digest }) => {
-	return BlogModel.updateOne({ _id }, { $set: { content, title, digest } });
+const updateBlog = (_id, content, title, digest, tags) => {
+	console.log(tags);
+	return BlogModel.updateOne({ _id }, { $set: { content, title, digest, tags } });
 };
 // 修改博客状态
 const changeBlogState = (state, id) => {
@@ -43,7 +44,7 @@ const changeBlogState = (state, id) => {
 };
 // 删除博客
 const deleteBlog = _id => {
-	return BlogModel.deleteOne({ _id });
+	return BlogModel.deleteOne({ _id }).lean();
 };
 // 查询某一博客
 const getBlog = id => {
@@ -74,7 +75,7 @@ const getFavour = _id => {
 	return BlogModel.findById(_id, 'favour');
 };
 // 增加浏览量
-const addBlogBrowse = (_id) => {
+const addBlogBrowse = _id => {
 	return BlogModel.updateOne({ _id }, { $inc: { browse: 1 } });
 };
 // 模糊查询所有文章

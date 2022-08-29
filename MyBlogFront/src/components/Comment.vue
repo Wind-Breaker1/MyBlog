@@ -175,9 +175,9 @@ export default {
 						} else {
 							blob = toBolb(data, 'image/jpeg', file.name);
 							const formdata = new FormData();
-							formdata.append('file', blob);
+							formdata.append('avatar', blob);
 							formdata.append('murmur', this.murmur);
-							const res = await this.$api.uploadImg(formdata);
+							const res = await this.$api.uploadAvatar(formdata);
 							this.avatarUrl = res.avatarUrl;
 						}
 					};
@@ -186,7 +186,7 @@ export default {
 					const formdata = new FormData();
 					formdata.append('file', blob);
 					formdata.append('murmur', this.murmur);
-					const res = await this.$api.uploadImg(formdata);
+					const res = await this.$api.uploadAvatar(formdata);
 					this.avatarUrl = res.avatarUrl;
 				}
 			};

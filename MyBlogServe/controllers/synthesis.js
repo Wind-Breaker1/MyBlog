@@ -9,7 +9,7 @@ var fs = require('fs');
 //新增标签
 const addTag = async (req, res) => {
 	const { title } = req.body;
-	const tag = await TagModel.addTag({ title, date: util.date(),bg: util.randomColor() });
+	const tag = await TagModel.addTag({ title, date: util.date(), bg: util.randomColor() });
 	if (tag) {
 		res.send({
 			msg: '新增标签成功',
@@ -23,7 +23,22 @@ const addTag = async (req, res) => {
 		});
 	}
 };
-
+const updateTag = async (req, res) => {
+	const { id, title } = req.body;
+	const tag = await TagModel.uptateTag(id, title);
+	if (tag.modifiedCount != 0) {
+		res.send({
+			msg: '标签修改成功',
+			status: 200,
+			data: tag,
+		});
+	} else {
+		res.send({
+			msg: '标签修改失败',
+			status: 0,
+		});
+	}
+};
 //删除标签
 const deleteTag = async (req, res) => {
 	const { _id } = req.query;
@@ -107,7 +122,7 @@ const getSliderInfo = async (req, res, next) => {
 				blogs,
 				jottings,
 				classifies,
-				tags
+				tags,
 			},
 		});
 	} else {
@@ -142,34 +157,64 @@ const searchArticle = async (req, res) => {
 	}
 };
 // 上传图片
-const uploadImg = async (req, res) => {
-	const { murmur } = req.body;
+const uploadArtimg = async (req, res) => {
 	const file = req.file; //这个就是前端传来的文件
-	const imgUrl = 'http://127.0.0.1:3000/images/' + file.filename;
-	console.log(req.body, murmur, '123');
-	if (murmur) {
-		const murmurInfo = await MurmruModel.getMurmurInfo(murmur);
-		if (murmurInfo.avatarUrl) {
-			util.deleteImg(murmurInfo.avatarUrl);
-		}
-		const result = await MurmruModel.updateMurmurAvatar(murmur, imgUrl);
-		if (result.modifiedCount != 0) {
-			res.send({
-				avatarUrl: imgUrl,
-				status: 200,
-				msg: '头像上传成功',
-			});
-		} else {
-			res.send({
-				status: 0,
-				msg: '头像上传失败',
-			});
-		}
-	} else {
+	const artimgUrl = 'http://127.0.0.1:3000/images/' + file.filename;
+	const url = path.join(__dirname, '../public/images/', file.filename);
+	console.log(req.file, '123');
+	if (fs.existsSync(url)) {
 		res.send({
-			imgUrl,
+			artimgUrl,
 			status: 200,
 			msg: '图片上传成功',
+		});
+	} else {
+		res.send({
+			status: 0,
+			msg: '图片上传失败',
+		});
+	}
+};
+// 照片墙上传图片
+const uploadPhoto = async (req, res) => {
+	const file = req.file; //这个就是前端传来的文件
+	const avatarUrl = 'http://127.0.0.1:3000/photos/' + file.filename;
+	const url = path.join(__dirname, '../public/photos/', file.filename);
+	console.log(req.body, murmur, '123');
+	if (fs.existsSync(url)) {
+		res.send({
+			avatarUrl,
+			status: 200,
+			msg: '图片上传成功',
+		});
+	} else {
+		res.send({
+			status: 0,
+			msg: '图片上传失败',
+		});
+	}
+};
+// 上传头像
+const uploadAvatar = async (req, res) => {
+	const { murmur } = req.body;
+	const file = req.file; //这个就是前端传来的文件
+	const avatarUrl = 'http://127.0.0.1:3000/avatars/' + file.filename;
+	const url = path.join(__dirname, '../public/avatars/', file.filename);
+	const murmurInfo = await MurmruModel.getMurmurInfo(murmur);
+	if (murmurInfo.avatarUrl) {
+		util.deleteImg(murmurInfo.avatarUrl);
+	}
+	const result = await MurmruModel.updateMurmurAvatar(murmur, avatarUrl);
+	if (result.modifiedCount != 0 && fs.existsSync(url)) {
+		res.send({
+			avatarUrl,
+			status: 200,
+			msg: '头像上传成功',
+		});
+	} else {
+		res.send({
+			status: 0,
+			msg: '头像上传失败',
 		});
 	}
 };
@@ -177,9 +222,12 @@ module.exports = {
 	getWebInfo,
 	getSliderInfo,
 	searchArticle,
-	uploadImg,
+	uploadArtimg,
+	uploadAvatar,
+	uploadPhoto,
 	addTag,
 	deleteTag,
 	getTag,
 	getTags,
+	updateTag,
 };

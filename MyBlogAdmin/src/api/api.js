@@ -50,7 +50,7 @@ export const addJotting = data => requests.post("/jottings/addjotting", data);
 // 获取某一随笔
 export const getJotting = params => requests.get("/jottings/getjotting", { params });
 // 添加图片
-export const uploadImg = data => requests.post("/synthesis/uploadimg", data, { headers: { "content-type": "multipart/form-data" } });
+export const uploadImg = data => requests.post("/synthesis/uploadartimg", data, { headers: { "content-type": "multipart/form-data" } });
 // 添加随笔
 export const updateJotting = data => requests.post("/jottings/updatejotting", data);
 
@@ -59,10 +59,24 @@ export const addFirstRoute = data => requests.post("/routes/addfirstroute", data
 // 添加二级路由
 export const addSecondRoute = data => requests.post("/routes/addsecondroute", data);
 // 修改路由
-export const updatRoute = data => requests.post("/routes/updatroute", data);
+export const updateRoute = data => requests.post("/routes/updatroute", data);
 // 删除路由
 export const deleteRoute = params => requests.delete("/routes/deleteroute", { params });
 // 获取路由
 export const getRoutes = params => requests.get("/routes/getroutes", { params });
 // 获取所有路由
 export const getRouteList = () => requests.get("/routes/getroutelist");
+
+// 添加书签
+export const addTag = data => requests.post("/synthesis/addtag", data);
+// 获取书签
+export const getTags = () => requests.get("/synthesis/gettags");
+// 修改书签
+export const updateTag = data => requests.post("/synthesis/updatetag", data);
+// 删除书签
+export const deleteTag = params => requests.delete("/synthesis/deletetag", { params });
+
+// 修改书签
+export const getMurmurInfos = () => requests.get("/murmur/getmurmurinfos");
+// 删除书签
+export const deleteMurmurInfo = params => requests.delete("/murmur/deletemurmurinfo", { params });

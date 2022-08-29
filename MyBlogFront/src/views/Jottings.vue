@@ -19,6 +19,7 @@
 				<span class="createtime"> <i class="iconfont icon-rili" style="margin-right: 10px"></i>{{ item.date }} </span>
 			</div>
 		</el-card>
+		<el-empty v-if="jottingList.length == 0" description="先去别的地方看看吧！"></el-empty>
 		<!-- 分页 -->
 		<div class="pagination-wrap">
 			<el-pagination
@@ -108,6 +109,9 @@ export default {
 .jotting {
 	animation: animate 2s;
 	transition: background-color 0.6s;
+	/deep/ .el-empty__description p {
+		color: #000;
+	}
 	.jottings-item {
 		border: none;
 		margin-bottom: 2vh;

@@ -5,11 +5,11 @@ Vue.use(VueRouter);
 
 const routes = [
 	{
-		path: '/bloglist',
+		path: '/blogs',
 		component: () => import('@/views/Blogs.vue'),
 	},
 	{
-		path: '/jottinglist',
+		path: '/jottings',
 		component: () => import('@/views/Jottings.vue'),
 	},
 	{
@@ -32,17 +32,13 @@ const routes = [
 		path: '/messageboard',
 		component: () => import('@/views/MessageBoard.vue'),
 	},
-	// {
-	// 	path: '/photo',
-	// 	component: () => import('@/views/PhotoWall.vue'),
-	// },
-	// {
-	// 	path: '/loading',
-	// 	component: () => import('@/components/Loading.vue'),
-	// },
+	{
+		path: '/photo',
+		component: () => import('@/views/PhotoWall.vue'),
+	},
 	{
 		path: '/',
-		redirect: '/bloglist',
+		redirect: '/blogs',
 	},
 ];
 
@@ -51,25 +47,15 @@ const router = new VueRouter({
 	base: process.env.BASE_URL,
 	routes,
 	scrollBehavior: (to, from, savePosition) => {
-		// 	// return 期望滚动到哪个的位置
-		// 	//  to：跳转到哪个页面
-		// 	// from：来自哪个页面
-		// 	//savePosition:位置
-		// 	// 常规的一种做法，直接禁止滚动行为，每个页面切换时自动回到顶部
-		// 	if (savePosition) {
-		// 		return {
-		// 			savePosition,
-		// 			behavior: 'smooth',
-		// 		};
-		// 	} else {
-		// 		return { behavior: 'smooth', y: 0 };
-		// 	}
-		return {
-			// 也可以这么写
-			// el: document.getElementById('main-content'),
-			// el: "#main-content",
-			y: 0,
-		};
+		// 动行为，每个页面切换时自动回到顶部
+		if (savePosition) {
+			return {
+				savePosition,
+				behavior: 'smooth', // 	// return 期望滚动到哪个的位置
+			};
+		} else {
+			return { behavior: 'smooth', y: 0 };
+		}
 	},
 });
 // 重定向不报错

@@ -1,9 +1,7 @@
 <template>
 	<!-- 主体瀑布流区域，无限滚动 -->
 	<div class="photo-wall" ref="photoWall" infinite-scroll-disabled="disabled" infinite-scroll-distance="10">
-		<el-card
-			shadow="hover"
-			:body-style="{ padding: '0px', 'border-radius': '10px' }"
+		<div
 			v-for="(img, index) in photoList"
 			:key="index"
 			:style="{ top: img.top + 'px', left: img.left + 'px', width: photoWidth + 'px', height: img.height }"
@@ -20,7 +18,8 @@
 				</div>
 			</el-image>
 			<div class="time">2022-12-3</div>
-		</el-card>
+		</div>
+		<input type="file" />
 	</div>
 </template>
 
@@ -51,18 +50,17 @@ export default {
 			//随机占位色卡的颜色
 			suijicolour: ['#b4ffe3', '#66CDAA', '#acc2e6', '#d7b0d8', '#95abe6', '#ffc47b', '#b6d288', '#f49586', '#bcaf7a'],
 			imgArr: [
-				require('../assets/img/bg1.jpg'),
-				require('../assets/img/bg2.jpg'),
-				require('../assets/img/bg3.jpg'),
-				require('../assets/img/bg4.jpg'),
-				require('../assets/img/bg5.jpg'),
+				require('../assets/img/avatar.png'),
+				require('../assets/img/infoBg.jpg'),
+				require('../assets/img/lightBg.png'),
+				require('../assets/img/nightBg.jpg'),
 				require('../assets/logo.png'),
 			],
 		};
 	},
 	created() {
 		//初始就加载数据
-		for (let i = 0; i < 10; i++) {
+		for (let i = 0; i < 50; i++) {
 			this.imgList.push(this.imgArr[Math.round(Math.random() * 4)]);
 		}
 	},
@@ -75,7 +73,7 @@ export default {
 		calculationWidth() {
 			let domWidth = this.$refs.photoWall.offsetWidth;
 			if (!this.photoWidth && this.waterFallPhotoCol) {
-				this.photoWidth = (domWidth - this.colLeft - 5 - this.photoRight * this.waterFallPhotoCol) / this.waterFallPhotoCol;
+				this.photoWidth = (domWidth - this.colLeft - this.photoRight * this.waterFallPhotoCol) / this.waterFallPhotoCol;
 			} else if (this.photoWidth && !this.waterFallPhotoCol) {
 				this.waterFallPhotoCol = Math.floor(domWidth / (this.photoWidth + this.photoRight));
 			}
@@ -93,7 +91,6 @@ export default {
 				aImg.src = this.imgList[i];
 				aImg.onload = aImg.onerror = e => {
 					let imgData = {};
-					// console.log(aImg, 'aImg');
 					const calculateHeight = (this.photoWidth / aImg.width) * aImg.height;
 					if (calculateHeight > this.$refs.photoWall.offsetHeight) {
 						imgData.height = this.$refs.photoWall.offsetHeight;
@@ -109,7 +106,7 @@ export default {
 		},
 		//瀑布流布局
 		rankImg(imgData) {
-			let { photoWidth, photoRight, photoBottom, DeviationHeight, waterFallPhotoCol } = this;
+			let { photoWidth, photoRight, photoBottom, DeviationHeight } = this;
 
 			//for (let i = 0;i < this.photoList.length;i++){
 			let minIndex = this.filterMin();
@@ -142,21 +139,24 @@ export default {
 	.photo-wall-item {
 		position: absolute;
 		margin-top: 5px;
-		margin-bottom: 5px;
 		padding: 5px;
 		box-sizing: border-box;
+		background: #eee;
+		border-radius: 5px;
 		.time {
-			// padding-right: 10px;
+			padding-right: 5px;
 			margin-top: 5px;
-			margin-bottom: 5px;
 			text-align: right;
-			line-height: 15px;
-			font-size: 13px;
+			font-size: 14px;
 			color: #999;
 		}
 	}
 	.photo-wall-item::after {
 		clear: both;
 	}
+}
+::-webkit-scrollbar {
+	/*滚动条整体样式*/
+	width: 0;
 }
 </style>

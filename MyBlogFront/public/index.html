@@ -1,39 +1,43 @@
 <!DOCTYPE html>
 <html lang="">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width,initial-scale=1.0">
-    <link rel="icon" href="<%= BASE_URL %>favicon.ico">
-    <link rel="stylesheet" href="<%= BASE_URL %>index.css">
-    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
-    <title>面谱人生的博客</title>
-    <script src="https://cdn.jsdelivr.net/npm/vue@2.7.9/dist/vue.js"></script>
-    <script src="https://unpkg.com/element-ui@2.15.9/lib/index.js"></script>
-    <!-- <script src="https://unpkg.com/vuex@4.0.0/dist/vuex.global.js"></script> -->
-    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-    <!-- <script src="https://unpkg.com/vue-router@4.0.15/dist/vue-router.global.js"></script> -->
-  </head>
-  <body>
-    <noscript>
-      <strong>We're sorry but <%= htmlWebpackPlugin.options.title %> doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
-    </noscript>
-    <div id="app">
-      <div class="mark" v-show="show">
-        <div class="base">
-          <div class="cube"></div>
-          <div class="cube"></div>
-          <div class="cube"></div>
-          <div class="cube"></div>
-          <div class="cube"></div>
-          <div class="cube"></div>
-          <div class="cube"></div>
-          <div class="cube"></div>
-          <div class="cube"></div>
-        </div>
-        <div class="text">正在加载资源中,请稍等...</div>
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <link rel="icon" href="<%= BASE_URL %>favicon.ico">
+  <link rel="stylesheet" href="<%= BASE_URL %>index.css">
+  <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+  <title>面谱人生的博客</title>
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.7.9/dist/vue.js"></script>
+  <script src="https://unpkg.com/element-ui@2.15.9/lib/index.js"></script>
+  <!-- <script src="https://unpkg.com/vuex@4.0.0/dist/vuex.global.js"></script> -->
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  <!-- <script src="https://unpkg.com/vue-router@4.0.15/dist/vue-router.global.js"></script> -->
+</head>
+
+<body>
+  <noscript>
+    <strong>We're sorry but <%= htmlWebpackPlugin.options.title %> doesn't work properly without JavaScript enabled.
+        Please enable it to continue.</strong>
+  </noscript>
+  <div id="app">
+    <div class="mark" v-show="show">
+      <div class="base">
+        <div class="cube"></div>
+        <div class="cube"></div>
+        <div class="cube"></div>
+        <div class="cube"></div>
+        <div class="cube"></div>
+        <div class="cube"></div>
+        <div class="cube"></div>
+        <div class="cube"></div>
+        <div class="cube"></div>
       </div>
+      <div class="text">正在加载资源中,请稍等...</div>
     </div>
-    <!-- built files will be auto injected -->
-  </body>
+  </div>
+  <!-- built files will be auto injected -->
+</body>
+
 </html>

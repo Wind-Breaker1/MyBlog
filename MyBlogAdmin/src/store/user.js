@@ -1,9 +1,10 @@
-import { getUsers, login, deleteUser, register, getUser, updatePassword, logout, updateUserInfo } from "../api/api";
+import { getUsers, login, deleteUser, register, getUser, updatePassword, logout, updateUserInfo, getMurmurInfos, deleteMurmurInfo } from "../api/api";
 import { setToken, getToken, clearToken, setUserInfo, getUserInfo } from "../util";
 const state = {
 	token: getToken() || "",
 	username: getUserInfo() ? getUserInfo().username : "",
 	userList: [],
+	murmurInfos: [],
 };
 const mutations = {
 	USERLOGIN(state, token) {
@@ -14,6 +15,9 @@ const mutations = {
 	},
 	USERLIST(state, userlist) {
 		state.userList = userlist;
+	},
+	MURMURINFOS(state, murmurInfos) {
+		state.murmurInfos = murmurInfos;
 	},
 	//清除本地数据
 	CLEAR(state) {
@@ -61,11 +65,23 @@ const actions = {
 	// 获取用户信息
 	async getUser({ commit }) {
 		let result = await getUser();
-		if (result.code == 200) {
+		if (result.status == 200) {
 			commit("USERINFO", result.data);
 		} else {
 			return result;
 		}
+	},
+	async getMurmurInfos({ commit }) {
+		let result = await getMurmurInfos();
+		console.log(result, "r");
+		if (result.status == 200) {
+			commit("MURMURINFOS", result.data);
+		} else {
+			return result;
+		}
+	},
+	async deleteMurmurInfo({ commit }, id) {
+		return await deleteMurmurInfo(id);
 	},
 
 	// 退出登录
@@ -81,6 +97,9 @@ const actions = {
 const getters = {
 	userList(state) {
 		return state.userList;
+	},
+	murmurInfos() {
+		return state.murmurInfos;
 	},
 };
 export default {

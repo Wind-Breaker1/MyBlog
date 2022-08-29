@@ -39,9 +39,9 @@ const updateMurmurAvatar = (murmur, avatarUrl) => {
 };
 
 // // 删除用户
-// const deleteMurmur = email => {
-// 	return MurmurModel.deleteOne({ email });
-// };
+const deleteMurmurInfo = id => {
+	return MurmurModel.deleteOne({ _id: id });
+};
 // 查找某一个用户，如果用户信息不存在返回null
 
 /**
@@ -65,4 +65,5 @@ module.exports = {
 	updateMurmurUsername,
 	updateMurmurAvatar,
 	getMurmurInfos,
+	deleteMurmurInfo,
 };

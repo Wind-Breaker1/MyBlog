@@ -2,42 +2,34 @@
 	<div id="siderInfo-box">
 		<el-card class="box-card" :style="`${color};${mainBg}`">
 			<div slot="header"><i class="el-icon-edit-outline" style="margin-right: 10px"></i>专栏</div>
-				<div class="content" v-for="item in classifyList" :key="item._id" @click="showdetail('jotting', item._id)">
-					<span>{{ item.title }}</span>
-					<span>{{ item.articleNum }}</span>
-				</div>
-				<el-empty description="还没有专栏呢！"></el-empty>
+			<div class="content" v-for="item in classifyList" :key="item._id" @click="getBlogsOfClassify(item)">
+				<span>{{ item.title }}</span>
+				<span>{{ item.articleNum }}</span>
+			</div>
+			<el-empty v-if="classifyList.length == 0" description="还没有专栏呢！"></el-empty>
 		</el-card>
 		<el-card class="box-card" :style="`${color};${mainBg}`">
 			<div slot="header"><i class="el-icon-price-tag" style="margin-right: 10px"></i>书签</div>
-
-			<el-tag
-				v-for="item in tagList"
-				:key="item._id"
-				class="bookmark"
-				:style="isLight?item.bg:`${color};${mainBg}`"
-				:id="item._id"
-				type="info"
-				@click="getBlogsOfClassify($event)"
-				>{{ item.title }}</el-tag
-			>
-			<el-empty description="先去别的地方看看吧！"></el-empty>
+			<span class="bookmark" v-for="item in tagList" :key="item._id" :style="{ backgroundColor: item.bg }">
+				{{ item.title }}
+			</span>
+			<el-empty v-if="tagList.length == 0" description="先去别的地方看看吧！"></el-empty>
 		</el-card>
 		<el-card class="box-card" :style="`${color};${mainBg}`">
-			<div slot="header"><i class="el-icon-medal" style="margin-right: 10px"></i>最新随笔</div>
+			<div slot="header"><i class="el-icon-medal" style="margin-right: 10px"></i>最新心情</div>
 			<div class="content" v-for="item in jottingList" :key="item._id" @click="showdetail('jotting', item._id)">
 				<span>{{ item.title }}</span
-				><span>{{ item.date }}</span>
+				><span>{{ item.date.substr(2) }}</span>
 			</div>
-			<el-empty description="博主正在加班创作中！"></el-empty>
+			<el-empty v-if="jottingList.length == 0" description="博主正在加班创作中！"></el-empty>
 		</el-card>
 		<el-card class="box-card" :style="`${color};${mainBg}`">
 			<div slot="header"><i class="el-icon-document" style="margin-right: 10px"></i>最新博客</div>
 			<div class="content" v-for="item in blogList" :key="item._id" @click="showdetail('blog', item._id)">
 				<span>{{ item.title }}</span
-				><span>{{ item.date }}</span>
+				><span>{{ item.date.substr(2) }}</span>
 			</div>
-			<el-empty description="再等等吧！"></el-empty>
+			<el-empty v-if="blogList.length == 0" description="再等等吧！"></el-empty>
 		</el-card>
 		<el-calendar v-model="time" class="calendar box-card" :class="isLight ? 'calendar-moon' : 'calendar-night'"> </el-calendar>
 		<div class="like-context box-card" :style="`${color};${mainBg}`">
@@ -86,10 +78,10 @@ export default {
 					const res = await this.$api.getSliderInfo();
 					console.log(res);
 					if (res.status === 200) {
-						this.classifyList = res.data.classifies;
+						this.classifyList = res.data.classifies || [];
 						if (res.data.blogs.length > 0) this.blogList = res.data.blogs.slice(0, 3);
 						if (res.data.jottings.length > 0) this.jottingList = res.data.jottings.slice(0, 3);
-						this.tagList = res.tags;
+						this.tagList = res.data.tags || [];
 						this.$store.commit('SAVECLASSIFIES', this.classifies);
 						this.$store.commit('SAVEBLOG', res.data.blogs);
 					} else {
@@ -101,10 +93,10 @@ export default {
 			}
 		},
 		// 获取某一书签下所有博客
-		async getBlogsOfClassify(e) {
+		async getBlogsOfClassify(item) {
 			this.$router.push({
-				path: '/bloglist',
-				query: { type: 'blog', classification: e.target.id },
+				path: '/blogs',
+				query: { type: 'blog', classification: item._id },
 			});
 		},
 		// 获取某个文章
@@ -129,7 +121,12 @@ export default {
 		border: 1px solid #c5c4c4;
 
 		.bookmark {
-			margin: 5px 5px;
+			display: inline-block;
+			margin: 2px;
+			padding: 5px;
+			font-size: 14px;
+			border-radius: 2px;
+			color: #ffffff;
 			// color: white;
 			cursor: pointer;
 		}
@@ -139,13 +136,14 @@ export default {
 			justify-content: space-between;
 			font-size: 14px;
 			& > span:nth-child(1) {
-				width: 130px;
+				width: 150px;
 				white-space: overflow;
 				text-overflow: ellipsis;
 				overflow: hidden;
 			}
 			& > span:nth-child(2) {
-				width: 65px;
+				text-align: right;
+				width: 45px;
 			}
 			cursor: pointer;
 		}

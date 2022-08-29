@@ -13,12 +13,13 @@
 			</div>
 			<div class="footer">
 				<span class="favour">
-					<i class="iconfont icon-icon" :class="item.favour.includes(murmur) ? 'active' : ''" style="margin-right: 10px"></i>{{ item.favour.length }}
+					<i class="iconfont .icon-icon" :class="item.favour.includes(murmur) ? 'active' : ''" style="margin-right: 10px"></i>{{ item.favour.length }}
 				</span>
 				<span class="brows"> <i class="el-icon-view" style="margin-right: 10px"></i>{{ item.browse }} </span>
 				<span class="createtime"> <i class="iconfont icon-rili" style="margin-right: 10px"></i>{{ item.date }} </span>
 			</div>
 		</el-card>
+		<el-empty v-if="blogList.length == 0" description="先去别的地方看看吧！"></el-empty>
 		<!-- 分页 -->
 		<div class="paginationWrap">
 			<el-pagination
@@ -120,7 +121,9 @@ export default {
 .blog {
 	animation: animate 2s;
 	transition: background-color 0.6s;
-
+	/deep/ .el-empty__description p {
+		color: #000;
+	}
 	.active {
 		color: rgb(202, 4, 4);
 	}

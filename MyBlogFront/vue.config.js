@@ -15,17 +15,17 @@ module.exports = {
 			'element-ui': 'ELEMENT',
 		},
 	},
-	configureWebpack: config => {
-		if (process.env.NODE_ENV === 'production') {
-			config.plugins.push(
-				new CompressionPlugin({
-					algorithm: 'gzip',
-					test: /\.js$|\.html$|\.css$|\.jpg$|\.png/,
-					threshold: 10240,
-					minRatio: 0.5,
-					deleteOriginalAssets: true, // 是否删除源文件
-				})
-			);
-		}
-	},
+	// configureWebpack: config => {
+	// 	if (process.env.NODE_ENV === 'production') {
+	// 		config.plugins.push(
+	// 			new CompressionPlugin({
+	// 				algorithm: 'gzip',
+	// 				test: /\.js$|\.html$|\.css$|\.jpg$|\.png/,
+	// 				threshold: 10240,
+	// 				minRatio: 0.5,
+	// 				deleteOriginalAssets: true, // 是否删除源文件
+	// 			})
+	// 		);
+	// 	}
+	// },
 };

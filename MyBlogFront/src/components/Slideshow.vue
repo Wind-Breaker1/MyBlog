@@ -96,7 +96,7 @@ export default {
 
 	.info {
 		position: absolute;
-		height: 25vh;
+		height: 190px;
 		width: 13vw;
 		left: 5%;
 		bottom: 2%;

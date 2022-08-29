@@ -5,6 +5,7 @@ import classify from "./classify";
 import article from "./blogs";
 import jotting from "./jotting";
 import route from "./route";
+import tags from "./tags";
 Vue.use(Vuex);
 
 export default new Vuex.Store({
@@ -18,5 +19,6 @@ export default new Vuex.Store({
 		article,
 		jotting,
 		route,
+		tags,
 	},
 });

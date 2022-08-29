@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const TagSchema = new mongoose.Schema({
 	date: { type: String, require: true },
 	title: { type: String, require: true, unique: true },
-	bg: {type: String}
+	bg: { type: String },
 });
 const TagModel = mongoose.model('tag', TagSchema);
 
@@ -36,7 +36,14 @@ const deleteTag = _id => {
 const getTag = id => {
 	return TagModel.findById(id);
 };
-
+/**
+ * 查找某一个标签
+ * @param {string} id 标签的_id
+ * @return {object} 查找到的标签
+ */
+const uptateTag = (id, title) => {
+	return TagModel.updateOne({ _id: id }, { $set: { title } });
+};
 /**
  *获取所有标签
  @return {Array} 查找到的标签对象数组
@@ -55,4 +62,5 @@ module.exports = {
 	deleteTag,
 	addTag,
 	getTagSums,
+	uptateTag,
 };

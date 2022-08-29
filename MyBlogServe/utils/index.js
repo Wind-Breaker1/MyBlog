@@ -79,8 +79,9 @@ const depComments = (hashMurmur, comments) => {
 };
 // 删除图片
 exports.deleteImg = function (imgUrl) {
-	const imgName = imgUrl.substr(imgUrl.indexOf('images/') + 7);
-	const url = path.join(__dirname, '../public/images', imgName);
+	const imgName = imgUrl.substr(imgUrl.indexOf('avatars/') + 8);
+	const url = path.join(__dirname, '../public/avatars/', imgName);
+	console.log(url, 'url');
 	//判断给定的路径是否存在
 	if (fs.existsSync(url)) {
 		//返回文件和子目录的数组

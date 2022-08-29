@@ -1,7 +1,6 @@
 <template>
-  <el-menu :default-active="$route.path" class="menu" background-color="#545c64" text-color="#fff"
-    active-text-color="#ffd04b">
-    <!-- <router-link to="/article">
+	<el-menu router :default-active="$route.path" class="menu" background-color="#545c64" text-color="#fff" active-text-color="#ffd04b">
+		<!-- <router-link to="/article">
 					<el-submenu index="/article">
             <template slot="title">
               <i class="el-icon-document"></i>
@@ -9,49 +8,50 @@
             </template>
             <el-menu-item-group>
 					<template slot="title">分组一</template> -->
-    <!-- <el-menu-item :index="'/admin/' + item.path" v-for="item in routes" :key="item.id">
+		<!-- <el-menu-item :index="'/admin/' + item.path" v-for="item in routes" :key="item.id">
       <i :class="item.meta.icon"></i>
       <span slot="title">{{ item.name }}</span>
     </el-menu-item> -->
-    <el-menu-item index="/admin/jottings">
-      <i class="el-icon-notebook-1"></i>
-      <span slot="title">随笔管理</span>
-    </el-menu-item>
-    <el-menu-item index="/admin/markdown">
-      <i class="el-icon-edit"></i>
-      <span slot="title">编辑文章</span>
-    </el-menu-item>
-    <el-menu-item index="/admin/classify">
-      <i class="el-icon-menu"></i>
-      <span slot="title">专栏管理</span>
-    </el-menu-item>
-    <el-menu-item index="/admin/user">
-      <i class="el-icon-s-custom"></i>
-      <span slot="title">用户管理</span>
-    </el-menu-item>
-    <el-menu-item index="/admin/routingmanage">
-      <i class="el-icon-s-custom"></i>
-      <span slot="title">路由管理</span>
-    </el-menu-item>
-    <el-menu-item index="/admin/logs">
-      <i class="el-icon-setting"></i>
-      <span to="logs" tag="span" slot="title">日志</span>
-    </el-menu-item>
-  </el-menu>
+		<el-menu-item index="/admin/article">
+			<i class="el-icon-notebook-1"></i>
+			<span slot="title">文章管理</span>
+		</el-menu-item>
+		<el-menu-item index="/admin/markdown">
+			<i class="el-icon-edit"></i>
+			<span slot="title">编辑文章</span>
+		</el-menu-item>
+		<!-- <el-menu-item index="/admin/classify">
+			<i class="el-icon-menu"></i>
+			<span slot="title">专栏管理</span>
+		</el-menu-item> -->
+		<el-menu-item index="/admin/user">
+			<i class="el-icon-s-custom"></i>
+			<span slot="title">用户管理</span>
+		</el-menu-item>
+		<!-- <el-menu-item index="/admin/routingmanage">
+			<i class="el-icon-s-custom"></i>
+			<span slot="title">路由管理</span>
+		</el-menu-item> -->
+		<!-- <el-menu-item index="/admin/logs">
+			<i class="el-icon-setting"></i>
+			<span to="logs" tag="span" slot="title">日志</span>
+		</el-menu-item> -->
+	</el-menu>
 </template>
 <script>
 import { mapGetters } from "vuex";
 export default {
-  computed: {
-    ...mapGetters(["routes"]),
-  },
-  methods: {
-  }
+	computed: {
+		...mapGetters(["routes"]),
+	},
+	methods: {},
 };
 </script>
 <style lang="less" scoped>
-.menu{
-  width: 150px;
-  height: 100%;
+.menu {
+	flex-shrink: 0;
+	width: 150px;
+	height: 100%;
+	border: none;
 }
 </style>

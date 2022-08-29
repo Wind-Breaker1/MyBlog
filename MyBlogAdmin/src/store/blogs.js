@@ -41,7 +41,7 @@ const actions = {
 	async getBlog({ commit }, data) {
 		let result = await getBlog(data);
 		if (result.status == 200) {
-			commit("BLOG", result.data.blog);
+			commit("BLOG", result.data);
 		} else {
 			return result;
 		}

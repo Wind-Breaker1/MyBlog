@@ -8,23 +8,7 @@
 			<SiderInfo />
 		</div>
 		<!-- <Footer /> -->
-		<button @click="changTheme" style="position: fixed; bottom: 30px; right: 30px">切换</button>
-		<el-backtop target="#app">
-			<div
-				style="
-					 {
-						height: 100%;
-						width: 100%;
-						background-color: #f2f5f6;
-						box-shadow: 0 0 6px rgba(0, 0, 0, 0.12);
-						text-align: center;
-						line-height: 40px;
-						color: #1989fa;
-					}
-				">
-				UP
-			</div></el-backtop
-		>
+		<button @click="changTheme" style="position: fixed; bottom: 50px; right: 30px">{{ isLight ? '暗黑模式' : '正常模式' }}</button>
 	</div>
 </template>
 <script>
@@ -36,7 +20,7 @@ import Slideshow from '@/components/Slideshow.vue';
 import { createFingerprint } from '@/util';
 import clickSpecialEffect from '@/util/clickSpecialEffect';
 import bgSpecialEffect from '@/util/bgSpecialEffect';
-import './assets/font/font.css';
+// import './assets/font/font.css';
 import { mapState, mapGetters } from 'vuex';
 export default {
 	data() {
@@ -116,10 +100,7 @@ export default {
 }
 ::-webkit-scrollbar {
 	/*滚动条整体样式*/
-	width: 8px;
-	/*高宽分别对应横竖滚动条的尺寸*/
-	height: 5px;
-	scrollbar-arrow-color: red;
+	width: 5px;
 }
 
 ::-webkit-scrollbar-thumb {

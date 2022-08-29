@@ -49,9 +49,9 @@ export const pressImg = img => {
 	const initSize = img.src.length;
 	let width = img.width;
 	let height = img.height;
-	// 如果图片大于四百万像素，计算压缩比并将大小压至400万以下
+	// 如果图片大于四百万像素，计算压缩比并将大小压至4万以下
 	let ratio;
-	if ((ratio = (width * height) / 4000000) > 1) {
+	if ((ratio = (width * height) / 40000) > 1) {
 		ratio = Math.sqrt(ratio);
 		width /= ratio;
 		height /= ratio;
@@ -65,7 +65,7 @@ export const pressImg = img => {
 	ctx.fillRect(0, 0, canvas.width, canvas.height);
 	// 如果图片像素大于100万则使用瓦片绘制
 	let count;
-	if ((count = (width * height) / 1000000) > 1) {
+	if ((count = (width * height) / 10000) > 1) {
 		count = ~~(Math.sqrt(count) + 1); // 计算要分成多少块瓦片
 		// 计算每块瓦片的宽和高
 		const nw = ~~(width / count);
@@ -82,7 +82,7 @@ export const pressImg = img => {
 		ctx.drawImage(img, 0, 0, width * 2, height * 2);
 	}
 	// 进行最小压缩
-	const pressImgData = canvas.toDataURL('image/jpeg', 0.8);
+	const pressImgData = canvas.toDataURL('image/jpeg', 0.5);
 	console.log('压缩前：' + initSize);
 	console.log('压缩后：' + pressImgData.length);
 	console.log('压缩率：' + ~~((100 * (initSize - pressImgData.length)) / initSize) + '%');
@@ -107,13 +107,19 @@ export const toBolb = (basestr, type) => {
 	}
 	return blob;
 };
-// export const time = (basestr, type) => {
-// 	const date = new Date();
-// 	const year = date.getFullYear();
-// 	const month = date.getMonth() + 1;
-// 	const day = date.getDate();
-// 	const hour = date.getHours();
-// 	const minutes = date.getMinutes();
-// 	// if ()
-// 	return year + '-' + month + '-' + day + ' ' + hour + ':' + minutes;
-// };
+export const formatTime = timeNum => {
+	const date = new Date(timeNum);
+	const year = date.getFullYear();
+	const month = date.getMonth() + 1;
+	const day = date.getDate();
+	const hour = date.getHours();
+	const minutes = date.getMinutes();
+	return year + '-' + month + '-' + day + ' ' + hour + ':' + minutes;
+};
+export const dormatDate = dateNum => {
+	const date = new Date(dateNum);
+	const year = date.getFullYear();
+	const month = date.getMonth() + 1;
+	const day = date.getDate();
+	return year + '-' + month + '-' + day;
+};

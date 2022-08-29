@@ -1,5 +1,5 @@
 <template>
-	<div class="block">
+	<div class="route-box">
 		<div class="option">
 			<el-button type="primary" size="mini" @click="addRoute" class="sub">新增路由</el-button>
 		</div>
@@ -223,16 +223,26 @@ export default {
 </script>
 
 <style scoped lang="less">
-.block {
+.route-box {
 	overflow-y: auto;
+	margin: 1vw;
+	border-radius: 5px;
+	background-color: #323232;
 	/deep/ .el-tree-node {
-		height: 10vh;
+		background-color: #323232;
+		height: 8vh;
+		color: #888888;
 		.el-tree-node__content {
 			height: 100%;
 		}
+		.el-tree-node__content:hover {
+			background-color: #222222;
+		}
+	}
+	/deep/.el-tree-node:focus > .el-tree-node__content {
+		background-color: #222222;
 	}
 	.option {
-		background-color: #ffffff;
 		line-height: 10vh;
 		button {
 			margin-left: 1vw;

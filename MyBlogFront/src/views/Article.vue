@@ -5,9 +5,9 @@
 			<div class="article-class" v-show="isBlog">
 				<div>专栏：{{ article.classifyName }}</div>
 				<div class="tag night-tag">
-					<div><i class="el-icon-price-tag"></i> 武切维奇</div>
-					<div><i class="el-icon-price-tag"></i> 武切维奇</div>
-					<div><i class="el-icon-price-tag"></i> 武切维奇</div>
+					<div v-for="item in article.tags" :key="item._id" :style="{ 'background-color': item.bg }">
+						<i class="el-icon-price-tag"></i> {{ item.title }}
+					</div>
 				</div>
 			</div>
 			<div class="opration">

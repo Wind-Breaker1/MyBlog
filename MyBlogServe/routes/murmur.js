@@ -6,4 +6,5 @@ var murmurController = require('../controllers/murmur');
 router.post('/addmurmurinfo', murmurController.addMurmurInfo);
 router.post('/updatemurmurusername', murmurController.updateMurmurUsername);
 router.get('/getmurmurinfos', murmurController.getMurmurInfos);
+router.delete('/deletemurmurinfo', murmurController.deleteMurmurInfo);
 module.exports = router;

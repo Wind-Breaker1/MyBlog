@@ -4,7 +4,7 @@ const TagModel = require('../model/tag');
 const util = require('../utils');
 // 添加新博客
 const addBlog = async (req, res) => {
-	const { title, classification, content, digest, state } = req.body;
+	const { title, classification, content, digest, state, tags } = req.body;
 	const blog = await BlogsModel.addblog({
 		date: util.date(),
 		title,
@@ -12,6 +12,7 @@ const addBlog = async (req, res) => {
 		content,
 		digest,
 		state,
+		tags,
 	});
 	const result = await ClassifyModel.updateClassifySum(classification, 1);
 	if (blog && result.modifiedCount !== 0) {
@@ -45,9 +46,9 @@ const changeBlogState = async (req, res) => {
 };
 // 更新博客
 const updateBlog = async (req, res) => {
-	const { content, _id, digest, title } = req.body;
+	const { content, _id, digest, title, tags } = req.body;
 	console.log(content, _id, digest, title);
-	const result = await BlogsModel.updateBlog(_id, { content, digest, title });
+	const result = await BlogsModel.updateBlog(_id, content, digest, title, tags);
 	if (result.modifiedCount !== 0) {
 		res.send({
 			msg: '博客已更新',
@@ -117,15 +118,13 @@ const getBlog = async (req, res) => {
 	// 这里必须要await
 	const blog = await BlogsModel.getBlog(_id);
 	const classify = await ClassifyModel.getClassify(blog.classification);
-	
-	
 	blog.classifyName = classify?.title;
 	// 查询博客所属书签
 	if (blog) {
 		res.send({
 			msg: '博客查找成功',
 			status: 200,
-			data: blog
+			data: blog,
 		});
 	} else {
 		res.send({

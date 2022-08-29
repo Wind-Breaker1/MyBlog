@@ -3,6 +3,7 @@ module.exports = defineConfig({
 	transpileDependencies: true,
 	// 关闭eslint
 	lintOnSave: false,
+	productionSourceMap: false,
 	devServer: {
 		proxy: {
 			"/api": {

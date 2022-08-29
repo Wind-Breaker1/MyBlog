@@ -1,27 +1,31 @@
 <template>
-	<div>
-		<mavon-editor v-model="content" ref="md" @imgAdd="img" style="height: 530px" scrollStyle: true xssOptions:false />
-		<button @click="dialogFormVisible = true" class="sub">保存</button>
-		<el-dialog title="发布文章" :visible.sync="dialogFormVisible" center>
-			<el-form :model="form">
+	<div class="markdown-box">
+		<mavon-editor v-model="article.content" ref="md" @imgAdd="imgAdd" class="markdown" scrollStyle xssOptions />
+		<button @click="dialogVisible = true" class="sub">保存</button>
+		<el-dialog title="发布文章" :visible.sync="dialogVisible" center>
+			<el-form>
 				<el-form-item label="标题" :label-width="formLabelWidth">
-					<el-input v-model="form.title" autocomplete="off"></el-input>
+					<el-input v-model="article.title" autocomplete="off" style="width: 250px"></el-input>
 				</el-form-item>
 				<el-form-item label="文章类型" :label-width="formLabelWidth" v-if="!type">
-					<div class="block">
-						<span class="demonstration"></span>
-						<el-cascader placeholder="搜索" :options="options" filterable v-model="classification"></el-cascader>
-					</div>
+					<el-select placeholder="请选择文章类型" filterable v-model="article.classification" style="width: 250px">
+						<el-option v-for="item in classifyOptions" :key="item.value" :label="item.label" :value="item.value"> </el-option>
+					</el-select>
 				</el-form-item>
-				<el-form-item label="描述" :label-width="formLabelWidth">
-					<el-input v-model="form.digest" autocomplete="off"></el-input>
+				<el-form-item label="书签" :label-width="formLabelWidth">
+					<el-select multiple placeholder="请选择文章标签" default-first-option filterable v-model="article.tags" style="width: 250px">
+						<el-option v-for="item in tagsOptions" :key="item.value" :label="item.label" :value="item.value"> </el-option>
+					</el-select>
+				</el-form-item>
+				<el-form-item label="摘要" :label-width="formLabelWidth">
+					<el-input v-model="article.digest" autocomplete="off" style="width: 250px"></el-input>
 				</el-form-item>
 				<el-form-item label="是否发布" :label-width="formLabelWidth" v-if="!type">
-					<el-switch v-model="state" active-text="发布"> </el-switch>
+					<el-switch v-model="article.state" active-text="发布"> </el-switch>
 				</el-form-item>
 			</el-form>
 			<div slot="footer" class="dialog-footer">
-				<el-button @click="dialogFormVisible = false">取 消</el-button>
+				<el-button @click="dialogVisible = false">取 消</el-button>
 				<el-button type="primary" @click="submit">确 定</el-button>
 			</div>
 		</el-dialog>
@@ -40,31 +44,30 @@ export default {
 	},
 	data() {
 		return {
-			dialogFormVisible: false, //控制是否显示弹出框
-			form: {
-				// 弹出框双向绑定数据
-				title: "",
-				digest: "",
-			},
+			dialogVisible: false, //控制是否显示弹出框
 			formLabelWidth: "120px", // 弹出框输入框的长度
-			classification: [], //分类
-			content: "", // 文章内容
-			html: "", // 渲染的html内容
-			state: false, //文章是否发布
 			// 专栏列表数据
-			options: [
+			classifyOptions: [
 				{
 					// 专栏下拉框数据
 					value: "suibi",
 					label: "随笔",
 				},
 			],
+			tagsOptions: [],
+			article: {
+				title: "",
+				classification: "",
+				digest: "",
+				state: false,
+				content: "",
+				tags: [],
+			},
 			type: this.$route.query.type,
-			_id: "",
 		};
 	},
 	computed: {
-		...mapGetters(["blog"]),
+		...mapGetters(["classifies", "tags"]),
 	},
 	methods: {
 		// 将图片上传到服务器，返回地址替换到md中
@@ -100,11 +103,9 @@ export default {
 					// 缩放图片需要的canvas（也可以在DOM中直接定义canvas标签，这样就能把压缩完的图片不转base64也能直接显示出来）
 					let canvas = document.createElement("canvas");
 					let context = canvas.getContext("2d");
-
 					// 图片原始尺寸
 					let originWidth = this.width;
 					let originHeight = this.height;
-
 					// 最大尺寸限制，可通过设置宽高来实现图片压缩程度
 					let maxWidth = 800,
 						maxHeight = 800;
@@ -130,12 +131,8 @@ export default {
 					// 图片压缩
 					context.drawImage(img, 0, 0, targetWidth, targetHeight);
 					/*第一个参数是创建的img对象；第二三个参数是左上角坐标，后面两个是画布区域宽高*/
-
 					//压缩后的图片转base64 url
-					/*canvas.toDataURL(mimeType, qualityArgument),mimeType 默认值是'image/png';
-					 * qualityArgument表示导出的图片质量，只有导出为jpeg和webp格式的时候此参数才有效，默认值是0.92*/
 					let newUrl = canvas.toDataURL("image/jpeg", 0.6); //base64 格式
-
 					// base64 转 blob 再转 file
 					let arr = newUrl.split(","),
 						mime = arr[0].match(/:(.*?);/)[1], // 去掉url的头，并转化为byte
@@ -146,116 +143,142 @@ export default {
 						u8arr[n] = bstr.charCodeAt(n);
 					}
 					// 转blob
-					let filename = Date.parse(new Date()) + ".jpeg";
+					let filename = Date.parse(new Date());
 					// 转file
 					let file = new File([u8arr], filename, { type: mime });
-
 					// 将图片上传到服务器
-					formData.append("file", file);
-					await axios.post("/uploadImg", formData, {
-						onUploadProgress: progressEvent => {
-							var percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
-							this.percentCompleted = percentCompleted;
-						},
-					});
-					// uploadImg(formData).then(res => {
-					//   $vm.$img2Url(pos, res.data)
-					// })
-					// axios({
-					//   url: 'http://localhost:9090/file/upload',
-					//   method: 'post',
-					//   data: formData,
-					//   headers: {'Content-Type': 'multipart/form-data'},
-					// }).then((res) => {
-					//   // 将返回的url替换到文本原位置![...](./0) -> ![...](url)
-					//   $vm.$img2Url(pos, res.data)
-					// })
-					console.log(this.$api);
+					formData.append("artimg", file);
+					let res = await uploadImg(formData);
+					if (res.status === 200) {
+						$vm.$img2Url(pos, res.artimgUrl);
+					}
 				};
 			}
 		},
 		async submit() {
-			let data = {
-				title: this.form.title,
-				classification: this.classification,
-				digest: this.form.digest,
-				state: this.state,
-				content: this.content,
-				_id: this._id,
-			};
+			const { title, digest, content, tags, state, classification, _id } = this.article;
+			// 验证信息是否完整
+			if (!title || !content || tags.length == 0 || !digest) {
+				this.$message.warning("请完整填写必要的信息！");
+				return;
+			}
 			let result;
-			// 判断是添加到随笔还是博客
-			console.log(this.type, this.classification[0]);
-			if (this.type === "jotting" && this.classification[0] !== "suibi") {
-				delete data.classification;
+			// 判断是更新博客还是心情
+			if (this.type === "jotting") {
+				if (!_id) {
+					this.$message.warning("哎呀，出错了！请重新编辑");
+					this.$router.push("/admin/article");
+				}
+				const data = { title, digest, content, tags, _id };
 				result = await this.$store.dispatch("updateJotting", data);
-			} else if (this.type === "blog" && this.classification[0] !== "suibi") {
+			} else if (this.type === "blog") {
+				if (!_id) {
+					this.$message.warning("哎呀，出错了！请重新编辑");
+					this.$router.push("/admin/article");
+				}
+				const data = { title, digest, content, tags, _id };
 				result = await this.$store.dispatch("updateBlog", data);
-			} else if (!this.type && this.classification[0] === "suibi") {
-				delete data.classification;
+			}
+			if (!this.article.classification) {
+				this.$message.warning("添加博客所属专栏不能为空哦！");
+				return;
+			}
+			// 判断是添加到心情还是博客
+			if (!this.type && this.article.classification === "suibi") {
+				const data = { title, digest, content, tags, state };
 				result = await this.$store.dispatch("addJotting", data);
-			} else if (!this.type && this.classification[0] !== "suibi") {
+			} else if (!this.type && this.article.classification !== "suibi") {
+				const data = { title, digest, content, tags, state, classification };
 				result = await this.$store.dispatch("addBlog", data);
 			}
 			if (result.status === 200) {
 				// 修改成功后清空值
-				this.form.username = "";
-				this.form.password = "";
-				this.form.email = "";
-				this.dialogFormVisible = false;
+				this.dialogVisible = false;
 				this.$message.success(result.msg);
-				if (this.type === "blog" || (this.classification[0] && this.classification[0] !== "suibi")) this.$router.push("/admin/blog");
-				else this.$router.push("/admin/jottings");
-				this.classification = [];
+				this.$router.push("/admin/article");
 			} else {
 				this.$message.error(result.msg);
 			}
 		},
 		init() {
-			let article = {};
+			for (let c of this.classifies) {
+				this.classifyOptions.push({ value: c._id, label: c.title });
+			}
+			for (let c of this.tags) {
+				this.tagsOptions.push({ value: c._id, label: c.title });
+			}
 			if (this.type) {
 				if (this.type === "blog") {
-					article = this.$store.getters.blog;
+					this.article = this.$store.getters.blog || {};
 				} else {
-					article = this.$store.getters.jotting;
+					this.article = this.$store.getters.jotting || {};
 				}
-				this.classification.push(article.classification);
-				this.content = article.content;
-				this.state = article.state;
-				this.form.title = article.title;
-				this.form.digest = article.digest;
-				this._id = article._id;
 			}
 		},
 	},
-	mounted() {
-		// 从session中获得专栏列表
-		let classifies = getClassifyList();
-		// 循环添加到
-		for (let c of classifies) {
-			let value = c._id;
-			let label = c.title;
-			this.options.push({ value: value, label: label });
-		}
+	created() {
 		this.init();
 	},
 };
 </script>
 
-<style scoped>
-.save {
-	background-color: rgb(221, 216, 216);
-	margin-right: 60px;
-}
-.sub {
-	background-color: rgb(179, 192, 209);
-	width: 100px;
-	height: 30px;
-	margin-top: 10px;
-	box-shadow: 4px 4px 10px #888888;
-	border-radius: 5%;
-	border: 0;
-	margin-left: 50%;
-	transform: translate(-50%);
+<style scoped lang="less">
+.markdown-box {
+	padding: 1vw;
+	.markdown {
+		height: calc(100% - 40px);
+		/deep/ .v-note-panel {
+			background-color: #222222 !important;
+			.v-note-edit {
+				background-color: #323232 !important;
+				.content-input-wrapper {
+					background-color: #323232 !important;
+					.auto-textarea-input {
+						background-color: #323232;
+						color: #888888;
+					}
+				}
+			}
+		}
+		/deep/.scroll-style::-webkit-scrollbar {
+			background-color: #cccccc !important;
+		}
+		/deep/ .v-show-content {
+			background-color: #323232 !important;
+			color: #888888;
+		}
+		/deep/ .v-note-op {
+			background-color: #323232 !important;
+			.op-icon.selected {
+				background-color: #323232 !important;
+				color: #757575;
+			}
+		}
+		/deep/ .v-note-read-model {
+			background-color: #323232 !important;
+			color: #888888;
+		}
+	}
+	/deep/ .el-dialog {
+		background-color: #323232;
+		.el-dialog__title {
+			color: #ffffff;
+		}
+		.el-form-item__label {
+			color: #ffffff;
+		}
+	}
+	.sub {
+		background-color: #323232;
+		color: #ffffff;
+		width: 100px;
+		height: 30px;
+		margin-top: 10px;
+		box-shadow: 4px 4px 10px #888888;
+		border-radius: 5%;
+		border: 0;
+		margin-left: 50%;
+		transform: translate(-50%);
+	}
 }
 </style>

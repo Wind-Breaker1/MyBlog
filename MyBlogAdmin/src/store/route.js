@@ -1,4 +1,4 @@
-import { getRoutes, addSecondRoute, updatRoute, deleteRoute, addFirstRoute, getRouteList } from "../api/api";
+import { getRoutes, addSecondRoute, updateRoute, deleteRoute, addFirstRoute, getRouteList } from "../api/api";
 
 const state = {
 	routeList: [],
@@ -26,7 +26,7 @@ const actions = {
 	},
 	// 更新获取路由信息
 	async updatRoute({ commit }, data) {
-		return await updatRoute(data);
+		return await updateRoute(data);
 	},
 	//删除路由
 	async deleteRoute({ commit }, data) {
