@@ -16,6 +16,7 @@ const synthesisRouter = require('./routes/synthesis');
 const commentRouter = require('./routes/comments');
 const routeRouter = require('./routes/routes');
 const murmurRouter = require('./routes/murmur');
+const photoRouter = require('./routes/photo');
 const app = express();
 
 app.use(session({
@@ -45,6 +46,7 @@ app.use('/api/synthesis', synthesisRouter);
 app.use('/api/comments', commentRouter);
 app.use('/api/routes', routeRouter);
 app.use('/api/murmur', murmurRouter);
+app.use('/api/photo', photoRouter);
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));

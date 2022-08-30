@@ -1,10 +1,11 @@
 const mongoose = require('mongoose');
+
 const UserSchema = new mongoose.Schema({
 	//创建表
 	username: { type: String, require: true },
 	password: { type: String, require: true },
 	email: { type: String, require: true, unique: true }, //index: { unique: true }
-	date: { type: String },
+	date: { type: Date },
 	role: { type: String, require: true, default: '普通用户' },
 });
 const UserModel = mongoose.model('user', UserSchema);
@@ -34,7 +35,7 @@ const getUser = email => {
 };
 // 查询所有用户
 const getUsers = () => {
-	return UserModel.find();
+	return UserModel.find().lean();
 };
 module.exports = {
 	addUser,

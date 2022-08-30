@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const BlogSchema = new mongoose.Schema({
 	//创建博客模型
-	date: { type: String }, //创建日期
+	date: { type: Date }, //创建日期
 	title: { type: String, require: true },
 	classification: { type: mongoose.Types.ObjectId, require: true }, //所属专栏
 	favour: [
@@ -52,19 +52,23 @@ const getBlog = id => {
 };
 // 查询所有文章
 const getBlogs = () => {
-	return BlogModel.find();
+	return BlogModel.find().lean();
 };
 // 查询所有已发布的博客
 const getPublishBlogs = (pageStart = 0, pageSize = 5) => {
-	return BlogModel.find({ state: true }, '_id date digest favour title browse').skip(pageStart).limit(pageSize);
+	return BlogModel.find({ state: true }, '_id date digest favour title browse').skip(pageStart).limit(pageSize).lean();
 };
 // 查询所有已发布的博客的数量
 const getblogSums = () => {
 	return BlogModel.find({ state: true }).count();
 };
-// 查询某一书签下的所有博客
+// 查询某一专栏下的所有博客
 const getBlogsOfClassify = classification => {
-	return BlogModel.find({ classification }, '_id date digest favour title browse');
+	return BlogModel.find({ classification }, '_id date digest favour title browse').lean();
+};
+// 查询某一书签下的所有博客
+const getBlogsOfTag= searchTag => {
+	return BlogModel.find({ tags:{$in: searchTag} }, '_id date digest favour title browse');
 };
 // 增加点赞
 const addFavour = (id, favourMurmur) => {
@@ -100,4 +104,5 @@ module.exports = {
 	addBlogBrowse,
 	getFavour,
 	searchBlogs,
+	getBlogsOfTag
 };

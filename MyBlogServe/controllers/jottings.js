@@ -3,7 +3,7 @@ const util = require('../utils');
 const addJotting = async (req, res, next) => {
 	let { title, content, digest, state, tags } = req.body;
 	let result = await JottingModel.addJotting({
-		date: util.date(),
+		date: Date.now(),
 		title,
 		content,
 		digest,
@@ -58,6 +58,9 @@ const updateJotting = async (req, res, next) => {
 // 获取随笔列表
 const getJottings = async (req, res, next) => {
 	let result = await JottingModel.getJottings();
+	result.forEach(item => {
+		item.date = util.formatDate(item.date);
+	})
 	if (result) {
 		res.send({
 			msg: '随笔查询成功',
@@ -75,6 +78,9 @@ const getJottings = async (req, res, next) => {
 const getPublishJottings = async (req, res, next) => {
 	let { pageStart, pageSize } = req.query;
 	let jottingList = await JottingModel.getPublishJottings(pageStart, pageSize);
+	jottingList.forEach(item => {
+		item.date = util.formatDate(item.date);
+	})
 	let count = await JottingModel.getJottingSums();
 	if (jottingList) {
 		res.send({
@@ -93,6 +99,7 @@ const getPublishJottings = async (req, res, next) => {
 const getJotting = async (req, res, next) => {
 	let { _id } = req.query;
 	let jotting = await JottingModel.getJotting(_id);
+	jotting.date = util.formatDate(jotting.date);
 	if (jotting) {
 		res.send({
 			msg: '随笔详情查询成功',

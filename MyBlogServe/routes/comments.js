@@ -9,4 +9,5 @@ router.delete('/deletesecondcomment', commentController.deleteSecondComment);
 router.get('/addfirstfavour', commentController.addFirstFavour);
 router.get('/addsecondfavour', commentController.addSecondFavour);
 router.get('/getcomments', commentController.getComments);
+router.get('/getcommentsofarticle', commentController.getCommentsOfArticle);
 module.exports = router;

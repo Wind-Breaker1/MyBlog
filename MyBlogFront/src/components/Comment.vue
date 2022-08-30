@@ -237,7 +237,7 @@ export default {
 				} else {
 					id = this.keyId;
 				}
-				const res = await this.$api.getComments({
+				const res = await this.$api.getCommentsOfArticle({
 					id,
 					pageSize,
 					pageStart,
@@ -406,12 +406,7 @@ export default {
 		align-items: center;
 		transition: background-color 0.6s;
 		#avatarInput {
-			width: 10vh;
-			height: 10vh;
-			position: absolute;
-			left: 10px;
 			visibility: hidden;
-			z-index: 10;
 		}
 
 		.input {

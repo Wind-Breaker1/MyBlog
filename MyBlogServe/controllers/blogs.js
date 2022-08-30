@@ -1,12 +1,11 @@
 const BlogsModel = require('../model/blogs');
 const ClassifyModel = require('../model/classifies');
-const TagModel = require('../model/tag');
 const util = require('../utils');
 // 添加新博客
 const addBlog = async (req, res) => {
 	const { title, classification, content, digest, state, tags } = req.body;
 	const blog = await BlogsModel.addblog({
-		date: util.date(),
+		date: Date.now(),
 		title,
 		classification,
 		content,
@@ -63,12 +62,13 @@ const updateBlog = async (req, res) => {
 };
 // 获取文章列表
 const getBlogs = async (req, res) => {
-	const result = await BlogsModel.getBlogs();
-	if (result) {
+	const blogs = await BlogsModel.getBlogs();
+	blogs.forEach(item => item.date = util.formatDate(item.date))
+	if (blogs) {
 		res.send({
 			msg: '博客查询成功',
 			status: 200,
-			data: result,
+			data: blogs,
 		});
 	} else {
 		res.send({
@@ -82,6 +82,7 @@ const getPublishBlogs = async (req, res) => {
 	const { pageStart, pageSize } = req.query;
 	const blogList = await BlogsModel.getPublishBlogs(pageStart, pageSize);
 	const count = await BlogsModel.getblogSums();
+	blogList.forEach(item =>item.date = util.formatDate(item.date))
 	if (blogList) {
 		res.send({
 			msg: '博客查询成功',
@@ -117,6 +118,7 @@ const getBlog = async (req, res) => {
 	const { _id } = req.query;
 	// 这里必须要await
 	const blog = await BlogsModel.getBlog(_id);
+	blog.date = util.formatDate(blog.date);
 	const classify = await ClassifyModel.getClassify(blog.classification);
 	blog.classifyName = classify?.title;
 	// 查询博客所属书签
@@ -133,16 +135,17 @@ const getBlog = async (req, res) => {
 		});
 	}
 };
-// 获取某书签下所有博客
+// 获取某专栏下所有博客
 const getBlogsOfClassify = async (req, res) => {
 	const { classification } = req.query;
-	const result = await BlogsModel.getBlogsOfClassify(classification);
-	if (result && result.length > 0) {
+	const blogs = await BlogsModel.getBlogsOfClassify(classification);
+	blogs.forEach(item => item.date = util.formatDate(item.date))
+	if (blogs && blogs.length > 0) {
 		res.send({
 			msg: '查找博客成功',
 			status: 200,
 			data: {
-				blogList: result,
+				blogList: blogs,
 			},
 		});
 	} else {

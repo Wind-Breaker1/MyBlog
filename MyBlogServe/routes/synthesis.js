@@ -25,29 +25,19 @@ var storageAvatar = multer.diskStorage({
 		cb(null, Date.now() + path.extname(file.originalname));
 	},
 });
-// 照片墙上传图片上传
-var storagePhoto = multer.diskStorage({
-	// 配置文件上传后存储的路径
-	destination: function (req, file, cb) {
-		cb(null, path.join(__dirname, '../public/photos'));
-	},
-	// 配置文件上传后存储的路径和文件名
-	filename: function (req, file, cb) {
-		cb(null, Date.now() + path.extname(file.originalname));
-	},
-});
+
 const uploadArtimg = multer({ storage: storageArtimg });
 const uploadAvatar = multer({ storage: storageAvatar });
-const uploadPhoto = multer({ storage: storagePhoto });
+
 router.get('/getwebinfo', synthesisControll.getWebInfo);
 router.get('/getsliderinfo', synthesisControll.getSliderInfo);
 router.get('/searcharticle', synthesisControll.searchArticle);
 router.post('/uploadartimg', uploadArtimg.single('artimg'), synthesisControll.uploadArtimg);
 router.post('/uploadavatar', uploadAvatar.single('avatar'), synthesisControll.uploadAvatar);
-router.post('/uploadphoto', uploadPhoto.single('photo'), synthesisControll.uploadPhoto);
 router.get('/gettags', synthesisControll.getTags);
 router.get('/gettag', synthesisControll.getTag);
 router.delete('/deletetag', synthesisControll.deleteTag);
 router.post('/addtag', synthesisControll.addTag);
 router.post('/updatetag', synthesisControll.updateTag);
+router.get('/getarticlesoftag', synthesisControll.getArticlesOfTag);
 module.exports = router;

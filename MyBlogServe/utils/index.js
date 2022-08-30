@@ -2,6 +2,7 @@ const bcrypt = require('bcrypt');
 const fs = require('fs');
 const path = require('path');
 const jwt = require('jsonwebtoken');
+const { type } = require('os');
 /**
  * 密码加密
  * @param {string} myPassword
@@ -43,15 +44,15 @@ exports.verify = token => {
 	const result = jwt.verify(token, publicKey);
 	return result;
 };
-exports.date = () => {
-	const date = new Date();
+exports.formatDate = (date) => {
+	// const date = new Date(dateNum);
 	const year = date.getFullYear();
 	const month = date.getMonth() + 1;
 	const day = date.getDate();
 	return year + '-' + month + '-' + day;
 };
-exports.time = () => {
-	const date = new Date();
+exports.formatTime = (date) => {
+	// const date = new Date(timeNum);
 	const year = date.getFullYear();
 	const month = date.getMonth() + 1;
 	const day = date.getDate();
@@ -69,6 +70,7 @@ exports.manageMurmurComments = (murmurInfo, comments) => {
 const depComments = (hashMurmur, comments) => {
 	comments?.forEach(item => {
 		const murValue = hashMurmur.get(item.murmur);
+		item.date = this.formatTime(item.date);
 		item.username = murValue.username;
 		item.avatarUrl = murValue.avatarUrl;
 		if (item.replyInfo) {
@@ -77,10 +79,23 @@ const depComments = (hashMurmur, comments) => {
 	});
 	return comments;
 };
-// 删除图片
+exports.imgBaseUrl = (type) => {
+	switch(type) {
+		case 'avatar':
+			return 'http://127.0.0.1:3000/avatars/';
+		case 'image':
+			return 'http://127.0.0.1:3000/images/';
+		case 'photo':
+			return 'http://127.0.0.1:3000/photos/';
+	}
+}
+/**
+ *删除图片
+ * @param {*} imgUrl
+ */
 exports.deleteImg = function (imgUrl) {
-	const imgName = imgUrl.substr(imgUrl.indexOf('avatars/') + 8);
-	const url = path.join(__dirname, '../public/avatars/', imgName);
+	const imgName = imgUrl.substr(imgUrl.indexOf('avatars/') + 7);
+	const url = path.join(__dirname, '../public/avatars', imgName);
 	console.log(url, 'url');
 	//判断给定的路径是否存在
 	if (fs.existsSync(url)) {

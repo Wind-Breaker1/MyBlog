@@ -42,7 +42,7 @@ export const addMurmur = data => requests.post('/murmur/addmurmurinfo', data);
 export const updateMurmur = data => requests.post('/murmur/updatemurmurusername', data);
 
 // 获取某篇文章的所有评论
-export const getComments = params => requests.get('/comments/getcomments', { params });
+export const getCommentsOfArticle = params => requests.get('/comments/getcommentsofarticle', { params });
 // 一级评论点赞
 export const addfirstfavour = params => requests.get('/comments/addfirstfavour', { params });
 // 二级评论点赞

@@ -4,12 +4,12 @@ const ClassifyModel = require('../model/classifies');
 const MurmruModel = require('../model/murmurs');
 const TagModel = require('../model/tag');
 const util = require('../utils');
-var path = require('path');
-var fs = require('fs');
+const path = require('path');
+const fs = require('fs');
 //新增标签
 const addTag = async (req, res) => {
 	const { title } = req.body;
-	const tag = await TagModel.addTag({ title, date: util.date(), bg: util.randomColor() });
+	const tag = await TagModel.addTag({ title, date: Date.now(), bg: util.randomColor() });
 	if (tag) {
 		res.send({
 			msg: '新增标签成功',
@@ -78,6 +78,7 @@ const getTag = async (req, res) => {
 //获取所有标签
 const getTags = async (req, res) => {
 	const tags = await TagModel.getTags();
+	tags.forEach(item => item.date = util.formatDate(item.date));
 	if (tags) {
 		res.send({
 			msg: '获取标签列表成功',
@@ -111,7 +112,13 @@ const getWebInfo = async (req, res, next) => {
 };
 const getSliderInfo = async (req, res, next) => {
 	const blogs = await BlogsModel.getPublishBlogs();
+	blogs.forEach(item => {
+		item.date = util.formatDate(item.date);
+	})
 	const jottings = await JottingModel.getPublishJottings();
+	jottings.forEach(item => {
+		item.date = util.formatDate(item.date);
+	})
 	const classifies = await ClassifyModel.getClassifies();
 	const tags = await TagModel.getTags();
 	if (blogs && blogs && classifies && tags) {
@@ -132,14 +139,44 @@ const getSliderInfo = async (req, res, next) => {
 		});
 	}
 };
+// 搜索文章
 const searchArticle = async (req, res) => {
 	let { searchValue } = req.query;
 	let blogs = await BlogsModel.searchBlogs(searchValue);
 	blogs.forEach(item => {
+		item.date = util.formatDate(item.date);
 		item.type = 'blog';
 	});
 	let jottings = await JottingModel.searchJottings(searchValue);
 	jottings.forEach(item => {
+		item.date = util.formatDate(item.date);
+		item.type = 'jotting';
+	});
+	let data = [...blogs, ...jottings];
+	if (data.length > 0) {
+		res.send({
+			msg: '搜索到文章',
+			status: 200,
+			data,
+		});
+	} else {
+		res.send({
+			msg: '未查询到相关信息',
+			status: 0,
+		});
+	}
+};
+// 查找某一书签下所有文章
+const getArticlesOfTag = async (req, res) => {
+	let { searchTag } = req.query;
+	let blogs = await BlogsModel.getBlogsOfTag(searchTag);
+	blogs.forEach(item => {
+		item.date = util.formatDate(item.date);
+		item.type = 'blog';
+	});
+	let jottings = await JottingModel.getJottingsOfTag(searchTag);
+	jottings.forEach(item => {
+		item.date = util.formatDate(item.date);
 		item.type = 'jotting';
 	});
 	let data = [...blogs, ...jottings];
@@ -159,7 +196,7 @@ const searchArticle = async (req, res) => {
 // 上传图片
 const uploadArtimg = async (req, res) => {
 	const file = req.file; //这个就是前端传来的文件
-	const artimgUrl = 'http://127.0.0.1:3000/images/' + file.filename;
+	const artimgUrl = util.imgBaseUrl('image') + file.filename;
 	const url = path.join(__dirname, '../public/images/', file.filename);
 	console.log(req.file, '123');
 	if (fs.existsSync(url)) {
@@ -175,30 +212,12 @@ const uploadArtimg = async (req, res) => {
 		});
 	}
 };
-// 照片墙上传图片
-const uploadPhoto = async (req, res) => {
-	const file = req.file; //这个就是前端传来的文件
-	const avatarUrl = 'http://127.0.0.1:3000/photos/' + file.filename;
-	const url = path.join(__dirname, '../public/photos/', file.filename);
-	console.log(req.body, murmur, '123');
-	if (fs.existsSync(url)) {
-		res.send({
-			avatarUrl,
-			status: 200,
-			msg: '图片上传成功',
-		});
-	} else {
-		res.send({
-			status: 0,
-			msg: '图片上传失败',
-		});
-	}
-};
+
 // 上传头像
 const uploadAvatar = async (req, res) => {
 	const { murmur } = req.body;
 	const file = req.file; //这个就是前端传来的文件
-	const avatarUrl = 'http://127.0.0.1:3000/avatars/' + file.filename;
+	const avatarUrl = util.imgBaseUrl('avatar') + file.filename;
 	const url = path.join(__dirname, '../public/avatars/', file.filename);
 	const murmurInfo = await MurmruModel.getMurmurInfo(murmur);
 	if (murmurInfo.avatarUrl) {
@@ -224,10 +243,10 @@ module.exports = {
 	searchArticle,
 	uploadArtimg,
 	uploadAvatar,
-	uploadPhoto,
 	addTag,
 	deleteTag,
 	getTag,
 	getTags,
 	updateTag,
+	getArticlesOfTag
 };

@@ -20,10 +20,10 @@
 			<i class="el-icon-edit"></i>
 			<span slot="title">编辑文章</span>
 		</el-menu-item>
-		<!-- <el-menu-item index="/admin/classify">
+		<el-menu-item index="/admin/comment">
 			<i class="el-icon-menu"></i>
-			<span slot="title">专栏管理</span>
-		</el-menu-item> -->
+			<span slot="title">评论管理</span>
+		</el-menu-item>
 		<el-menu-item index="/admin/user">
 			<i class="el-icon-s-custom"></i>
 			<span slot="title">用户管理</span>

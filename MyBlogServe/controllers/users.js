@@ -1,5 +1,5 @@
 const UserModel = require('../model/users');
-const { sign, verify, hash, compare, date } = require('../utils');
+const { sign, verify, hash, compare, formatDate } = require('../utils');
 // 添加新用户
 const register = async (req, res, next) => {
 	let { username, password, email, role } = req.body;
@@ -7,13 +7,12 @@ const register = async (req, res, next) => {
 	const bcryptPassword = await hash(password);
 	// 检查此邮箱是否已经被注册
 	const Email = await UserModel.getUser(email);
-	const time = date();
 	if (!Email) {
 		let result = await UserModel.addUser({
 			username,
 			password: bcryptPassword,
 			email,
-			date: time,
+			date: Date.now(),
 			role,
 		});
 
@@ -134,12 +133,13 @@ const updatePassword = async (req, res, next) => {
 };
 // 获取用户列表
 const getUsers = async (req, res, next) => {
-	let result = await UserModel.getUsers();
-	if (result) {
+	const users = await UserModel.getUsers();
+	users.forEach(item => item.date = formatDate(item.date))
+	if (users) {
 		res.send({
 			msg: '查询用户成功',
 			status: 200,
-			data: result,
+			data: users,
 		});
 	} else {
 		res.send({
@@ -153,7 +153,6 @@ const deleteUser = async (req, res, next) => {
 	const { email } = req.query;
 	// 这里必须要await
 	let result = await UserModel.deleteUser(email);
-	console.log(result);
 	if (result.deletedCount != 0) {
 		res.send({
 			msg: '用户注销成功！',

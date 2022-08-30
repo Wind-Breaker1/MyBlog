@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const TagSchema = new mongoose.Schema({
-	date: { type: String, require: true },
+	date: { type: Date, require: true },
 	title: { type: String, require: true, unique: true },
 	bg: { type: String },
 });
@@ -22,7 +22,6 @@ const addTag = data => {
 /**
  *删除标签
  * @param {string} murmur 浏览器指纹
- * @param {string} username 浏览器指纹对应用户名
  */
 const deleteTag = _id => {
 	return TagModel.deleteOne({ _id });
@@ -39,7 +38,7 @@ const getTag = id => {
 /**
  * 查找某一个标签
  * @param {string} id 标签的_id
- * @return {object} 查找到的标签
+ * @return {object} 更新操作结果
  */
 const uptateTag = (id, title) => {
 	return TagModel.updateOne({ _id: id }, { $set: { title } });
@@ -49,9 +48,12 @@ const uptateTag = (id, title) => {
  @return {Array} 查找到的标签对象数组
  */
 const getTags = () => {
-	return TagModel.find();
+	return TagModel.find().lean();
 };
-
+/**
+ *获取所有标签的数量
+ @return {number} 查找到的标签数量
+ */
 const getTagSums = () => {
 	return TagModel.count();
 };

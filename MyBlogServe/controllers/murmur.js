@@ -3,7 +3,7 @@ const util = require('../utils');
 // 新增指纹信息
 const addMurmurInfo = async (req, res) => {
 	const { murmur, username, avatarUrl } = req.body;
-	const result = await MurmruModel.addMurmur({ date: util.date(), murmur, username, avatarUrl });
+	const result = await MurmruModel.addMurmur({ date: Date.now(), murmur, username, avatarUrl });
 	console.log(result);
 	if (result) {
 		res.send({
@@ -37,6 +37,9 @@ const updateMurmurUsername = async (req, res, next) => {
 //查询所有用户信息
 const getMurmurInfos = async (req, res, next) => {
 	let result = await MurmruModel.getMurmurInfos();
+	result.forEach(item => {
+		item.date = util.formatDate(item.date);
+	})
 	if (result) {
 		res.send({
 			msg: '查询成功',

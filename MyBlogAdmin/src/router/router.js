@@ -9,11 +9,11 @@ export const routes = [
 				name: "article",
 				component: () => import("../views/Article.vue"),
 			},
-			// {
-			// 	path: "classify",
-			// 	name: "classify",
-			// 	component: () => import("../views/Classification.vue"),
-			// },
+			{
+				path: "comment",
+				name: "comment",
+				component: () => import("../views/Photo.vue"),
+			},
 			{
 				path: "markdown",
 				name: "markdown",

@@ -76,7 +76,23 @@ export const updateTag = data => requests.post("/synthesis/updatetag", data);
 // 删除书签
 export const deleteTag = params => requests.delete("/synthesis/deletetag", { params });
 
-// 修改书签
+// 修改游客信息
 export const getMurmurInfos = () => requests.get("/murmur/getmurmurinfos");
-// 删除书签
+// 删除游客信息
 export const deleteMurmurInfo = params => requests.delete("/murmur/deletemurmurinfo", { params });
+
+// 获取所有照片信息
+export const getPhotos= () => requests.get("/photo/getphotos");
+// 修改照片信息
+export const updatePhotos= data => requests.post("/photo/updatephotodigest", data);
+// 删除照片信息
+export const deletePhoto= params => requests.delete("/photo/deletephoto", { params });
+// 新增照片信息
+export const addPhoto= data => requests.post("/photo/addphoto", data);
+
+// 获取所有评论
+export const getComments= () => requests.get("/comments/getcomments");
+// 删除一级评论
+export const deleteFirstComment= params => requests.delete("/comments/deletefirstcomment", {params});
+// 删除二级评论
+export const deleteSecondComment= params => requests.delete("/comments/deletesecondcomment", {params});

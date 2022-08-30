@@ -2,7 +2,7 @@
 const mongoose = require('mongoose');
 const JottingSchema = new mongoose.Schema({
 	//创建表
-	date: { type: String },
+	date: { type: Date },
 	title: { type: String, require: true },
 	favour: [
 		{
@@ -48,15 +48,19 @@ const deleteJotting = _id => {
 };
 // 查询某一随笔
 const getJotting = id => {
-	return JottingModel.findById(id);
+	return JottingModel.findById(id).lean();
 };
 // 查询所有随笔
 const getJottings = () => {
-	return JottingModel.find();
+	return JottingModel.find().lean();
 };
 // 查询所有已发布随笔
 const getPublishJottings = (pageStart = 0, pageSize = 5) => {
-	return JottingModel.find({ state: true }, '_id date digest favour title browse').skip(pageStart).limit(pageSize);
+	return JottingModel.find({ state: true }, '_id date digest favour title browse').skip(pageStart).limit(pageSize).lean();
+};
+// 查询某一书签下的所有博客
+const getJottingsOfTag= searchTag => {
+	return BlogModel.find({ tags:{$in: searchTag} }, '_id date digest favour title browse').lean();
 };
 // 查询所有已发布的随笔数量
 const getJottingSums = () => {
@@ -95,4 +99,5 @@ module.exports = {
 	addFavour,
 	getFavour,
 	searchJottings,
+	getJottingsOfTag
 };

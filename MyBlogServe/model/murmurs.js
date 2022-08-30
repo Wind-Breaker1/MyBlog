@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const MurmurSchema = new mongoose.Schema({
-	date: { type: String, require: true },
+	date: { type: Date, require: true },
 	username: { type: String, require: true },
 	murmur: { type: String, require: true, unique: true },
 	avatarUrl: { type: String },

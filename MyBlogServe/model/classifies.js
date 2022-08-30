@@ -2,7 +2,7 @@
 const mongoose = require('mongoose');
 const ClassifySchema = new mongoose.Schema({
 	//创建表
-	date: { type: String },
+	date: { type: Date },
 	title: { type: String },
 	digest: { type: String }, // 描述信息
 	articleNum: { type: Number, default: 0 }, // 文章数量
@@ -20,7 +20,7 @@ const addClassify = data => {
 			return false;
 		});
 };
-// 查询某一书签信息
+// 查询某一专栏信息
 const getClassify = id => {
 	return ClassifyModel.findById(id);
 };
@@ -38,7 +38,7 @@ const updateClassifyTitle = (_id, title, digest) => {
 };
 // 查询所有专栏
 const getClassifies = () => {
-	return ClassifyModel.find();
+	return ClassifyModel.find().lean();
 };
 // 查询所有专栏的数量
 const getClassifySums = () => {

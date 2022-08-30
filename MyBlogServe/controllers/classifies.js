@@ -4,7 +4,7 @@ const util = require('../utils');
 const addClassify = async (req, res) => {
 	const { title, digest } = req.body;
 	const result = await ClassifyModel.addClassify({
-		date: util.date(),
+		date: Date.now(),
 		title,
 		digest,
 		bgColor: util.randomColor(),
@@ -21,14 +21,15 @@ const addClassify = async (req, res) => {
 		});
 	}
 };
-// 获取专栏名称
+// 获取所有专栏
 const getClassifies = async (req, res) => {
-	const result = await ClassifyModel.getClassifies();
-	if (result) {
+	const classifies = await ClassifyModel.getClassifies();
+	classifies.forEach(item => item.date = util.formatDate(item.date));
+	if (classifies) {
 		res.send({
 			msg: '专栏查询成功',
 			status: 200,
-			data: result,
+			data: classifies,
 		});
 	} else {
 		res.send({

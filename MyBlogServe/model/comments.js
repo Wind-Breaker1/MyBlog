@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const CommentSchema = new mongoose.Schema({
 	//创建博客模型
-	date: { type: String, require: true }, //创建日期
+	date: { type: Date, require: true }, //创建日期
 	keyId: { type: String, require: true }, // 评论的文章id
 	// username: { type: String, require: true },
 	favour: [
@@ -13,7 +13,7 @@ const CommentSchema = new mongoose.Schema({
 	murmur: { type: String, require: true },
 	replyInfo: [
 		{
-			date: { type: String, require: true }, //创建日期
+			date: { type: Date, require: true }, //创建日期
 			// replymurmur: { type: String, require: true },// 回复的指纹
 			// replyId: { type: mongoose.Types.ObjectId, require: true }, // 回复的id
 			replyName: { type: String, require: true },
@@ -61,8 +61,12 @@ const deleteSecondComment = (_id, replyId) => {
 	return CommentModel.updateOne({ _id }, { $pull: { replyInfo: { _id: replyId } } });
 };
 // 查询所有评论
-const getComments = (_id, pageSize = 5, pageStart = 0) => {
+const getCommentsOfArticle = (_id, pageSize = 5, pageStart = 0) => {
 	return CommentModel.find({ keyId: _id }).skip(pageStart).limit(pageSize).lean();
+};
+const getComments = ( pageSize = 5, pageStart = 0) => {
+	return CommentModel.find();
+	// .skip(pageStart).limit(pageSize).lean();
 };
 // 查询某一个评论
 const getCommentReplyLast = (id) => {
@@ -77,5 +81,6 @@ module.exports = {
 	deleteSecondComment,
 	getComments,
 	addSecondFavour,
-	getCommentReplyLast
+	getCommentReplyLast,
+	getCommentsOfArticle
 };

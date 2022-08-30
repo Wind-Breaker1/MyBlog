@@ -6,7 +6,7 @@ const addFirstComment = async (req, res, next) => {
 	// 获取时间字符串
 	const { keyId, date, content, murmur, replyInfo = [] } = req.body;
 	const result = await CommentModel.addFirstComment({
-		date: util.time(),
+		date: Date.now(),
 		keyId,
 		// username,
 		content,
@@ -31,7 +31,7 @@ const addSecondComment = async (req, res, next) => {
 	// 获取时间字符串
 	const { _id, date, reply, murmur, replyName, replyId } = req.body;
 	const result = await CommentModel.addSecondComment(_id, {
-		date: util.time(),
+		date: Date.now(),
 		// replymurmur,
 		replyId,
 		// username,
@@ -119,10 +119,10 @@ const deleteSecondComment = async (req, res, next) => {
 	}
 };
 // 查询所有评论
-const getComments = async (req, res) => {
+const getCommentsOfArticle = async (req, res) => {
 	const { id, pageSize, pageStart, murmur } = req.query;
 	// 这里必须要await
-	let comments = await CommentModel.getComments(id, pageSize, pageStart);
+	let comments = await CommentModel.getCommentsOfArticle(id, pageSize, pageStart);
 	const murmurInfos = await MurmruModel.getMurmurInfos();
 	const user = await MurmruModel.getMurmurInfo(murmur);
 	comments = util.manageMurmurComments(murmurInfos, comments);
@@ -139,7 +139,24 @@ const getComments = async (req, res) => {
 		});
 	}
 };
-
+// 查询所有的评论
+const getComments = async (req, res) => {
+	// const { id, pageSize, pageStart, murmur } = req.query;
+	// 这里必须要await
+	let comments = await CommentModel.getComments();
+	if (comments) {
+		res.send({
+			msg: '查询成功',
+			status: 200,
+			data:comments,
+		});
+	} else {
+		res.send({
+			msg: '查询失败',
+			status: 0,
+		});
+	}
+};
 module.exports = {
 	addFirstComment,
 	addSecondComment,
@@ -147,5 +164,6 @@ module.exports = {
 	addSecondFavour,
 	deleteFirstComment,
 	deleteSecondComment,
+	getCommentsOfArticle,
 	getComments,
 };
