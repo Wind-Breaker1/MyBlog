@@ -1,0 +1,54 @@
+/* el-table和el-dialog样式 */
+.el-table__cell,
+.el-dialog,
+.el-table tr {
+	background-color: #323232 !important;
+}
+.el-table {
+	background-color: transparent;
+	color: #ddd;
+}
+.el-tabs__content {
+	height: calc(100% - 55px);
+}
+
+.is-active {
+	color: #409eff;
+	box-shadow: none !important;
+}
+
+.el-dialog__title,
+.el-form-item__label,
+.el-tabs__item {
+	color: #ddd;
+}
+
+/* markdown插件样式 */
+.v-note-edit,
+.content-input-wrapper,
+.v-note-op,
+.v-note-panel,
+.op-icon.selected,
+.v-note-read-model,
+.auto-textarea-input,
+.v-show-content {
+	background-color: #323232 !important;
+}
+.auto-textarea-input,
+.v-show-content {
+	color: #ccc !important;
+}
+.op-icon.selected,
+.v-note-read-model {
+	color: #757575 !important;
+}
+/* 抽屉样式 */
+.el-drawer {
+	background-color: #323232;
+}
+.el-input {
+	width: 80% !important;
+}
+.el-select {
+	width: 100%;
+}

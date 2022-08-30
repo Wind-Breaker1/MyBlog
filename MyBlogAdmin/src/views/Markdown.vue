@@ -5,20 +5,20 @@
 		<el-dialog title="发布文章" :visible.sync="dialogVisible" center>
 			<el-form>
 				<el-form-item label="标题" :label-width="formLabelWidth">
-					<el-input v-model="article.title" autocomplete="off" style="width: 250px"></el-input>
+					<el-input v-model="article.title" autocomplete="off"></el-input>
 				</el-form-item>
 				<el-form-item label="文章类型" :label-width="formLabelWidth" v-if="!type">
-					<el-select placeholder="请选择文章类型" filterable v-model="article.classification" style="width: 250px">
+					<el-select placeholder="请选择文章类型" filterable v-model="article.classification">
 						<el-option v-for="item in classifyOptions" :key="item.value" :label="item.label" :value="item.value"> </el-option>
 					</el-select>
 				</el-form-item>
 				<el-form-item label="书签" :label-width="formLabelWidth">
-					<el-select multiple placeholder="请选择文章标签" default-first-option filterable v-model="article.tags" style="width: 250px">
+					<el-select multiple placeholder="请选择文章标签" default-first-option filterable v-model="article.tags">
 						<el-option v-for="item in tagsOptions" :key="item.value" :label="item.label" :value="item.value"> </el-option>
 					</el-select>
 				</el-form-item>
 				<el-form-item label="摘要" :label-width="formLabelWidth">
-					<el-input v-model="article.digest" autocomplete="off" style="width: 250px"></el-input>
+					<el-input v-model="article.digest" autocomplete="off"></el-input>
 				</el-form-item>
 				<el-form-item label="是否发布" :label-width="formLabelWidth" v-if="!type">
 					<el-switch v-model="article.state" active-text="发布"> </el-switch>
@@ -227,46 +227,6 @@ export default {
 	padding: 1vw;
 	.markdown {
 		height: calc(100% - 40px);
-		/deep/ .v-note-panel {
-			background-color: #222222 !important;
-			.v-note-edit {
-				background-color: #323232 !important;
-				.content-input-wrapper {
-					background-color: #323232 !important;
-					.auto-textarea-input {
-						background-color: #323232;
-						color: #888888;
-					}
-				}
-			}
-		}
-		/deep/.scroll-style::-webkit-scrollbar {
-			background-color: #cccccc !important;
-		}
-		/deep/ .v-show-content {
-			background-color: #323232 !important;
-			color: #888888;
-		}
-		/deep/ .v-note-op {
-			background-color: #323232 !important;
-			.op-icon.selected {
-				background-color: #323232 !important;
-				color: #757575;
-			}
-		}
-		/deep/ .v-note-read-model {
-			background-color: #323232 !important;
-			color: #888888;
-		}
-	}
-	/deep/ .el-dialog {
-		background-color: #323232;
-		.el-dialog__title {
-			color: #ffffff;
-		}
-		.el-form-item__label {
-			color: #ffffff;
-		}
 	}
 	.sub {
 		background-color: #323232;

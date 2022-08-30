@@ -10,8 +10,8 @@ export const routes = [
 				component: () => import("../views/Article.vue"),
 			},
 			{
-				path: "comment",
-				name: "comment",
+				path: "photo",
+				name: "photo",
 				component: () => import("../views/Photo.vue"),
 			},
 			{

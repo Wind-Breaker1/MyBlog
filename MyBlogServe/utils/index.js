@@ -44,15 +44,15 @@ exports.verify = token => {
 	const result = jwt.verify(token, publicKey);
 	return result;
 };
-exports.formatDate = (date) => {
-	// const date = new Date(dateNum);
+exports.formatDate = dateNum => {
+	const date = new Date(dateNum);
 	const year = date.getFullYear();
 	const month = date.getMonth() + 1;
 	const day = date.getDate();
 	return year + '-' + month + '-' + day;
 };
-exports.formatTime = (date) => {
-	// const date = new Date(timeNum);
+exports.formatTime = timeNum => {
+	const date = new Date(timeNum);
 	const year = date.getFullYear();
 	const month = date.getMonth() + 1;
 	const day = date.getDate();
@@ -79,8 +79,8 @@ const depComments = (hashMurmur, comments) => {
 	});
 	return comments;
 };
-exports.imgBaseUrl = (type) => {
-	switch(type) {
+exports.imgBaseUrl = type => {
+	switch (type) {
 		case 'avatar':
 			return 'http://127.0.0.1:3000/avatars/';
 		case 'image':
@@ -88,7 +88,7 @@ exports.imgBaseUrl = (type) => {
 		case 'photo':
 			return 'http://127.0.0.1:3000/photos/';
 	}
-}
+};
 /**
  *删除图片
  * @param {*} imgUrl

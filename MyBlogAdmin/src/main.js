@@ -5,6 +5,7 @@ import store from "@/store";
 import "element-ui/lib/theme-chalk/index.css";
 import element from "element-ui";
 import { has } from "./util/directive";
+import "@/assets/conmon.css";
 // import { Message } from "element-ui";
 // import { Notification } from "element-ui";
 // import { MessageBox } from "element-ui";

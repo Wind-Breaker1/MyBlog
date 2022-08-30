@@ -61,13 +61,13 @@
 		<el-dialog :title="title" :visible.sync="dialogFormVisible" center>
 			<el-form :model="form">
 				<el-form-item label="用户名" :label-width="formLabelWidth" v-show="flag !== 'password'">
-					<el-input v-model="form.username" autocomplete="off" style="width: 250px"></el-input>
+					<el-input v-model="form.username" autocomplete="off"></el-input>
 				</el-form-item>
 				<el-form-item :label="lable" :label-width="formLabelWidth" v-show="flag !== 'userInfo'">
-					<el-input v-model="form.password" autocomplete="off" style="width: 250px"></el-input>
+					<el-input v-model="form.password" autocomplete="off"></el-input>
 				</el-form-item>
 				<el-form-item v-show="flag === 'register'" label="email" :label-width="formLabelWidth">
-					<el-input v-model="form.email" autocomplete="off" style="width: 250px"></el-input>
+					<el-input v-model="form.email" autocomplete="off"></el-input>
 				</el-form-item>
 				<el-form-item label="角色" :label-width="formLabelWidth" v-show="flag !== 'password'">
 					<el-dropdown split-button @command="changeRole">
@@ -233,35 +233,9 @@ export default {
 		height: 100%;
 		.tab-content {
 			height: 100%;
-			.table {
-				background-color: transparent;
-				color: #ffffff;
-				/deep/ .el-table__cell {
-					background-color: rgb(50, 50, 50);
-				}
-			}
 			.option {
 				height: calc(100% - 28px);
 			}
-		}
-		/deep/.el-tabs__content {
-			height: calc(100% - 55px);
-		}
-		/deep/ .el-tabs__item {
-			color: #ffffff;
-		}
-		/deep/ .is-active {
-			color: #409eff;
-			box-shadow: none !important;
-		}
-	}
-	/deep/ .el-dialog {
-		background-color: #323232;
-		.el-dialog__title {
-			color: #ffffff;
-		}
-		.el-form-item__label {
-			color: #ffffff;
 		}
 	}
 }
