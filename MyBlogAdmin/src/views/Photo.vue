@@ -106,7 +106,6 @@ export default {
 								formdata.append("digest", this.form.digest);
 								formdata.append("shootingTime", this.form.shootingTime);
 								res = await addPhoto(formdata);
-								this.avatarUrl = res.avatarUrl;
 							}
 						};
 					} else {
@@ -116,7 +115,6 @@ export default {
 						formdata.append("digest", this.form.digest);
 						formdata.append("shootingTime", this.form.shootingTime);
 						res = await addPhoto(formdata);
-						this.avatarUrl = res.avatarUrl;
 					}
 				};
 			} else {

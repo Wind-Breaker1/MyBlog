@@ -70,7 +70,7 @@ export default {
 		// 获取基本信息
 		async getBaseInfo() {
 			try {
-				if (this.blogs?.length > 0 && this.jottings?.length > 0 && this.classifies?.length > 0) {
+				if (this.blogs.length > 0 && this.jottings.length > 0 && this.classifies.length > 0) {
 					this.classifyList = this.classifies;
 					this.blogList = this.blogs;
 					this.jottingList = this.jottings;

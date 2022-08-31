@@ -3,7 +3,7 @@
 		<Head></Head>
 		<div class="main-box">
 			<Nav></Nav>
-			<router-view class="sythies-style"></router-view>
+			<router-view class="box"></router-view>
 		</div>
 	</div>
 </template>
@@ -28,6 +28,10 @@ export default {
 		background-color: #000;
 		.sythies-style {
 			flex: 1;
+			margin: 1vw;
+  		padding: 1vh;
+			background-color: #323232;
+			border-radius: 5px;
 		}
 	}
 }

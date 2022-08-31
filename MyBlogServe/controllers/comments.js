@@ -4,7 +4,7 @@ const util = require('../utils');
 // 添加新一级评论
 const addFirstComment = async (req, res, next) => {
 	// 获取时间字符串
-	const { keyId, date, content, murmur, replyInfo = [] } = req.body;
+	const { keyId, articleTitle, content, murmur, replyInfo = [] } = req.body;
 	const result = await CommentModel.addFirstComment({
 		date: Date.now(),
 		keyId,
@@ -12,6 +12,7 @@ const addFirstComment = async (req, res, next) => {
 		content,
 		murmur,
 		replyInfo,
+		articleTitle
 	});
 	if (result) {
 		res.send({
@@ -39,7 +40,7 @@ const addSecondComment = async (req, res, next) => {
 		murmur,
 		replyName,
 	});
-	if (result.modifiedCount !== 0) {
+	if (result.acknowledged && result.modifiedCount !== 0) {
 		const comment = await CommentModel.getCommentReplyLast(_id);
 		res.send({
 			msg: '评论成功',
@@ -57,7 +58,7 @@ const addSecondComment = async (req, res, next) => {
 const addFirstFavour = async (req, res) => {
 	const { _id, favourMurmur } = req.query;
 	const result = await CommentModel.addFirstFavour(_id, favourMurmur);
-	if (result.modifiedCount !== 0) {
+	if (result.acknowledged && result.modifiedCount !== 0) {
 		res.send({
 			msg: '点赞成功',
 			status: 200,
@@ -73,7 +74,7 @@ const addFirstFavour = async (req, res) => {
 const addSecondFavour = async (req, res) => {
 	const { _id, replyId, favourMurmur } = req.query;
 	const result = await CommentModel.addSecondFavour(_id, replyId, favourMurmur);
-	if (result.modifiedCount !== 0) {
+	if (result.acknowledged && result.modifiedCount !== 0) {
 		res.send({
 			msg: '点赞成功',
 			status: 200,
@@ -89,7 +90,7 @@ const addSecondFavour = async (req, res) => {
 const deleteFirstComment = async (req, res, next) => {
 	const { _id } = req.query;
 	const result = await CommentModel.deleteFirstComment(_id);
-	if (result.deletedCount !== 0) {
+	if (result.acknowledged && result.deletedCount !== 0) {
 		res.send({
 			msg: '删除成功',
 			status: 200,
@@ -106,7 +107,7 @@ const deleteFirstComment = async (req, res, next) => {
 const deleteSecondComment = async (req, res, next) => {
 	const { _id, replyId } = req.query;
 	const result = await CommentModel.deleteSecondComment(_id, replyId);
-	if (result.modifiedCount !== 0) {
+	if (result.acknowledged && result.modifiedCount !== 0) {
 		res.send({
 			msg: '删除成功',
 			status: 200,
@@ -118,7 +119,7 @@ const deleteSecondComment = async (req, res, next) => {
 		});
 	}
 };
-// 查询所有评论
+// 查询某一篇文章的所有评论
 const getCommentsOfArticle = async (req, res) => {
 	const { id, pageSize, pageStart, murmur } = req.query;
 	// 这里必须要await
@@ -141,9 +142,11 @@ const getCommentsOfArticle = async (req, res) => {
 };
 // 查询所有的评论
 const getComments = async (req, res) => {
-	// const { id, pageSize, pageStart, murmur } = req.query;
+	// const { pageSize, pageStart, murmur } = req.query;
 	// 这里必须要await
 	let comments = await CommentModel.getComments();
+	const murmurInfos = await MurmruModel.getMurmurInfos();
+	comments = util.manageMurmurComments(murmurInfos, comments);
 	if (comments) {
 		res.send({
 			msg: '查询成功',

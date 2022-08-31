@@ -26,7 +26,7 @@ const addSecondRoute = async (req, res, next) => {
 		});
 	} else {
 		const result = await RouteModel.addSecondRoute(parentRouteName, route);
-		if (result.modifiedCount !== 0) {
+		if (result.acknowledged && result.modifiedCount !== 0) {
 			res.send({
 				msg: '添加成功',
 				status: 200,
@@ -43,7 +43,7 @@ const addSecondRoute = async (req, res, next) => {
 const updatRoute = async (req, res, next) => {
 	const { route } = req.body;
 	const result = await RouteModel.updateFirstRouteInfo(route);
-	if (result) {
+	if (result.acknowledged && result.modifiedCount != 0) {
 		res.send({
 			msg: '修改成功',
 			status: 200,
@@ -119,7 +119,7 @@ const deleteRoute = async (req, res) => {
 	// } else {
 	// 	result = await RouteModel.deleteSecondRoute(_id, name);
 	// }
-	if (result.deletedCount != 0) {
+	if (result.acknowledged && result.deletedCount != 0) {
 		res.send({
 			msg: '路由删除成功！',
 			status: 200,

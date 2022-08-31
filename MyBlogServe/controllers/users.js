@@ -102,7 +102,7 @@ const getUserState = async (req, res, next) => {
 const updateUserInfo = async (req, res, next) => {
 	let { email, role, username } = req.body;
 	let result = await UserModel.updateUserInfo(email, role, username);
-	if (result.modifiedCount !== 0) {
+	if (result.acknowledged && result.modifiedCount !== 0) {
 		res.send({
 			msg: '用户信息修改成功',
 			status: 200,
@@ -119,7 +119,7 @@ const updatePassword = async (req, res, next) => {
 	let { email, password } = req.body;
 	const bcryptPassword = await hash(password);
 	let result = await UserModel.updatePassword(email, bcryptPassword);
-	if (result.modifiedCount !== 0) {
+	if (result.acknowledged && result.modifiedCount !== 0) {
 		res.send({
 			msg: '密码修改成功',
 			status: 200,
@@ -153,7 +153,7 @@ const deleteUser = async (req, res, next) => {
 	const { email } = req.query;
 	// 这里必须要await
 	let result = await UserModel.deleteUser(email);
-	if (result.deletedCount != 0) {
+	if (result.acknowledged && result.deletedCount != 0) {
 		res.send({
 			msg: '用户注销成功！',
 			status: 200,

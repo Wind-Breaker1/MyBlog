@@ -26,7 +26,7 @@ const addTag = async (req, res) => {
 const updateTag = async (req, res) => {
 	const { id, title } = req.body;
 	const tag = await TagModel.uptateTag(id, title);
-	if (tag.modifiedCount != 0) {
+	if (tag.acknowledged && tag.modifiedCount != 0) {
 		res.send({
 			msg: '标签修改成功',
 			status: 200,
@@ -43,7 +43,7 @@ const updateTag = async (req, res) => {
 const deleteTag = async (req, res) => {
 	const { _id } = req.query;
 	const tag = await TagModel.deleteTag(_id);
-	if (tag) {
+	if (tag.acknowledged && tag.deletedCount != 0) {
 		res.send({
 			msg: '删除标签成功',
 			status: 200,
@@ -224,7 +224,7 @@ const uploadAvatar = async (req, res) => {
 		util.deleteImg(murmurInfo.avatarUrl);
 	}
 	const result = await MurmruModel.updateMurmurAvatar(murmur, avatarUrl);
-	if (result.modifiedCount != 0 && fs.existsSync(url)) {
+	if (result.acknowledged && result.modifiedCount != 0 && fs.existsSync(url)) {
 		res.send({
 			avatarUrl,
 			status: 200,

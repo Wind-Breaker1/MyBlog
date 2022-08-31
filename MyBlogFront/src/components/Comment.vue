@@ -105,6 +105,9 @@ export default {
 		keyId: {
 			type: String,
 		},
+		articleTitle:{
+			type: String
+		},
 		emptyText: {
 			type: String,
 		},
@@ -243,10 +246,10 @@ export default {
 					pageStart,
 					murmur: this.murmur,
 				});
-				this.comments = res.data?.comments;
+				this.comments = res.data.comments;
 				console.log(res);
-				this.username = res.data.user?.username;
-				this.avatarUrl = res.data.user?.avatarUrl;
+				this.username = res.data.user.username;
+				this.avatarUrl = res.data.user.avatarUrl;
 			} catch (err) {
 				this.$message.error(err);
 			}
@@ -364,6 +367,7 @@ export default {
 					keyId: id,
 					content: this.context,
 					murmur: this.murmur,
+					articleTitle
 				});
 				res.data.username = this.username;
 				this.comments.push(res.data);

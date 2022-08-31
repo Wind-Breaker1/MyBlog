@@ -55,6 +55,8 @@ export const addsecondcomment = data => requests.post('/comments/addsecondcommen
 export const deletefirstcomment = params => requests.delete('/comments/deletefirstcomment', { params });
 // 删除二级评论
 export const deletesecondcomment = params => requests.delete('/comments/deletesecondcomment', { params });
+// 获取事件线数据
+export const getTimeclues = params => requests.get('/timeclues/gettimeclues', { params });
 // 上传图片
 export const uploadAvatar = data =>
 	requests.post('/synthesis/uploadavatar', data, {

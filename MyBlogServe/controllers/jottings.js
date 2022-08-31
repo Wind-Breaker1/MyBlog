@@ -27,7 +27,7 @@ const changeState = async (req, res) => {
 	let { _id } = req.query;
 	let jotting = await JottingModel.getJotting(_id);
 	let result = await JottingModel.changeJottingState(!jotting.state, _id);
-	if (result.modifiedCount !== 0) {
+	if (result.acknowledged && result.modifiedCount !== 0) {
 		res.send({
 			msg: '随笔状态修改成功',
 			status: 200,
@@ -43,7 +43,7 @@ const changeState = async (req, res) => {
 const updateJotting = async (req, res, next) => {
 	let { content, _id, title, digest, tags } = req.body;
 	let result = await JottingModel.updateJotting(_id, { content, digest, title, tags });
-	if (result.modifiedCount !== 0) {
+	if (result.acknowledged && result.modifiedCount !== 0) {
 		res.send({
 			msg: '随笔修改成功',
 			status: 200,
@@ -117,7 +117,7 @@ const getJotting = async (req, res, next) => {
 const addBrowse = async (req, res, next) => {
 	let { _id } = req.query;
 	let jotting = await JottingModel.addBrowse(_id);
-	if (jotting.modifiedCount !== 0) {
+	if (result.acknowledged && jotting.modifiedCount !== 0) {
 		res.send({
 			msg: '随笔点赞成功',
 			status: 200,
@@ -133,9 +133,8 @@ const addBrowse = async (req, res, next) => {
 // 删除随笔
 const deleteJotting = async (req, res, next) => {
 	const { _id } = req.query;
-	// 这里必须要await
 	let result = await JottingModel.deleteJotting(_id);
-	if (result.deletedCount !== 0) {
+	if (result.acknowledged && result.deletedCount !== 0) {
 		res.send({
 			msg: '随笔删除成功',
 			status: 200,
@@ -152,7 +151,7 @@ const addFavour = async (req, res) => {
 	let { _id, favourMurmur } = req.query;
 	let addFavour = await JottingModel.addFavour(_id, favourMurmur);
 	let getFavour = await JottingModel.getFavour(_id);
-	if (addFavour.modifiedCount !== 0) {
+	if (addFavour.acknowledged && addFavour.modifiedCount !== 0) {
 		res.send({
 			msg: '点赞随笔成功',
 			status: 200,
@@ -170,7 +169,7 @@ const addFavour = async (req, res) => {
 const addJottingBrowse = async (req, res) => {
 	let { _id } = req.query;
 	let addBrowse = await JottingModel.addJottingBrowse(_id);
-	if (addBrowse.modifiedCount !== 0) {
+	if (addBrowse.acknowledged && addBrowse.modifiedCount !== 0) {
 		res.send({
 			msg: '随笔浏览量增加成功',
 			status: 200,

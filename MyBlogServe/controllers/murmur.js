@@ -4,7 +4,6 @@ const util = require('../utils');
 const addMurmurInfo = async (req, res) => {
 	const { murmur, username, avatarUrl } = req.body;
 	const result = await MurmruModel.addMurmur({ date: Date.now(), murmur, username, avatarUrl });
-	console.log(result);
 	if (result) {
 		res.send({
 			msg: '新增浏览器指纹信息成功',
@@ -22,7 +21,7 @@ const addMurmurInfo = async (req, res) => {
 const updateMurmurUsername = async (req, res, next) => {
 	const { murmur, username } = req.body;
 	let result = await MurmruModel.updateMurmurUsername(murmur, username);
-	if (result.modifiedCount != 0) {
+	if (result.acknowledged && result.modifiedCount != 0) {
 		res.send({
 			msg: '更新用户名成功',
 			status: 200,
@@ -57,7 +56,7 @@ const getMurmurInfos = async (req, res, next) => {
 const deleteMurmurInfo = async (req, res, next) => {
 	const { id } = req.query;
 	const result = await MurmruModel.deleteMurmurInfo(id);
-	if (result.deletedCount != 0) {
+	if (result.acknowledged && result.deletedCount != 0) {
 		res.send({
 			msg: '删除成功',
 			status: 200,

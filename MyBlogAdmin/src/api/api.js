@@ -96,3 +96,12 @@ export const getComments= () => requests.get("/comments/getcomments");
 export const deleteFirstComment= params => requests.delete("/comments/deletefirstcomment", {params});
 // 删除二级评论
 export const deleteSecondComment= params => requests.delete("/comments/deletesecondcomment", {params});
+
+// 获取所有时间节点
+export const getTimeclues= () => requests.get("/timeclues/gettimeclues");
+// 删除时间节点
+export const deleteTimeclue= params => requests.delete("/timeclues/deletetimeclue", {params});
+// 修改时间节点
+export const updateTimeclue= data => requests.post("/timeclues/updatetimeclue", data);
+// 新增时间节点
+export const addTimeclue= data => requests.post("/timeclues/addtimeclue", data);

@@ -13,8 +13,8 @@ const addBlog = async (req, res) => {
 		state,
 		tags,
 	});
-	const result = await ClassifyModel.updateClassifySum(classification, 1);
-	if (blog && result.modifiedCount !== 0) {
+	ClassifyModel.updateClassifySum(classification, 1);
+	if (blog ) {
 		res.send({
 			msg: '博客添加成功',
 			status: 200,
@@ -29,9 +29,9 @@ const addBlog = async (req, res) => {
 // 修改博客状态
 const changeBlogState = async (req, res) => {
 	const { _id } = req.query;
-	const article = await BlogsModel.getBlog(_id);
-	const result = await BlogsModel.changeBlogState(!article.state, _id);
-	if (result) {
+	const blog = await BlogsModel.getBlog(_id);
+	const result = await BlogsModel.changeBlogState(!blog.state, _id);
+	if (result.acknowledged && result.modifiedCount != 0) {
 		res.send({
 			msg: '博客状态修改成功',
 			status: 200,
@@ -46,9 +46,8 @@ const changeBlogState = async (req, res) => {
 // 更新博客
 const updateBlog = async (req, res) => {
 	const { content, _id, digest, title, tags } = req.body;
-	console.log(content, _id, digest, title);
 	const result = await BlogsModel.updateBlog(_id, content, digest, title, tags);
-	if (result.modifiedCount !== 0) {
+	if (result.acknowledged && result.modifiedCount !== 0) {
 		res.send({
 			msg: '博客已更新',
 			status: 200,
@@ -100,8 +99,8 @@ const getPublishBlogs = async (req, res) => {
 const deleteBlog = async (req, res) => {
 	const { _id, classification } = req.query;
 	const deleteBlog = await BlogsModel.deleteBlog(_id);
-	const result = await ClassifyModel.updateClassifySum(classification, -1);
-	if (deleteBlog.deletedCount !== 0 && result.modifiedCount !== 0) {
+	ClassifyModel.updateClassifySum(classification, -1);
+	if (deleteBlog.acknowledged && deleteBlog.deletedCount !== 0) {
 		res.send({
 			msg: '博客删除成功',
 			status: 200,

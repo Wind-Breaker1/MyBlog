@@ -6,8 +6,6 @@ const fs = require('fs');
 const addPhoto = async (req, res) => {
   const { digest, shootingTime } = req.body;
   const file = req.file;
-  console.log('p', file, digest, shootingTime);
-  
   const photoUrl = util.imgBaseUrl('photo') + file.filename;
   const url = path.join(__dirname, '../public/photos/', file.filename);
   const result = await PhotoModel.addPhoto({
@@ -53,7 +51,7 @@ const getPhotos = async (req, res) => {
 const updatePhotoDigest = async (req, res) => {
   const { _id, digest, shootingTime } = req.body;
   const result = await PhotoModel.updatePhoto(_id, digest, shootingTime);
-  if (result.modifiedCount !== 0) {
+  if (result.acknowledged && result.modifiedCount !== 0) {
     res.send({
       msg: '照片信息编辑成功',
       status: 200,
@@ -70,7 +68,7 @@ const updatePhotoDigest = async (req, res) => {
 const deletePhoto = async (req, res) => {
   const { _id } = req.query;
   const result = await PhotoModel.deletePhoto(_id);
-  if (result.deletedCount !== 0) {
+  if (result.acknowledged && result.deletedCount !== 0) {
     res.send({
       msg: '照片删除成功',
       status: 200,

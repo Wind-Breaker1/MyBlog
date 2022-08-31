@@ -40,7 +40,9 @@ const updateBlog = (_id, content, title, digest, tags) => {
 };
 // 修改博客状态
 const changeBlogState = (state, id) => {
-	return BlogModel.findByIdAndUpdate(id, { $set: { state } });
+	// return BlogModel.updateOne(id, { $set: { state } });
+	return BlogModel.updateOne(id, { $set: { state } });
+	
 };
 // 删除博客
 const deleteBlog = _id => {
@@ -49,6 +51,20 @@ const deleteBlog = _id => {
 // 查询某一博客
 const getBlog = id => {
 	return BlogModel.findById(id).lean();
+	// return BlogModel.aggregate([
+	// 	{
+	// 		$lookup: {
+  //       from: "classifies", // 关联 articles 表
+  //       localField: "classification", // 根据 comments 里 articleId 字段查询
+  //       foreignField: "_id", // 查找 articles 表里对应的 _id 的数据
+	// 			pipeline: [ {$project: {title: 1} } ],
+  //       as: "classify",// 返回的字段别名
+  //     },
+	// 	},
+	// 	{$match:{_id:id}},
+		// { $unwind: "$userinfo" },//数据打散
+	// ]);
+	
 };
 // 查询所有文章
 const getBlogs = () => {

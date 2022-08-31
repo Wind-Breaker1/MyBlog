@@ -1,5 +1,5 @@
 <template>
-	<div class="article-box">
+	<div>
 		<el-tabs tab-position="top" class="tabs" @tab-click="changeTab">
 			<el-tab-pane label="用户管理" class="tab-content">
 				<el-button type="primary" size="mini" @click="register" class="sub">新增用户</el-button>
@@ -221,14 +221,6 @@ export default {
 </script>
 
 <style scoped lang="less">
-.article-box {
-	margin: 1vw;
-	padding: 2vh;
-	box-sizing: border-box;
-	width: 100%;
-	background-color: rgb(50, 50, 50);
-	border-radius: 5px;
-
 	.tabs {
 		height: 100%;
 		.tab-content {
@@ -238,5 +230,4 @@ export default {
 			}
 		}
 	}
-}
 </style>

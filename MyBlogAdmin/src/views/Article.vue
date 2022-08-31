@@ -144,15 +144,15 @@
 			</el-tab-pane>
 			<el-tab-pane label="评论管理" class="tab-content">
 				<el-button type="primary" size="mini" @click="addItem('tag')" class="sub">新增书签</el-button>
-				<el-table :data="comments" row-key="id" border :tree-props="{ children: 'children', hasChildren: 'hasChildren' }">
+				<el-table :data="comments" row-key="id" :tree-props="{ children: 'replyInfo' }">
 					<el-table-column label="评论日期" min-width="60">
 						<template slot-scope="scope">
 							<i class="el-icon-time"></i>
 							<span style="margin-left: 10px">{{ scope.row.date }}</span>
 						</template>
 					</el-table-column>
-					<el-table-column prop="articleName" label="所属文章" min-width="180"> </el-table-column>
-					<el-table-column prop="username" label="评论者" min-width="100"> </el-table-column>
+					<el-table-column prop="articleTitle" label="所属文章" min-width="180"> </el-table-column>
+					<el-table-column prop="userinfo.username" label="评论者" min-width="100"> </el-table-column>
 					<el-table-column label="操作" min-width="100">
 						<template slot-scope="scope">
 							<el-button size="mini" type="danger" @click="deleteItem(scope.row, 'comment')">删除</el-button>
@@ -357,7 +357,7 @@ export default {
 				console.log(res);
 				this.$store.dispatch("getTags");
 			}
-			if (res?.status === 200) {
+			if (res.status === 200) {
 				// 修改成功后清空值
 				this.form.title = "";
 				this.form.digest = "";
@@ -366,7 +366,7 @@ export default {
 				this.$message.success(res.msg);
 				// this.getData();
 			} else {
-				this.$message.error(res?.msg || "出错啦！");
+				this.$message.error(res.msg || "出错啦！");
 			}
 		},
 		async getBlogs() {
@@ -391,12 +391,7 @@ export default {
 
 <style lang="less" scoped>
 .article-box {
-	margin: 1vw;
-	padding: 2vh;
 	box-sizing: border-box;
-	width: 100%;
-	background-color: rgb(50, 50, 50);
-	border-radius: 5px;
 
 	.tabs {
 		height: 100%;

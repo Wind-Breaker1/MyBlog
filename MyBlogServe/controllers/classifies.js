@@ -42,7 +42,7 @@ const getClassifies = async (req, res) => {
 const updateClassifyTitle = async (req, res) => {
 	const { _id, title, digest } = req.body;
 	const result = await ClassifyModel.updateClassifyTitle(_id, title, digest);
-	if (result.modifiedCount !== 0) {
+	if (result.acknowledged && result.modifiedCount !== 0) {
 		res.send({
 			msg: '专栏编辑成功',
 			status: 200,
@@ -68,7 +68,7 @@ const deleteClassify = async (req, res) => {
 		});
 	} else {
 		const result = await ClassifyModel.deleteClassify(_id);
-		if (result.deletedCount !== 0) {
+		if (result.acknowledged && result.deletedCount !== 0) {
 			res.send({
 				msg: '专栏删除成功',
 				status: 200,

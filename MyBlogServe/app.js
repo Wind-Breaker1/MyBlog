@@ -17,6 +17,7 @@ const commentRouter = require('./routes/comments');
 const routeRouter = require('./routes/routes');
 const murmurRouter = require('./routes/murmur');
 const photoRouter = require('./routes/photo');
+const timeclueRouter = require('./routes/timeclue.js');
 const app = express();
 
 app.use(session({
@@ -44,6 +45,7 @@ app.use('/api/jottings', jottingsRouter);
 app.use('/api/classifies', classifiesRouter);
 app.use('/api/synthesis', synthesisRouter);
 app.use('/api/comments', commentRouter);
+app.use('/api/timeclues', timeclueRouter);
 app.use('/api/routes', routeRouter);
 app.use('/api/murmur', murmurRouter);
 app.use('/api/photo', photoRouter);
