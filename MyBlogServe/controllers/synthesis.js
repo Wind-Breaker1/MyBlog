@@ -216,16 +216,26 @@ const uploadArtimg = async (req, res) => {
 
 // 上传头像
 const uploadAvatar = async (req, res) => {
-	const { murmur } = req.body;
+	const { murmur, email } = req.body;
 	const file = req.file; //这个就是前端传来的文件
 	const avatarUrl = util.imgBaseUrl('avatar') + file.filename;
 	const url = path.join(__dirname, '../public/avatars/', file.filename);
-	const murmurInfo = await MurmruModel.getMurmurInfo(murmur);
-	if (murmurInfo.avatarUrl) {
-		util.deleteImg(murmurInfo.avatarUrl);
+	let user = null,
+		res = null;
+	if (murmur) {
+		user = await MurmruModel.getMurmurInfo(murmur);
+	} else if (email) {
+		user = await UserModel.getUser(email);
 	}
-	const result = await MurmruModel.updateMurmurAvatar(murmur, avatarUrl);
-	if (result.acknowledged && result.modifiedCount != 0 && fs.existsSync(url)) {
+	if (user.avatarUrl) {
+		util.deleteImg(user.avatarUrl);
+	}
+	if (murmur) {
+		res = await MurmruModel.updateMurmurAvatar(murmur, avatarUrl);
+	} else {
+		res = await UserModel.uploadAvatar(email, avatarUrl);
+	}
+	if (res.acknowledged && res.modifiedCount != 0 && fs.existsSync(url)) {
 		res.send({
 			avatarUrl,
 			status: 200,

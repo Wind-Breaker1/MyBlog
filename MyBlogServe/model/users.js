@@ -6,6 +6,7 @@ const UserSchema = new mongoose.Schema({
 	password: { type: String, require: true },
 	email: { type: String, require: true, unique: true }, //index: { unique: true }
 	date: { type: Date },
+	avatarUrl: { type: String },
 	role: { type: String, require: true, default: '普通用户' },
 });
 const UserModel = mongoose.model('user', UserSchema);
@@ -16,6 +17,9 @@ const addUser = data => {
 		.save()
 		.then(() => true)
 		.catch(() => false);
+};
+const uploadAvatar = (email, avatarUrl) => {
+	return UserModel.updateOne({ email }, { $set: { avatarUrl } });
 };
 // 更新用户信息
 const updateUserInfo = (email, role, username) => {
@@ -44,4 +48,5 @@ module.exports = {
 	deleteUser,
 	getUser,
 	updatePassword,
+	uploadAvatar,
 };

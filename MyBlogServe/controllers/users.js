@@ -114,6 +114,7 @@ const updateUserInfo = async (req, res, next) => {
 		});
 	}
 };
+
 // 修改密码
 const updatePassword = async (req, res, next) => {
 	let { email, password } = req.body;
@@ -134,7 +135,7 @@ const updatePassword = async (req, res, next) => {
 // 获取用户列表
 const getUsers = async (req, res, next) => {
 	const users = await UserModel.getUsers();
-	users.forEach(item => item.date = formatDate(item.date))
+	users.forEach(item => (item.date = formatDate(item.date)));
 	if (users) {
 		res.send({
 			msg: '查询用户成功',

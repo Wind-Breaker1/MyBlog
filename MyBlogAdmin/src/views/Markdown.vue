@@ -2,32 +2,32 @@
 	<div class="markdown-box">
 		<mavon-editor v-model="article.content" ref="md" @imgAdd="imgAdd" class="markdown" scrollStyle xssOptions />
 		<button @click="dialogVisible = true" class="sub">保存</button>
-		<el-dialog title="发布文章" :visible.sync="dialogVisible" center>
+		<el-dialog title="发布文章" :visible.sync="dialogVisible" :center="true">
 			<el-form :model="article" ref="form" :rules="formRules">
-				<el-form-item label="标题" :label-width="formLabelWidth" prop="title">
+				<el-form-item label="标题" label-width="120px" prop="title">
 					<el-input v-model="article.title" autocomplete="off"></el-input>
 				</el-form-item>
-				<el-form-item label="文章类型" :label-width="formLabelWidth" v-if="!type" prop="classification">
+				<el-form-item label="文章类型" label-width="120px" v-if="!type" prop="classification">
 					<el-select placeholder="请选择文章类型" filterable v-model="article.classification">
 						<el-option v-for="item in classifyOptions" :key="item.value" :label="item.label" :value="item.value"> </el-option>
 					</el-select>
 				</el-form-item>
-				<el-form-item label="书签" :label-width="formLabelWidth" prop="tags">
+				<el-form-item label="书签" label-width="120px" prop="tags">
 					<el-select multiple placeholder="请选择文章标签" default-first-option filterable v-model="article.tags">
 						<el-option v-for="item in tagsOptions" :key="item.value" :label="item.label" :value="item.value"> </el-option>
 					</el-select>
 				</el-form-item>
-				<el-form-item label="摘要" :label-width="formLabelWidth" prop="digest">
+				<el-form-item label="摘要" label-width="120px" prop="digest">
 					<el-input v-model="article.digest" autocomplete="off"></el-input>
 				</el-form-item>
-				<el-form-item label="是否发布" :label-width="formLabelWidth" v-if="!type">
+				<el-form-item label="是否发布" label-width="120px" v-if="!type">
 					<el-switch v-model="article.state" active-text="发布"> </el-switch>
 				</el-form-item>
 			</el-form>
 			<div slot="footer" class="dialog-footer">
 				<el-button @click="dialogVisible = false">取 消</el-button>
 				<el-button type="primary" @click="submit('form')">确 定</el-button>
-				<el-button type="warn" @click="resetForm('form')">重置</el-button>
+				<el-button type="warn" @click="$refs.form.resetFields()">重置</el-button>
 			</div>
 		</el-dialog>
 	</div>
@@ -37,7 +37,6 @@
 import { uploadImg } from "../api/api";
 import { mavonEditor } from "mavon-editor";
 import "mavon-editor/dist/css/index.css";
-import { getClassifyList } from "../util";
 import { mapGetters } from "vuex";
 export default {
 	components: {
@@ -46,7 +45,6 @@ export default {
 	data() {
 		return {
 			dialogVisible: false, //控制是否显示弹出框
-			formLabelWidth: "120px", // 弹出框输入框的长度
 			// 专栏列表数据
 			classifyOptions: [
 				{
@@ -162,14 +160,14 @@ export default {
 					if (this.type === "jotting") {
 						if (!_id) {
 							this.$message.warning("哎呀，出错了！请重新编辑");
-							this.$router.push("/admin/article");
+							this.$router.back();
 						}
 						const data = { title, digest, content, tags, _id };
 						res = await this.$store.dispatch("updateJotting", data);
 					} else if (this.type === "blog") {
 						if (!_id) {
 							this.$message.warning("哎呀，出错了！请重新编辑");
-							this.$router.push("/admin/article");
+							this.$router.back();
 						}
 						const data = { title, digest, content, tags, _id };
 						res = await this.$store.dispatch("updateBlog", data);
@@ -184,7 +182,7 @@ export default {
 					}
 					if (res.status === 200) {
 						// 重置表单数据
-						this.$refs[formName].resetFields();
+						// this.$refs[formName].resetFields();
 						this.dialogVisible = false;
 						this.$message.success(res.msg);
 						this.$router.push("/admin/article");
@@ -198,9 +196,6 @@ export default {
 			});
 		},
 
-		resetForm(formName) {
-			this.$refs[formName].clearValidate();
-		},
 		init() {
 			for (let c of this.classifies) {
 				this.classifyOptions.push({ value: c._id, label: c.title });

@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const RouteSchema = new mongoose.Schema({
 	//创建表
-	path: { type: Date, require: true, unique: true },
+	path: { type: String, require: true, unique: true },
 	name: { type: String },
 	meta: { type: Object, default: {} },
 	children: [

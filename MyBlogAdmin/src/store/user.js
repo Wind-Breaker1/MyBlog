@@ -98,6 +98,12 @@ const getters = {
 	userList(state) {
 		return state.userList;
 	},
+	token(state) {
+		return state.token;
+	},
+	username(state) {
+		return state.username;
+	},
 	murmurInfos() {
 		return state.murmurInfos;
 	},

@@ -59,6 +59,8 @@ const updatRoute = async (req, res, next) => {
 const getRoutes = async (req, res, next) => {
 	const { role } = req.query;
 	const result = await RouteModel.getRoutes();
+	console.log('rew', result);
+
 	const route = _filterRoute(role, result);
 	if (result) {
 		res.send({
@@ -73,7 +75,7 @@ const getRoutes = async (req, res, next) => {
 		});
 	}
 };
-// 获取路由列表
+// 获取所有路由列表
 const getRouteList = async (req, res, next) => {
 	const result = await RouteModel.getRoutes();
 	if (result) {
@@ -92,6 +94,7 @@ const getRouteList = async (req, res, next) => {
 // 递归处理符合条件的路由
 const _filterRoute = (role, routeList) => {
 	const route = [];
+	// console.log('r', routeList);
 	routeList.forEach(item => {
 		if (item.limits && item.limits.includes(role)) {
 			const obj = {};

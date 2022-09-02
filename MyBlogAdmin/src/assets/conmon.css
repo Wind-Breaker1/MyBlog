@@ -16,6 +16,13 @@
 	color: #409eff;
 	box-shadow: none !important;
 }
+.el-dialog{
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, -50%);
+	margin-top: 0 !important;
+}
 
 .el-dialog__title,
 .el-form-item__label,
@@ -56,6 +63,8 @@
 .el-select {
 	width: 100%;
 }
+
+
 
 a {
 	text-decoration: none;
