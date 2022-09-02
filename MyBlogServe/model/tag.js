@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const TagSchema = new mongoose.Schema({
 	date: { type: Date, require: true },
 	title: { type: String, require: true, unique: true },
+	digest: { type: String, require: true },
 	bg: { type: String },
 });
 const TagModel = mongoose.model('tag', TagSchema);
@@ -40,8 +41,9 @@ const getTag = id => {
  * @param {string} id 标签的_id
  * @return {object} 更新操作结果
  */
-const uptateTag = (id, title) => {
-	return TagModel.updateOne({ _id: id }, { $set: { title } });
+const uptateTag = (_id, title, digest) => {
+	console.log(_id, title, digest);
+	return TagModel.updateOne({ _id }, { $set: { title, digest } });
 };
 /**
  *获取所有标签

@@ -1,10 +1,10 @@
 const mongoose = require('mongoose');
 const PhotoSchema = new mongoose.Schema({
 	uploadTime: { type: Date, require: true },
-	shootingTime: {type: Date, required: true},
-	digest: { type: String },
-  photoUrl: {type: String, required: true, unique: true},
-  thumbnailUrl: {type: String, unique: true},
+	shootingTime: { type: String, required: true },
+	digest: { type: String, required: true },
+	photoUrl: { type: String, required: true, unique: true },
+	thumbnailUrl: { type: String },
 	preBg: { type: String },
 });
 const PhotoModel = mongoose.model('Photo', PhotoSchema);
@@ -15,16 +15,16 @@ const PhotoModel = mongoose.model('Photo', PhotoSchema);
  * @return 成功返回新增的照片信息，否则返回false
  */
 const addPhoto = data => {
+	console.log(data);
 	const Photo = new PhotoModel(data);
-	return Photo
-		.save()
+	return Photo.save()
 		.then(res => res)
-		.catch(() => false);
+		.catch(err => false);
 };
 
 /**
  *删除照片
- * @param {string} _id 
+ * @param {string} _id
  */
 const deletePhoto = _id => {
 	return PhotoModel.deleteOne({ _id });
@@ -57,7 +57,7 @@ const getPhotos = () => {
 
 /**
  *获取所有照片的数量
- * @return {number} 照片数量  
+ * @return {number} 照片数量
  */
 const getPhotoSums = () => {
 	return PhotoModel.count();

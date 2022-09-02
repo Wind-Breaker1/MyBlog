@@ -1,5 +1,5 @@
 <template>
-	<div class="article-box">
+	<div>
 		<el-tabs tab-position="top" class="tabs" @tab-click="changeTab">
 			<el-tab-pane label="博客管理" class="tab-content">
 				<el-table :data="blogsData" height="100%">
@@ -106,14 +106,14 @@
 			</el-tab-pane>
 			<el-tab-pane label="专栏管理" class="tab-content">
 				<el-button type="primary" size="mini" @click="addItem('classify')" class="sub">新增专栏</el-button>
-				<el-table :data="classifies" class="option">
+				<el-table :data="classifies" height="calc(100% - 28px)">
 					<el-table-column label="提交日期" min-width="60">
 						<template slot-scope="scope">
 							<i class="el-icon-time"></i>
 							<span style="margin-left: 10px">{{ scope.row.date }}</span>
 						</template>
 					</el-table-column>
-					<el-table-column prop="title" label="标题" min-width="100"> </el-table-column>
+					<el-table-column prop="title" label="专栏名" min-width="100"> </el-table-column>
 					<el-table-column prop="digest" label="专栏介绍" min-width="180"> </el-table-column>
 					<el-table-column prop="articleNum" label="博客数量" min-width="60"> </el-table-column>
 					<el-table-column label="操作" min-width="100">
@@ -126,14 +126,15 @@
 			</el-tab-pane>
 			<el-tab-pane label="书签管理" class="tab-content">
 				<el-button type="primary" size="mini" @click="addItem('tag')" class="sub">新增书签</el-button>
-				<el-table :data="tags" class="option">
+				<el-table :data="tags" height="calc(100% - 28px)">
 					<el-table-column label="创建日期" min-width="60">
 						<template slot-scope="scope">
 							<i class="el-icon-time"></i>
 							<span style="margin-left: 10px">{{ scope.row.date }}</span>
 						</template>
 					</el-table-column>
-					<el-table-column prop="title" label="书签名" min-width="200"> </el-table-column>
+					<el-table-column prop="title" label="书签名" min-width="100"> </el-table-column>
+					<el-table-column prop="digest" label="专栏介绍" min-width="180"> </el-table-column>
 					<el-table-column label="操作" min-width="100">
 						<template slot-scope="scope">
 							<el-button size="mini" @click="Edit(scope.row, 'tag')">编辑</el-button>
@@ -143,17 +144,16 @@
 				</el-table>
 			</el-tab-pane>
 			<el-tab-pane label="评论管理" class="tab-content">
-				<el-button type="primary" size="mini" @click="addItem('tag')" class="sub">新增书签</el-button>
-				<el-table :data="comments" row-key="id" :tree-props="{ children: 'replyInfo' }">
+				<el-table :data="comments" row-key="_id" default-expand-all :tree-props="{ children: 'children', hasChildren: 'hasChildren' }" height="100%">
 					<el-table-column label="评论日期" min-width="60">
 						<template slot-scope="scope">
 							<i class="el-icon-time"></i>
 							<span style="margin-left: 10px">{{ scope.row.date }}</span>
 						</template>
 					</el-table-column>
-					<el-table-column prop="articleTitle" label="所属文章" min-width="180"> </el-table-column>
-					<el-table-column prop="userinfo.username" label="评论者" min-width="100"> </el-table-column>
-					<el-table-column label="操作" min-width="100">
+					<el-table-column prop="articleTitle" label="所属文章" min-width="100"> </el-table-column>
+					<el-table-column prop="username" label="评论者" min-width="60"> </el-table-column>
+					<el-table-column label="操作" min-width="60">
 						<template slot-scope="scope">
 							<el-button size="mini" type="danger" @click="deleteItem(scope.row, 'comment')">删除</el-button>
 						</template>
@@ -161,18 +161,19 @@
 				</el-table>
 			</el-tab-pane>
 		</el-tabs>
-		<el-dialog :title="dialogTitle" :visible.sync="dialogVisible" center>
-			<el-form :model="form">
-				<el-form-item :label="currentTab == 2 ? '专栏名' : '书签名'" :label-width="formLabelWidth">
+		<el-dialog :title="dialogTitle" :visible.sync="dialogVisible" center @close="resetForm('form')">
+			<el-form :model="form" ref="form" :rules="formRules">
+				<el-form-item :label="currentTab == 2 ? '专栏名' : '书签名'" :label-width="formLabelWidth" prop="title">
 					<el-input v-model="form.title" autocomplete="off"></el-input>
 				</el-form-item>
-				<el-form-item label="专栏介绍" :label-width="formLabelWidth" v-show="currentTab == 2">
+				<el-form-item label="专栏介绍" :label-width="formLabelWidth" prop="digest">
 					<el-input v-model="form.digest" autocomplete="off"></el-input>
 				</el-form-item>
 			</el-form>
 			<div slot="footer" class="dialog-footer">
 				<el-button @click="dialogVisible = false">取 消</el-button>
-				<el-button type="primary" @click="submit">确 定</el-button>
+				<el-button type="primary" @click="submit('form')">确 定</el-button>
+				<el-button @click="resetForm('form')">重置</el-button>
 			</div>
 		</el-dialog>
 	</div>
@@ -188,16 +189,23 @@ export default {
 				title: "",
 				digest: "",
 			},
+			// 校验规则
+			formRules: {
+				title: [
+					{ required: true, message: "不能为空", trigger: "blur" },
+					{ min: 1, max: 10, message: "长度在 1 到 10 个字符", trigger: "blur" },
+				],
+				digest: [
+					{ required: true, message: "请输入描述信息", trigger: "blur" },
+					{ min: 1, max: 30, message: "长度在 1 到 30 个字符", trigger: "blur" },
+				],
+			},
 			formLabelWidth: "120px",
 			dialogVisible: false,
 			id: "",
 			dialogTitle: "",
 			currentTab: 0,
 			comments: [],
-			firstClick1: true,
-			firstClick2: true,
-			firstClick3: true,
-			firstClick4: true,
 		};
 	},
 	mounted() {
@@ -223,21 +231,17 @@ export default {
 	methods: {
 		async changeTab(tab) {
 			this.currentTab = parseInt(tab.index);
-			if (this.currentTab == 1 && this.firstClick1 && this.jottings.length == 0) {
+			if (this.currentTab == 1) {
 				this.$store.dispatch("getJottings");
-				this.firstClick1 = false;
-			} else if (this.currentTab == 2 && this.firstClick2 && this.classifies.length == 0) {
+			} else if (this.currentTab == 2) {
 				this.$store.dispatch("getClassifies");
-				this.firstClick2 = false;
-			} else if (this.currentTab == 3 && this.firstClick3 && this.tags.length == 0) {
+			} else if (this.currentTab == 3) {
 				this.$store.dispatch("getTags");
-				this.firstClick3 = false;
-			} else if (this.currentTab == 4 && this.firstClick4) {
+			} else if (this.currentTab == 4) {
 				const res = await getComments();
 				if (res.status == 200) {
 					this.comments = res.data;
 				}
-				this.firstClick3 = false;
 			}
 		},
 		// 编辑
@@ -251,12 +255,6 @@ export default {
 					await this.$store.dispatch("getJotting", { _id: row._id });
 					this.$router.push({ path: "/admin/markdown", query: { type: "jotting" } });
 					break;
-				case "tag":
-					this.dialogTitle = "编辑书签";
-					this.form.title = row.title;
-					this.dialogVisible = true;
-					this.id = row._id;
-					break;
 				case "classify":
 					this.dialogTitle = "编辑专栏";
 					this.form.title = row.title;
@@ -264,25 +262,19 @@ export default {
 					this.dialogVisible = true;
 					this.id = row._id;
 					break;
-			}
-			if (type == "blog") {
-				await this.$store.dispatch("getBlog", { _id: row._id });
-				this.$router.push({ path: "/admin/markdown", query: { type: "blog" } });
-			} else if (type == "jotting") {
-				await this.$store.dispatch("getJotting", { _id: row._id });
-				this.$router.push({ path: "/admin/markdown", query: { type: "jotting" } });
-			} else {
-				this.dialogTitle = "编辑专栏";
-				this.form.title = row.title;
-				this.form.digest = row.digest;
-				this.dialogVisible = true;
-				this._id = row._id;
+				case "tag":
+					this.dialogTitle = "编辑书签";
+					this.form.title = row.title;
+					this.dialogVisible = true;
+					this.form.digest = row.digest;
+					this.id = row._id;
+					break;
 			}
 		},
 		// 删除
 		async deleteItem(row, type) {
 			let res = null;
-			switch (type) {
+			switch ((type, isFirst)) {
 				case "blog":
 					res = await this.$store.dispatch("deleteBlog", { _id: row._id, classification: row.classification });
 					this.$store.dispatch("getBlogs");
@@ -301,7 +293,11 @@ export default {
 					this.$store.dispatch("getClassifies");
 					break;
 				case "comment":
-					res = await this.$store.dispatch("deleteClassify", { _id: row._id });
+					if (isFirst) {
+						res = await deleteFirstComment({ _id: row._id });
+					} else {
+						res = await deleteSecondComment({ _id: row._id, replyId: "" });
+					}
 			}
 			if (res.status === 200) {
 				this.$message.success(res.msg);
@@ -310,7 +306,6 @@ export default {
 			}
 			// this.getData();
 		},
-
 		// 修改文章状态
 		async changeState(row, type) {
 			let res = null;
@@ -328,46 +323,46 @@ export default {
 			}
 			// this.getData();
 		},
-
+		// 重置表单数据
+		resetForm(formName) {
+			this.id = "";
+			this.form.title = "";
+			this.form.digest = "";
+			this.$refs[formName].clearValidate();
+		},
 		// 提交数据
-		async submit() {
+		async submit(formName) {
 			let res = null;
-			if (this.currentTab == 2) {
-				if (!this.form.title || !this.form.digest) {
-					this.$message.warning("专栏名称和介绍不能为空哦！");
-					return;
-				}
-				if (this.id) {
-					res = await this.$store.dispatch("updateClassifyTitle", { _id: this.id, title: this.form.title, digest: this.form.digest });
+			this.$refs[formName].validate(async valid => {
+				if (valid) {
+					if (this.currentTab == 2) {
+						if (this.id) {
+							res = await this.$store.dispatch("updateClassifyTitle", { _id: this.id, ...this.form });
+						} else {
+							res = await this.$store.dispatch("addClassify", this.form);
+						}
+						this.$store.dispatch("getClassifies");
+					} else {
+						if (this.id) {
+							res = await this.$store.dispatch("updateTag", { _id: this.id, ...this.form });
+						} else {
+							res = await this.$store.dispatch("addTag", this.form);
+						}
+						this.$store.dispatch("getTags");
+					}
+					if (res.status === 200) {
+						// 修改成功后清空值
+						this.dialogVisible = false;
+						this.$message.success(res.msg);
+						// this.getData();
+					} else {
+						this.$message.error(res.msg || "出错啦！");
+					}
 				} else {
-					res = await this.$store.dispatch("addClassify", { title: this.form.title, digest: this.form.digest });
+					this.$message.warning("信息不完整，请注意红色提示");
+					return false;
 				}
-				this.$store.dispatch("getClassifies");
-			} else {
-				console.log(this.id, "id");
-				if (!this.form.title) {
-					this.$message.warning("书签名不能为空！");
-					return;
-				}
-				if (this.id) {
-					res = await this.$store.dispatch("updateTag", { id: this.id, title: this.form.title });
-				} else {
-					res = await this.$store.dispatch("addTag", { title: this.form.title });
-				}
-				console.log(res);
-				this.$store.dispatch("getTags");
-			}
-			if (res.status === 200) {
-				// 修改成功后清空值
-				this.form.title = "";
-				this.form.digest = "";
-				this._id = "";
-				this.dialogVisible = false;
-				this.$message.success(res.msg);
-				// this.getData();
-			} else {
-				this.$message.error(res.msg || "出错啦！");
-			}
+			});
 		},
 		async getBlogs() {
 			await this.$store.dispatch("getBlogs");
@@ -377,12 +372,9 @@ export default {
 			if (type == "tag") {
 				this.dialogTitle = "新增书签";
 				this.dialogVisible = true;
-				this.form.title = "";
 			} else {
 				this.dialogTitle = "新增专栏";
 				this.dialogVisible = true;
-				this.form.title = "";
-				this.form.digest = "";
 			}
 		},
 	},
@@ -390,23 +382,15 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.article-box {
-	box-sizing: border-box;
+.tabs {
+	height: 100%;
 
-	.tabs {
+	.tab-content {
 		height: 100%;
 
-		.tab-content {
-			height: 100%;
-
-			.table-expand .el-form-item {
-				margin-right: 0;
-				margin-bottom: 0;
-			}
-
-			.option {
-				height: calc(100% - 28px);
-			}
+		.table-expand .el-form-item {
+			margin-right: 0;
+			margin-bottom: 0;
 		}
 	}
 }

@@ -1,7 +1,8 @@
 const TimeclueModel = require('../model/timeclue');
+const util = require('../utils');
 const addTimeclue = async (req, res) => {
-	const { title, digest ,date} = req.body;
-	const timeclue = await TimeclueModel.addTimeclue({ title, date,digest });
+	const { title, digest, date } = req.body;
+	const timeclue = await TimeclueModel.addTimeclue({ title, date, digest });
 	if (timeclue) {
 		res.send({
 			msg: '新增时间线信息成功',
@@ -16,9 +17,9 @@ const addTimeclue = async (req, res) => {
 	}
 };
 const updateTimeclue = async (req, res) => {
-	const { id, title, digest } = req.body;
-	const timeclue = await TimeclueModel.uptateTimeclue(id, title, digest);
-	if (timeclue.acknowledged &&timeclue.modifiedCount != 0) {
+	const { _id, date, title, digest } = req.body;
+	const timeclue = await TimeclueModel.uptateTimeclue(_id, date, title, digest);
+	if (timeclue.acknowledged && timeclue.modifiedCount != 0) {
 		res.send({
 			msg: '时间线信息修改成功',
 			status: 200,
@@ -26,6 +27,22 @@ const updateTimeclue = async (req, res) => {
 	} else {
 		res.send({
 			msg: '时间线信息修改失败',
+			status: 0,
+		});
+	}
+};
+const changeTimeNodeState = async (req, res) => {
+	const { id } = req.query;
+	const { state } = await TimeclueModel.getTimeclue(id);
+	const timeclue = await TimeclueModel.changeTimeNodeState(id, !state);
+	if (timeclue.acknowledged && timeclue.modifiedCount != 0) {
+		res.send({
+			msg: '状态修改成功',
+			status: 200,
+		});
+	} else {
+		res.send({
+			msg: '状态修改失败',
 			status: 0,
 		});
 	}
@@ -68,6 +85,7 @@ const getTimeclue = async (req, res) => {
 //获取所有时间线信息
 const getTimeclues = async (req, res) => {
 	const timeclues = await TimeclueModel.getTimeclues();
+	timeclues.forEach(item => (item.date = util.formatDate(item.date)));
 	if (timeclues) {
 		res.send({
 			msg: '获取时间线信息列表成功',
@@ -87,4 +105,5 @@ module.exports = {
 	getTimeclue,
 	getTimeclues,
 	updateTimeclue,
+	changeTimeNodeState,
 };

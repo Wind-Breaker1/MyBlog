@@ -3,7 +3,7 @@
 		<el-tabs tab-position="top" class="tabs" @tab-click="changeTab">
 			<el-tab-pane label="用户管理" class="tab-content">
 				<el-button type="primary" size="mini" @click="register" class="sub">新增用户</el-button>
-				<el-table :data="userList" class="table" height="100%">
+				<el-table :data="userList" height="calc(100% - 28px)">
 					<i class="add"></i>
 					<el-table-column label="注册日期" min-width="60">
 						<template slot-scope="scope">
@@ -59,17 +59,20 @@
 			</el-tab-pane>
 		</el-tabs>
 		<el-dialog :title="title" :visible.sync="dialogFormVisible" center>
-			<el-form :model="form">
-				<el-form-item label="用户名" :label-width="formLabelWidth" v-show="flag !== 'password'">
+			<el-form :model="form" :rules="formRules" ref="form">
+				<el-form-item label="用户名" label-width="120px" prop="username" v-if="flag !== 'changePassword'">
 					<el-input v-model="form.username" autocomplete="off"></el-input>
 				</el-form-item>
-				<el-form-item :label="lable" :label-width="formLabelWidth" v-show="flag !== 'userInfo'">
+				<el-form-item :label="lable" label-width="120px" prop="password" v-if="flag !== 'changeUserInfo'">
 					<el-input v-model="form.password" autocomplete="off"></el-input>
 				</el-form-item>
-				<el-form-item v-show="flag === 'register'" label="email" :label-width="formLabelWidth">
+				<el-form-item label="确认密码" label-width="120px" prop="rePassword" v-if="flag !== 'changeUserInfo'">
+					<el-input v-model="form.rePassword" autocomplete="off"></el-input>
+				</el-form-item>
+				<el-form-item v-if="flag === 'register'" label="email" prop="email" label-width="120px">
 					<el-input v-model="form.email" autocomplete="off"></el-input>
 				</el-form-item>
-				<el-form-item label="角色" :label-width="formLabelWidth" v-show="flag !== 'password'">
+				<el-form-item label="角色" label-width="120px" v-if="flag !== 'changePassword'">
 					<el-dropdown split-button @command="changeRole">
 						{{ form.role }}
 						<el-dropdown-menu slot="dropdown">
@@ -80,8 +83,9 @@
 				</el-form-item>
 			</el-form>
 			<div slot="footer" class="dialog-footer">
-				<el-button @click="dialogFormVisible = false">取 消</el-button>
-				<el-button type="primary" @click="submit">确 定</el-button>
+				<el-button @click="cancle">取 消</el-button>
+				<el-button type="primary" @click="submit('form')">确 定</el-button>
+				<el-button @click="resetForm('form')">重置</el-button>
 			</div>
 		</el-dialog>
 	</div>
@@ -91,23 +95,52 @@
 import { mapGetters } from "vuex";
 export default {
 	data() {
+		var validatePass = (rule, value, callback) => {
+			if (value === "") {
+				callback(new Error("请输入密码"));
+			} else {
+				if (this.form.rePassword !== "") {
+					this.$refs.form.validateField("rePassword");
+				}
+				callback();
+			}
+		};
+		var validateRePass = (rule, value, callback) => {
+			if (value === "") {
+				callback(new Error("请再次输入密码"));
+			} else if (value !== this.form.password) {
+				callback(new Error("两次输入密码不一致!"));
+			} else {
+				callback();
+			}
+		};
 		return {
 			// element-ui弹出框数据
 			dialogFormVisible: false,
 			form: {
 				username: "",
 				password: "",
+				rePassword: "",
 				email: "",
 				role: "普通用户",
 			},
-			formLabelWidth: "120px",
-			dialogFormVisible: false,
 			title: "",
 			lable: "",
 			flag: "",
 			email: "",
 			currentTab: 0,
-			firstClick1: true,
+			formRules: {
+				email: [
+					{ required: true, message: "请输入邮箱地址", trigger: "blur" },
+					{ type: "email", message: "请输入正确的邮箱地址", trigger: ["blur", "change"] },
+				],
+				username: [
+					{ required: true, message: "请输入用户名", trigger: "blur" },
+					{ min: 1, max: 10, message: "长度在 1 到 10 个字符", trigger: "blur" },
+				],
+				password: [{ validator: validatePass, trigger: "blur" }],
+				rePassword: [{ validator: validateRePass, trigger: ["blur", "change"] }],
+			},
 		};
 	},
 	computed: {
@@ -121,9 +154,10 @@ export default {
 		//
 		changeTab(tab) {
 			this.currentTab = parseInt(tab.index);
-			if (this.currentTab == 1 && this.firstClick1 && this.murmurInfos.length == 0) {
+			if (this.currentTab == 1) {
 				this.$store.dispatch("getMurmurInfos");
-				this.firstClick1 = false;
+			} else {
+				this.getUsers();
 			}
 		},
 		// 改密码
@@ -131,14 +165,15 @@ export default {
 			this.title = "修改密码信息";
 			this.lable = "新密码";
 			this.dialogFormVisible = true;
-			this.flag = "password";
+			this.flag = "changePassword";
 			this.form.email = row.email;
 		},
+		// 改用户信息
 		editUserInfo(row) {
 			this.title = "修改用户信息";
 			this.lable = "新密码";
 			this.dialogFormVisible = true;
-			this.flag = "userInfo";
+			this.flag = "changeUserInfo";
 			// 获取点击行的email
 			this.form.email = row.email;
 			this.form.role = row.role;
@@ -169,51 +204,56 @@ export default {
 			this.$store.dispatch("getUsers");
 		},
 		// 提交数据
-		async submit() {
+		async submit(formName) {
 			let res = null;
 			const { username, password, email, role } = this.form;
-			if (this.flag === "register") {
-				// 注册请求接口
-				if (!username || !password || !email || !role) {
-					this.$message.warning("请完整填写必要的信息！");
-					return;
+			this.$refs[formName].validate(async valid => {
+				if (valid) {
+					if (this.flag === "register") {
+						// 注册请求接口
+						res = await this.$store.dispatch("register", this.form);
+					} else if (this.flag === "changeUserInfo") {
+						res = await this.$store.dispatch("updateUserInfo", { username, email, role });
+					} else {
+						res = await this.$store.dispatch("updatePassword", { password, email });
+					}
+					if (res.status === 200) {
+						// 修改成功后清空值
+						this.resetForm("form");
+						this.dialogFormVisible = false;
+						this.$message.success(res.msg);
+						this.getUsers();
+					} else {
+						this.$message.error(res.msg);
+					}
+				} else {
+					this.$message.warning("请注意红色提示");
+					return false;
 				}
-				res = await this.$store.dispatch("register", { username, password, email, role });
-			} else if (this.flag === "userInfo") {
-				// 修改用户信息请求接口
-				if (!username || !role) {
-					this.$message.warning("请完整填写必要的信息！");
-					return;
-				}
-				res = await this.$store.dispatch("updateUserInfo", { username, email, role });
-			} else {
-				if (!password) {
-					this.$message.warning("请完整填写必要的信息！");
-					return;
-				}
-				res = await this.$store.dispatch("updatePassword", { password, email });
+			});
+		},
+		// 取消
+		cancle() {
+			if (this.flag != "register") {
+				this.resetForm("form");
 			}
-			if (res.status === 200) {
-				// 修改成功后清空值
-				this.form.username = "";
-				this.form.password = "";
-				this.form.email = "";
-				this.dialogFormVisible = false;
-				this.$message.success(res.msg);
-				this.getUsers();
-			} else {
-				this.$message.error(res.msg);
-			}
+			this.dialogFormVisible = false;
+		},
+		// 重置表单数据
+		resetForm(formName) {
+			// this.email = "";
+			this.form.username = "";
+			this.form.password = "";
+			this.form.rePassword = "";
+			this.form.email = "";
+			this.form.role = "普通用户";
+			this.$refs[formName].clearValidate();
 		},
 		// 注册
 		register() {
 			this.title = "修改密码";
 			this.lable = "密码";
-			this.flag = true;
 			this.dialogFormVisible = true;
-			this.form.username = "";
-			this.form.email = "";
-			this.form.role = "普通用户";
 			this.flag = "register";
 		},
 	},
@@ -221,13 +261,10 @@ export default {
 </script>
 
 <style scoped lang="less">
-	.tabs {
+.tabs {
+	height: 100%;
+	.tab-content {
 		height: 100%;
-		.tab-content {
-			height: 100%;
-			.option {
-				height: calc(100% - 28px);
-			}
-		}
 	}
+}
 </style>

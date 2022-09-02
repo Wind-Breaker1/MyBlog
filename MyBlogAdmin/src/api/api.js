@@ -82,26 +82,28 @@ export const getMurmurInfos = () => requests.get("/murmur/getmurmurinfos");
 export const deleteMurmurInfo = params => requests.delete("/murmur/deletemurmurinfo", { params });
 
 // 获取所有照片信息
-export const getPhotos= () => requests.get("/photo/getphotos");
+export const getPhotos = () => requests.get("/photo/getphotos");
 // 修改照片信息
-export const updatePhotos= data => requests.post("/photo/updatephotodigest", data);
+export const updatePhotos = data => requests.post("/photo/updatephotodigest", data);
 // 删除照片信息
-export const deletePhoto= params => requests.delete("/photo/deletephoto", { params });
+export const deletePhoto = params => requests.delete("/photo/deletephoto", { params });
 // 新增照片信息
-export const addPhoto= data => requests.post("/photo/addphoto", data);
+export const addPhoto = data => requests.post("/photo/addphoto", data);
 
 // 获取所有评论
-export const getComments= () => requests.get("/comments/getcomments");
+export const getComments = () => requests.get("/comments/getcomments");
 // 删除一级评论
-export const deleteFirstComment= params => requests.delete("/comments/deletefirstcomment", {params});
+export const deleteFirstComment = params => requests.delete("/comments/deletefirstcomment", { params });
 // 删除二级评论
-export const deleteSecondComment= params => requests.delete("/comments/deletesecondcomment", {params});
+export const deleteSecondComment = params => requests.delete("/comments/deletesecondcomment", { params });
 
 // 获取所有时间节点
-export const getTimeclues= () => requests.get("/timeclues/gettimeclues");
+export const getTimeclues = () => requests.get("/timeclues/gettimeclues");
 // 删除时间节点
-export const deleteTimeclue= params => requests.delete("/timeclues/deletetimeclue", {params});
+export const deleteTimeclue = params => requests.delete("/timeclues/deletetimeclue", { params });
 // 修改时间节点
-export const updateTimeclue= data => requests.post("/timeclues/updatetimeclue", data);
+export const updateTimeclue = data => requests.post("/timeclues/updatetimeclue", data);
 // 新增时间节点
-export const addTimeclue= data => requests.post("/timeclues/addtimeclue", data);
+export const addTimeclue = data => requests.post("/timeclues/addtimeclue", data);
+// 改变时间节点状态
+export const changeTimeNodeState = params => requests.get("/timeclues/changetimenodestate", { params });

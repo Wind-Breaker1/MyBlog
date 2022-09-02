@@ -19,11 +19,11 @@ export const routes = [
 				name: "markdown",
 				component: () => import("../views/Markdown.vue"),
 			},
-			// {
-			// 	path: "jottings",
-			// 	name: "jottings",
-			// 	component: () => import("../views/Jottings.vue"),
-			// },
+			{
+				path: "timeclue",
+				name: "timeclue",
+				component: () => import("../views/Timeclue.vue"),
+			},
 			// {
 			// 	path: "routingmanage",
 			// 	name: "routingmanage",

@@ -57,7 +57,7 @@ const getMurmurInfo = murmur => {
  @return {Array} 查找到的指纹信息对象数组
  */
 const getMurmurInfos = () => {
-	return MurmurModel.find();
+	return MurmurModel.find().lean();
 };
 module.exports = {
 	addMurmur,

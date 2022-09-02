@@ -8,8 +8,9 @@ const path = require('path');
 const fs = require('fs');
 //新增标签
 const addTag = async (req, res) => {
-	const { title } = req.body;
-	const tag = await TagModel.addTag({ title, date: Date.now(), bg: util.randomColor() });
+	const { title, digest } = req.body;
+	const tag = await TagModel.addTag({ title, date: Date.now(), bg: util.randomColor(), digest });
+	console.log(tag, title, digest);
 	if (tag) {
 		res.send({
 			msg: '新增标签成功',
@@ -24,8 +25,8 @@ const addTag = async (req, res) => {
 	}
 };
 const updateTag = async (req, res) => {
-	const { id, title } = req.body;
-	const tag = await TagModel.uptateTag(id, title);
+	const { _id, title, digest } = req.body;
+	const tag = await TagModel.uptateTag(_id, title, digest);
 	if (tag.acknowledged && tag.modifiedCount != 0) {
 		res.send({
 			msg: '标签修改成功',
@@ -78,7 +79,7 @@ const getTag = async (req, res) => {
 //获取所有标签
 const getTags = async (req, res) => {
 	const tags = await TagModel.getTags();
-	tags.forEach(item => item.date = util.formatDate(item.date));
+	tags.forEach(item => (item.date = util.formatDate(item.date)));
 	if (tags) {
 		res.send({
 			msg: '获取标签列表成功',
@@ -114,11 +115,11 @@ const getSliderInfo = async (req, res, next) => {
 	const blogs = await BlogsModel.getPublishBlogs();
 	blogs.forEach(item => {
 		item.date = util.formatDate(item.date);
-	})
+	});
 	const jottings = await JottingModel.getPublishJottings();
 	jottings.forEach(item => {
 		item.date = util.formatDate(item.date);
-	})
+	});
 	const classifies = await ClassifyModel.getClassifies();
 	const tags = await TagModel.getTags();
 	if (blogs && blogs && classifies && tags) {
@@ -248,5 +249,5 @@ module.exports = {
 	getTag,
 	getTags,
 	updateTag,
-	getArticlesOfTag
+	getArticlesOfTag,
 };

@@ -10,7 +10,7 @@ const CommentSchema = new mongoose.Schema({
 		},
 	],
 	content: { type: String, default: '' },
-	murmur: { type: String, require: true},
+	murmur: { type: String, require: true },
 	replyInfo: [
 		{
 			date: { type: Date, require: true }, //创建日期
@@ -64,24 +64,24 @@ const deleteSecondComment = (_id, replyId) => {
 const getCommentsOfArticle = (_id, pageSize = 5, pageStart = 0) => {
 	return CommentModel.find({ keyId: _id }).skip(pageStart).limit(pageSize).lean();
 };
-const getComments = ( pageSize = 5, pageStart = 0) => {
-	return CommentModel.find();
+const getComments = (pageSize = 5, pageStart = 0) => {
+	return CommentModel.find().lean();
 	// return CommentModel.aggregate([
 	// 	{
 	// 		$lookup: {
-  //       from: "murmurs", // 关联 articles 表
-  //       localField: "murmur", // 根据 comments 里 articleId 字段查询
-  //       foreignField: "murmur", // 查找 articles 表里对应的 _id 的数据
+	//       from: "murmurs", // 关联 articles 表
+	//       localField: "murmur", // 根据 comments 里 articleId 字段查询
+	//       foreignField: "murmur", // 查找 articles 表里对应的 _id 的数据
 	// 			pipeline: [ {$project: {username: 1} } ],
-  //       as: "userinfo",// 返回的字段别名
-  //     },
+	//       as: "userinfo",// 返回的字段别名
+	//     },
 	// 	},
 	// 	{ $unwind: "$userinfo" },//数据打散
 	// ]);
 	// .skip(pageStart).limit(pageSize).lean();
 };
 // 查询某一个评论
-const getCommentReplyLast = (id) => {
+const getCommentReplyLast = id => {
 	return CommentModel.findById(id);
 };
 
@@ -94,5 +94,5 @@ module.exports = {
 	getComments,
 	addSecondFavour,
 	getCommentReplyLast,
-	getCommentsOfArticle
+	getCommentsOfArticle,
 };

@@ -31,7 +31,8 @@
 			emptyText="期待您的评论！"
 			buttonText="评论"
 			:contentLength="150"
-			placeholderText="请输入最多150字的评论..."></Comment>
+			placeholderText="请输入最多150字的评论..."
+			:articleTitle="article.title"></Comment>
 	</div>
 </template>
 

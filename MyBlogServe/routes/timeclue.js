@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 const TimeclueControll = require('../controllers/timeclue');
+router.get('/changetimenodestate', TimeclueControll.changeTimeNodeState);
 router.get('/gettimeclue', TimeclueControll.getTimeclue);
 router.get('/gettimeclues', TimeclueControll.getTimeclues);
 router.delete('/deletetimeclue', TimeclueControll.deleteTimeclue);

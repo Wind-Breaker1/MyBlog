@@ -1,8 +1,9 @@
 const mongoose = require('mongoose');
 const TimeclueSchema = new mongoose.Schema({
-	date: { type: String, require: true },
+	date: { type: String },
 	title: { type: String, require: true },
-  digest: {type: String},
+	state: { type: Boolean, require: true },
+	digest: { type: String },
 });
 const TimeclueModel = mongoose.model('timeclue', TimeclueSchema);
 /**
@@ -12,8 +13,7 @@ const TimeclueModel = mongoose.model('timeclue', TimeclueSchema);
  */
 const addTimeclue = data => {
 	const Timeclue = new TimeclueModel(data);
-	return Timeclue
-		.save()
+	return Timeclue.save()
 		.then(res => res)
 		.catch(() => false);
 };
@@ -39,8 +39,11 @@ const getTimeclue = id => {
  * @param {string} id 时间线信息的_id
  * @return {object} 更新操作结果
  */
-const uptateTimeclue = (id, date,title, digest) => {
+const uptateTimeclue = (id, date, title, digest) => {
 	return TimeclueModel.updateOne({ _id: id }, { $set: { date, title, digest } });
+};
+const changeTimeNodeState = (id, state) => {
+	return TimeclueModel.updateOne({ _id: id }, { $set: { state } });
 };
 /**
  *获取所有时间线信息
@@ -64,4 +67,5 @@ module.exports = {
 	addTimeclue,
 	// getTimeclueSums,
 	uptateTimeclue,
+	changeTimeNodeState,
 };

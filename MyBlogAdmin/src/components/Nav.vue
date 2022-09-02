@@ -24,10 +24,15 @@
 			<i class="el-icon-picture"></i>
 			<span slot="title">照片管理</span>
 		</el-menu-item>
+		<el-menu-item index="/admin/timeclue">
+			<i class="el-icon-timer"></i>
+			<span slot="title">时间节点管理</span>
+		</el-menu-item>
 		<el-menu-item index="/admin/user">
 			<i class="el-icon-s-custom"></i>
 			<span slot="title">用户管理</span>
 		</el-menu-item>
+
 		<!-- <el-menu-item index="/admin/routingmanage">
 			<i class="el-icon-s-custom"></i>
 			<span slot="title">路由管理</span>

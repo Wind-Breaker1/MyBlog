@@ -28,9 +28,9 @@
 	</div>
 </template>
 <script>
-import slideBgUrl1 from '@/assets/img/slideBg/slidebg1.jpg';
-import slideBgUrl3 from '@/assets/img/slideBg/slidebg2.jpg';
-import slideBgUrl4 from '@/assets/img/slideBg/slidebg3.jpg';
+import slideBgUrl1 from '@/assets/img/slideBg/slideBg1.jpg';
+import slideBgUrl3 from '@/assets/img/slideBg/slideBg2.jpg';
+import slideBgUrl4 from '@/assets/img/slideBg/slideBg3.jpg';
 import infoBgUrl from '@/assets/img/infoBg.jpg';
 import avatarUrl from '@/assets/img/avatar.png';
 import { mapGetters, mapState } from 'vuex';

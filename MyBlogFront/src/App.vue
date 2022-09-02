@@ -107,7 +107,6 @@ export default {
 	/*滚动条里面小方块*/
 	border-radius: 5px;
 	background: rgba(0, 0, 0, 0.2);
-	scrollbar-arrow-color: red;
 }
 
 ::-webkit-scrollbar-track {

@@ -26,10 +26,10 @@ export default {
 		height: calc(100vh - 45px);
 		display: flex;
 		background-color: #000;
-		.sythies-style {
+		.box {
 			flex: 1;
 			margin: 1vw;
-  		padding: 1vh;
+			padding: 1vh;
 			background-color: #323232;
 			border-radius: 5px;
 		}

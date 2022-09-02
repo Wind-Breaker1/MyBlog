@@ -12,8 +12,10 @@ const addFirstComment = async (req, res, next) => {
 		content,
 		murmur,
 		replyInfo,
-		articleTitle
+		articleTitle,
 	});
+	result.date = util.formatTime(result.date);
+	console.log(result);
 	if (result) {
 		res.send({
 			msg: '评论成功',
@@ -42,6 +44,7 @@ const addSecondComment = async (req, res, next) => {
 	});
 	if (result.acknowledged && result.modifiedCount !== 0) {
 		const comment = await CommentModel.getCommentReplyLast(_id);
+		comment.date = util.formatTime(comment.date);
 		res.send({
 			msg: '评论成功',
 			status: 200,
@@ -151,7 +154,7 @@ const getComments = async (req, res) => {
 		res.send({
 			msg: '查询成功',
 			status: 200,
-			data:comments,
+			data: comments,
 		});
 	} else {
 		res.send({

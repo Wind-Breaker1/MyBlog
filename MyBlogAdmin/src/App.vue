@@ -13,15 +13,4 @@ export default {
 };
 </script>
 
-<style lang="less">
-#app {
-	a {
-		text-decoration: none;
-	}
-}
-
-* {
-	margin: 0;
-	padding: 0;
-}
-</style>
+<style lang="less"></style>

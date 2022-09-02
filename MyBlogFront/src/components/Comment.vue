@@ -2,10 +2,9 @@
 	<div class="comment" :style="`${mainBg}`">
 		<div class="comment-header" :style="`${cartBg}`">
 			<div @click="handleClick">
-				<input type="file" id="avatarInput" @change="uploadAvatar" />
+				<input type="file" style="display: none" @change="uploadAvatar" />
 				<el-avatar :src="avatarUrl ? avatarUrl : 'https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png'" :size="40"></el-avatar>
 			</div>
-
 			<el-input
 				:placeholder="placeholderText"
 				v-model="context"
@@ -105,8 +104,8 @@ export default {
 		keyId: {
 			type: String,
 		},
-		articleTitle:{
-			type: String
+		articleTitle: {
+			type: String,
 		},
 		emptyText: {
 			type: String,
@@ -248,8 +247,8 @@ export default {
 				});
 				this.comments = res.data.comments;
 				console.log(res);
-				this.username = res.data.user.username;
-				this.avatarUrl = res.data.user.avatarUrl;
+				this.username = res.data.user?.username;
+				this.avatarUrl = res.data.user?.avatarUrl;
 			} catch (err) {
 				this.$message.error(err);
 			}
@@ -367,7 +366,7 @@ export default {
 					keyId: id,
 					content: this.context,
 					murmur: this.murmur,
-					articleTitle
+					articleTitle: this.articleTitle,
 				});
 				res.data.username = this.username;
 				this.comments.push(res.data);

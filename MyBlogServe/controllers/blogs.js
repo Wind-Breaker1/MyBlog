@@ -14,7 +14,7 @@ const addBlog = async (req, res) => {
 		tags,
 	});
 	ClassifyModel.updateClassifySum(classification, 1);
-	if (blog ) {
+	if (blog) {
 		res.send({
 			msg: '博客添加成功',
 			status: 200,
@@ -62,7 +62,7 @@ const updateBlog = async (req, res) => {
 // 获取文章列表
 const getBlogs = async (req, res) => {
 	const blogs = await BlogsModel.getBlogs();
-	blogs.forEach(item => item.date = util.formatDate(item.date))
+	blogs.forEach(item => (item.date = util.formatDate(item.date)));
 	if (blogs) {
 		res.send({
 			msg: '博客查询成功',
@@ -81,7 +81,7 @@ const getPublishBlogs = async (req, res) => {
 	const { pageStart, pageSize } = req.query;
 	const blogList = await BlogsModel.getPublishBlogs(pageStart, pageSize);
 	const count = await BlogsModel.getblogSums();
-	blogList.forEach(item =>item.date = util.formatDate(item.date))
+	blogList.forEach(item => (item.date = util.formatDate(item.date)));
 	if (blogList) {
 		res.send({
 			msg: '博客查询成功',
@@ -138,7 +138,7 @@ const getBlog = async (req, res) => {
 const getBlogsOfClassify = async (req, res) => {
 	const { classification } = req.query;
 	const blogs = await BlogsModel.getBlogsOfClassify(classification);
-	blogs.forEach(item => item.date = util.formatDate(item.date))
+	blogs.forEach(item => (item.date = util.formatDate(item.date)));
 	if (blogs && blogs.length > 0) {
 		res.send({
 			msg: '查找博客成功',

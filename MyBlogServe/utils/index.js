@@ -45,6 +45,9 @@ exports.verify = token => {
 	return result;
 };
 exports.formatDate = dateNum => {
+	if (!dateNum) {
+		return dateNum;
+	}
 	const date = new Date(dateNum);
 	const year = date.getFullYear();
 	const month = date.getMonth() + 1;
@@ -60,6 +63,7 @@ exports.formatTime = timeNum => {
 	const minutes = date.getMinutes();
 	return year + '-' + month + '-' + day + ' ' + hour + ':' + minutes;
 };
+
 exports.manageMurmurComments = (murmurInfo, comments) => {
 	const hashMurmur = new Map();
 	murmurInfo?.forEach(item => {
@@ -73,7 +77,9 @@ const depComments = (hashMurmur, comments) => {
 		item.date = this.formatTime(item.date);
 		item.username = murValue.username;
 		item.avatarUrl = murValue.avatarUrl;
-		if (item.replyInfo) {
+		if (item.replyInfo?.length > 0) {
+			item.children = item.replyInfo;
+			item.hasChildren = true;
 			depComments(hashMurmur, item.replyInfo);
 		}
 	});
