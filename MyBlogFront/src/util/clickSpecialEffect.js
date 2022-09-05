@@ -10,7 +10,10 @@ export default () => {
 	const colours = ['#F73859', '#14FFEC', '#00E0FF', '#FF99FE', '#FAF15D'];
 	const canvas = document.createElement('canvas');
 	document.body.appendChild(canvas);
-	canvas.setAttribute('style', ' top: 0; left: 0; z-index: 99999; position: fixed; pointer-events: none;');
+	canvas.setAttribute(
+		'style',
+		'width: 100%; height: 100%; top: 0; left: 0; z-index: 99999; position: fixed; pointer-events: none;'
+	);
 	const pointer = document.createElement('span');
 	pointer.classList.add('pointer');
 	document.body.appendChild(pointer);
@@ -38,7 +41,11 @@ export default () => {
 				clearInterval(longPress);
 				if (longPressed == true) {
 					document.body.classList.remove('is-longpress');
-					pushBalls(randBetween(50 + Math.ceil(multiplier), 100 + Math.ceil(multiplier)), e.clientX, e.clientY);
+					pushBalls(
+						randBetween(50 + Math.ceil(multiplier), 100 + Math.ceil(multiplier)),
+						e.clientX,
+						e.clientY
+					);
 					longPressed = false;
 				}
 				document.body.classList.remove('is-pressed');

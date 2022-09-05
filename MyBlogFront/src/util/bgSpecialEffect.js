@@ -3,7 +3,10 @@ export default () => {
 	const canvas = document.createElement('canvas');
 	document.body.appendChild(canvas);
 	const ctx = canvas.getContext('2d');
-	canvas.setAttribute('style', ' top: 0; left: 0; z-index: 99999; position: fixed; pointer-events: none;');
+	canvas.setAttribute(
+		'style',
+		' top: 0; left: 0; z-index: 99999; position: fixed; pointer-events: none;'
+	);
 	const flakeCount = 50;
 	let mX = -100;
 	let mY = -100;
@@ -20,9 +23,8 @@ export default () => {
 				x2 = flake.x,
 				y2 = flake.y;
 
-			const dist = Math.sqrt((x2 - x) * (x2 - x) + (y2 - y) * (y2 - y)),
-				dx = x2 - x,
-				dy = y2 - y;
+			const dist = Math.sqrt((x2 - x) * (x2 - x) + (y2 - y) * (y2 - y));
+			// (dx = x2 - x), (dy = y2 - y);
 
 			if (dist < minDist) {
 				const force = minDist / (dist * dist),

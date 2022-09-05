@@ -14,13 +14,13 @@ const addFirstComment = async (req, res, next) => {
 		replyInfo,
 		articleTitle,
 	});
-	result.date = util.formatTime(result.date);
-	console.log(result);
-	if (result) {
+	const comment = result.toObject();
+	comment.date = util.formatTime(comment.date);
+	if (comment) {
 		res.send({
 			msg: '评论成功',
 			status: 200,
-			data: result,
+			data: comment,
 		});
 	} else {
 		res.send({
@@ -44,11 +44,12 @@ const addSecondComment = async (req, res, next) => {
 	});
 	if (result.acknowledged && result.modifiedCount !== 0) {
 		const comment = await CommentModel.getCommentReplyLast(_id);
-		comment.date = util.formatTime(comment.date);
+		const newCom = comment.replyInfo.pop().toObject();
+		newCom.date = util.formatTime(newCom.date);
 		res.send({
 			msg: '评论成功',
 			status: 200,
-			data: comment.replyInfo.splice(-1).pop(),
+			data: newCom,
 		});
 	} else {
 		res.send({

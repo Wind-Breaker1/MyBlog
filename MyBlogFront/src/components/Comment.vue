@@ -1,10 +1,18 @@
 <template>
 	<div class="comment" :style="`${mainBg}`">
-		<div class="comment-header" :style="`${cartBg}`">
-			<div @click="handleClick">
-				<input type="file" style="display: none" @change="uploadAvatar" />
-				<el-avatar :src="avatarUrl ? avatarUrl : 'https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png'" :size="40"></el-avatar>
-			</div>
+		<div class="comment-header" :style="`${cardBg}`">
+			<el-tooltip class="item" effect="dark" content="点我更换头像" placement="top-start">
+				<div @click="handleClick">
+					<input type="file" style="display: none" @change="dealWithdAvatar" ref="avatar" />
+					<el-avatar
+						:src="
+							avatarUrl
+								? avatarUrl
+								: 'https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png'
+						"
+						:size="40"></el-avatar>
+				</div>
+			</el-tooltip>
 			<el-input
 				:placeholder="placeholderText"
 				v-model="context"
@@ -16,7 +24,9 @@
 				:class="!isLight ? 'input-night' : ''"
 				@focus="isShowSecReply(undefined)">
 			</el-input>
-			<el-button type="info" style="height: 40px" @click="submitInfo(keyId, undefined)">{{ buttonText }}</el-button>
+			<el-button type="info" style="height: 40px" @click="submitInfo(keyId, undefined)">{{
+				buttonText
+			}}</el-button>
 		</div>
 		<div class="comment-body" v-for="(item, index) in comments" :key="item.murmur + '' + index">
 			<!-- 一级评论 -->
@@ -33,24 +43,42 @@
 					</p>
 					<!-- 一级评论评论点赞 -->
 					<div class="comment-right">
-						<i class="iconfont icon-icon" @click="giveALike(item, item._id)" :class="item.favour.includes(murmur) ? 'active' : ''"></i
+						<i
+							class="iconfont icon-icon"
+							@click="giveALike(item, item._id)"
+							:class="item.favour.includes(murmur) ? 'active' : ''"></i
 						>{{ item.favour.length || 0 }}
 						<i class="el-icon-chat-dot-round" @click="isShowSecReply(item._id)"> 回复</i>
-						<i class="el-icon-delete" @click="deleteComment(item._id, undefined)" v-if="murmur === item.murmur"> 删除</i>
+						<i
+							class="el-icon-delete"
+							@click="deleteComment(item._id, undefined)"
+							v-if="murmur === item.murmur">
+							删除</i
+						>
 					</div>
 					<!-- 回复一级评论 -->
 					<div class="reply-comment" v-show="isShowSec === item._id">
 						<el-input
 							placeholder="请输入最多150字的评论...."
 							class="input"
-							v-model="replyContext"
+							v-model.trim="replyContext"
 							:maxlength="150"
 							:class="!isLight ? 'input-night' : ''">
 						</el-input>
-						<el-button type="info" size="mini" class="reply-button" @click="submitInfo(item._id, item.username)">回复 </el-button>
+						<el-button
+							type="info"
+							size="mini"
+							class="reply-button"
+							@click="submitInfo(item._id, item.username)"
+							>回复
+						</el-button>
 					</div>
 					<!-- 次级评论 -->
-					<div class="second-comment" v-for="(reply, index) in item.replyInfo" :key="reply.murmur + '' + index" :style="`${cartBg}`">
+					<div
+						class="second-comment"
+						v-for="(reply, index) in item.replyInfo"
+						:key="reply.murmur + '' + index"
+						:style="`${cardBg}`">
 						<!-- 次级评论头像,该用户没有头像则显示默认头像 -->
 						<el-avatar :size="40" :src="reply.avatarUrl"></el-avatar>
 						<div class="content">
@@ -68,20 +96,34 @@
 							</p>
 							<!-- 次级评论评论点赞 -->
 							<div class="comment-right">
-								<i class="iconfont icon-icon" @click="giveALike(reply, item._id)" :class="reply.favour.includes(murmur) ? 'active' : ''"></i
+								<i
+									class="iconfont icon-icon"
+									@click="giveALike(reply, item._id)"
+									:class="reply.favour.includes(murmur) ? 'active' : ''"></i
 								>{{ reply.favour ? reply.favour.length : 0 }}
 								<i class="el-icon-chat-dot-round" @click="isShowSecReply(reply._id)">回复</i>
-								<i class="el-icon-delete" @click="deleteComment(item._id, reply._id)" v-if="murmur === reply.murmur">删除</i>
+								<i
+									class="el-icon-delete"
+									@click="deleteComment(item._id, reply._id)"
+									v-if="murmur === reply.murmur"
+									>删除</i
+								>
 							</div>
 							<div class="reply-comment" v-show="isShowSec === reply._id">
 								<el-input
 									placeholder="请输入最多150字的评论...."
 									class="input"
-									v-model="replyContext"
+									v-model.trim="replyContext"
 									:maxlength="150"
 									:class="!isLight ? 'input-night' : ''">
 								</el-input>
-								<el-button type="info" size="mini" class="reply-button" @click="submitInfo(item._id, reply.username)">回复 </el-button>
+								<el-button
+									type="info"
+									size="mini"
+									class="reply-button"
+									@click="submitInfo(item._id, reply.username)"
+									>回复
+								</el-button>
 							</div>
 						</div>
 					</div>
@@ -89,15 +131,19 @@
 			</div>
 		</div>
 		<!-- 页码 -->
-		<div class="pagenation">
-			<el-pagination background layout="prev, pager, next" :total="10" :hide-on-single-page="true" :page-size="pageSize"> </el-pagination>
-		</div>
+		<el-pagination
+			background
+			layout="prev, pager, next"
+			:total="10"
+			:hide-on-single-page="true"
+			:page-size="pageSize">
+		</el-pagination>
 		<!-- 暂无评论的空状态 -->
 		<el-empty :description="emptyText" v-show="comments.length === 0"></el-empty>
 	</div>
 </template>
 <script>
-import { pressImg, toBolb } from '../util';
+import { pressImg, toBolb, deepCommentAvatar } from '../util';
 import { mapGetters, mapState } from 'vuex';
 export default {
 	props: {
@@ -124,7 +170,7 @@ export default {
 		...mapState({
 			isLight: state => state.theme.isLight,
 		}),
-		...mapGetters(['mainBg', 'cartBg']),
+		...mapGetters(['mainBg', 'cardBg']),
 	},
 	data() {
 		return {
@@ -144,6 +190,8 @@ export default {
 			pageStart: 0,
 			username: '',
 			avatarUrl: '',
+			firstUpdateAvatar: '',
+			currentUpdateAvatar: '',
 		};
 	},
 	mounted() {
@@ -157,10 +205,15 @@ export default {
 		},
 		// 唤起文件选择
 		handleClick() {
-			const input = document.querySelector('#avatarInput');
-			input.click();
+			this.$refs.avatar.click();
 		},
-		uploadAvatar(e) {
+		dealWithdAvatar(e) {
+			this.currentUpdateAvatar = Date.now();
+			// if (this.currentUpdateAvatar - this.firstUpdateAvatar < 24 * 3600000) {
+			// 	return;
+			// } else {
+			// 	this.f
+			// }
 			const maxSize = 2 * 1024 * 1024;
 			const file = Array.prototype.slice.call(e.target.files)[0];
 			const render = new FileReader();
@@ -176,22 +229,28 @@ export default {
 							this.$message.error('上传图片过大');
 						} else {
 							blob = toBolb(data, 'image/jpeg', file.name);
-							const formdata = new FormData();
-							formdata.append('avatar', blob);
-							formdata.append('murmur', this.murmur);
-							const res = await this.$api.uploadAvatar(formdata);
-							this.avatarUrl = res.avatarUrl;
+							this.updateAvatar(blob);
 						}
 					};
 				} else {
 					blob = toBolb(e.target.result, file.type, file.name);
-					const formdata = new FormData();
-					formdata.append('file', blob);
-					formdata.append('murmur', this.murmur);
-					const res = await this.$api.uploadAvatar(formdata);
-					this.avatarUrl = res.avatarUrl;
+					this.updateAvatar(blob);
 				}
 			};
+		},
+		async updateAvatar(blob) {
+			const formdata = new FormData();
+			formdata.append('avatar', blob);
+			formdata.append('murmur', this.murmur);
+			const res = await this.$api.uploadAvatar(formdata);
+			if (res.status == 200) {
+				// this.firstUpdateAvatar = Date.now();
+				this.avatarUrl = res.avatarUrl;
+				deepCommentAvatar(this.murmur, res.avatarUrl, this.comments);
+				this.$message.err(res.msg);
+			} else {
+				this.$message.err(res.msg);
+			}
 		},
 		submitInfo(id, replyName) {
 			if (!this.username) {
@@ -246,7 +305,6 @@ export default {
 					murmur: this.murmur,
 				});
 				this.comments = res.data.comments;
-				console.log(res);
 				this.username = res.data.user?.username;
 				this.avatarUrl = res.data.user?.avatarUrl;
 			} catch (err) {
@@ -354,9 +412,6 @@ export default {
 					replyName,
 					murmur: this.murmur,
 				});
-				res.data.username = this.username;
-				this.comments.find(item => item._id == id).replyInfo.push(res.data);
-				this.replyContext = '';
 			} else {
 				if (!this.context) {
 					this.$message.warning('评论或留言不能为空哦！');
@@ -368,14 +423,21 @@ export default {
 					murmur: this.murmur,
 					articleTitle: this.articleTitle,
 				});
-				res.data.username = this.username;
-				this.comments.push(res.data);
-				this.context = '';
 			}
 			if (res.status === 200) {
 				this.$message.success(res.msg);
+				res.data.username = this.username;
+				res.data.avatarUrl = this.avatarUrl;
+
+				if (replyName) {
+					this.comments.find(item => item._id == id).replyInfo.push(res.data);
+					this.replyContext = '';
+				} else {
+					this.comments.push(res.data);
+					this.context = '';
+				}
 			} else {
-				this.$message.error(res, msg);
+				this.$message.error(res.msg);
 			}
 			this.isShowSec = this.isClickId = '';
 		},
@@ -408,19 +470,12 @@ export default {
 		display: flex;
 		align-items: center;
 		transition: background-color 0.6s;
-		#avatarInput {
-			visibility: hidden;
-		}
 
 		.input {
 			margin-left: 10px;
 			margin-right: 20px;
 			flex: 1;
 			transition: background-color 0.6s;
-			// /deep/.el-input__inner,
-			// .el-textarea__inner {
-			// 	transition: background-color 0.6s;
-			// }
 			/deep/.el-input__inner:focus {
 				border-color: #dcdfe6;
 			}
@@ -441,7 +496,7 @@ export default {
 			}
 			i {
 				margin-right: 5px;
-				margin-left: 15px;
+				margin-left: 1vw;
 				cursor: pointer;
 
 				&:nth-child(3) {
@@ -487,12 +542,6 @@ export default {
 				}
 			}
 		}
-	}
-
-	.pagenation {
-		float: right;
-		margin-top: 10px;
-		margin-bottom: 20px;
 	}
 }
 </style>

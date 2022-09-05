@@ -1,5 +1,6 @@
 const BlogsModel = require('../model/blogs');
 const ClassifyModel = require('../model/classifies');
+const TagModel = require('../model/tag');
 const util = require('../utils');
 // 添加新博客
 const addBlog = async (req, res) => {
@@ -79,14 +80,14 @@ const getBlogs = async (req, res) => {
 // 获取已发布文章列表
 const getPublishBlogs = async (req, res) => {
 	const { pageStart, pageSize } = req.query;
-	const blogList = await BlogsModel.getPublishBlogs(pageStart, pageSize);
+	const dataList = await BlogsModel.getPublishBlogs(pageStart, pageSize);
 	const count = await BlogsModel.getblogSums();
-	blogList.forEach(item => (item.date = util.formatDate(item.date)));
-	if (blogList) {
+	dataList.forEach(item => (item.date = util.formatDate(item.date)));
+	if (dataList) {
 		res.send({
 			msg: '博客查询成功',
 			status: 200,
-			data: { blogList, count },
+			data: { dataList, count },
 		});
 	} else {
 		res.send({
@@ -117,6 +118,8 @@ const getBlog = async (req, res) => {
 	const { _id } = req.query;
 	// 这里必须要await
 	const blog = await BlogsModel.getBlog(_id);
+	const tags = await TagModel.getTags();
+	blog.tags = util.manageTags(blog.tags, tags);
 	blog.date = util.formatDate(blog.date);
 	const classify = await ClassifyModel.getClassify(blog.classification);
 	blog.classifyName = classify?.title;
@@ -137,14 +140,14 @@ const getBlog = async (req, res) => {
 // 获取某专栏下所有博客
 const getBlogsOfClassify = async (req, res) => {
 	const { classification } = req.query;
-	const blogs = await BlogsModel.getBlogsOfClassify(classification);
-	blogs.forEach(item => (item.date = util.formatDate(item.date)));
-	if (blogs && blogs.length > 0) {
+	const dataList = await BlogsModel.getBlogsOfClassify(classification);
+	dataList.forEach(item => (item.date = util.formatDate(item.date)));
+	if (dataList) {
 		res.send({
 			msg: '查找博客成功',
 			status: 200,
 			data: {
-				blogList: blogs,
+				dataList,
 			},
 		});
 	} else {

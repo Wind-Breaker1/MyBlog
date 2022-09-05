@@ -3,7 +3,7 @@ const state = {
 	color: '#FFFFFF',
 	infoBgColor: 'rgba(255,255,255,0.6)',
 	mainBg: 'rgba(50,50,50,0.6)',
-	cartBg: 'rgb(100,100,100)',
+	cardBg: 'rgb(100,100,100)',
 	animateBg: '#0088b5',
 	headFootBg: '#545c64',
 };
@@ -12,7 +12,7 @@ const getters = {
 		if (state.isLight) {
 			state.color = '#000000';
 		} else {
-			state.color = '#FFFFFF';
+			state.color = '#dddddd';
 		}
 		return 'color:' + state.color;
 	},
@@ -32,13 +32,21 @@ const getters = {
 		}
 		return 'background-color:' + state.mainBg;
 	},
-	cartBg(state) {
+	cardBg(state) {
 		if (state.isLight) {
-			state.cartBg = 'rgb(255,255,255)';
+			state.cardBg = '#ffffff';
 		} else {
-			state.cartBg = 'rgb(50,50,50)';
+			state.cardBg = '#323232';
 		}
-		return 'background-color:' + state.cartBg;
+		return 'background-color:' + state.cardBg;
+	},
+	specialcardBg(state) {
+		if (state.isLight) {
+			state.cardBg = '#ffffff';
+		} else {
+			state.cardBg = '#323232';
+		}
+		return state.cardBg;
 	},
 	animateBg(state) {
 		if (state.isLight) {

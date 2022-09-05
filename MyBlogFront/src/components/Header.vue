@@ -1,7 +1,11 @@
 <template>
 	<div id="header-box" :style="`${color};${headFootBg}`">
 		<img src="@/assets/logo.png" alt="欢迎来Meditators的博客" class="logo" />
-		<el-input placeholder="请输入关键字..." v-model="searchValue" class="search" :class="!isLight ? 'input-night' : ''"
+		<el-input
+			placeholder="请输入关键字..."
+			v-model="searchValue"
+			class="search"
+			:class="!isLight ? 'input-night' : ''"
 			><i class="el-icon-search" slot="suffix" @click="searchArticle"> </i
 		></el-input>
 	</div>
@@ -29,7 +33,7 @@ export default {
 					this.$message.warning('还没有输入搜索内容呢');
 					return;
 				}
-				this.$router.push('/search?searchValue=' + this.searchValue);
+				this.$router.push('/list/search?searchValue=' + this.searchValue);
 				this.searchValue = '';
 			} catch (err) {
 				this.$message.error(err);
@@ -43,7 +47,7 @@ export default {
 	height: 50px;
 	position: fixed;
 	top: 0;
-	width: 79vw;
+	width: 80vw;
 	padding-left: 10vw;
 	padding-right: 11vw;
 	line-height: 50px;
@@ -56,27 +60,19 @@ export default {
 		}
 	}
 	.logo {
-		height: 60px;
+		height: 50px;
 		float: left;
 	}
 	.search {
 		width: 20vw;
 		float: right;
-
-		/deep/ .el-icon-search {
-			margin-right: 10px;
-		}
-		/deep/ .el-input__inner {
-			transition: background-color 0.7s;
-			border: none;
-		}
 	}
 }
 @media screen and (max-width: 768px) {
 	#header-box {
-		width: 85vw;
+		width: 80vw;
 		.search {
-			width: 100%;
+			width: 80%;
 		}
 	}
 	.logo {

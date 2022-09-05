@@ -98,6 +98,7 @@ export default {
 			const res = await deleteTimeclue({ _id: item._id });
 			if (res.status == 200) {
 				this.$message.success(res.msg);
+				this.getTimeclues();
 			}
 		},
 		// 重置表单数据
@@ -119,6 +120,7 @@ export default {
 					if (res.status == 200) {
 						this.dialogShow = false;
 						this.$message.success(res.msg);
+						this.getTimeclues();
 					}
 				} else {
 					this.$message.warning("信息不完整，请确定您选择了要上传的图片");

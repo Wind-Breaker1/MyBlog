@@ -86,6 +86,7 @@ export default {
 		async deleteItem(item) {
 			const res = await deletePhoto({ _id: item._id });
 			if (res.status == 200) {
+				this.getPhotos();
 				this.$message.success(res.msg);
 			}
 		},
@@ -119,6 +120,7 @@ export default {
 					} else if (this.dialogTitle == "编辑图片信息") {
 						const res = await updatePhotos({ _id: this.id, ...this.form });
 						if (res.status == 200) {
+							this.getPhotos();
 							this.dialogShow = false;
 							this.$message.success(res.msg);
 						}

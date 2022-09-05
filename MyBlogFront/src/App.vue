@@ -7,20 +7,20 @@
 			<router-view class="main-box" :style="`${color};${mainBg}`"></router-view>
 			<SiderInfo />
 		</div>
-		<!-- <Footer /> -->
-		<button @click="changTheme" style="position: fixed; bottom: 50px; right: 30px">{{ isLight ? '暗黑模式' : '正常模式' }}</button>
+		<Footer />
+		<SwitchBar />
 	</div>
 </template>
 <script>
-import SiderInfo from '@/components/SiderInfo.vue';
-import Header from '@/components/Header.vue';
-import Nav from '@/components/Nav.vue';
-import Footer from '@/components/Footer.vue';
-import Slideshow from '@/components/Slideshow.vue';
+import SiderInfo from '@/components/siderInfo.vue';
+import Header from '@/components/header.vue';
+import Nav from '@/components/nav.vue';
+import Footer from '@/components/footer.vue';
+import Slideshow from '@/components/slideshow.vue';
 import { createFingerprint } from '@/util';
 import clickSpecialEffect from '@/util/clickSpecialEffect';
 import bgSpecialEffect from '@/util/bgSpecialEffect';
-// import './assets/font/font.css';
+import SwitchBar from '@/components/switch.vue';
 import { mapState, mapGetters } from 'vuex';
 export default {
 	data() {
@@ -38,20 +38,19 @@ export default {
 		Nav,
 		Footer,
 		Slideshow,
+		SwitchBar,
 	},
 	created() {
+		// 取指纹操作
 		if (!localStorage.getItem('browserId')) {
 			createFingerprint();
 		}
 	},
 	mounted() {
+		// 点击特效
 		clickSpecialEffect();
+		// 背景特效
 		bgSpecialEffect();
-	},
-	methods: {
-		changTheme() {
-			this.$store.commit('CHANGETHEME');
-		},
 	},
 };
 </script>
@@ -59,16 +58,16 @@ export default {
 * {
 	padding: 0;
 	margin: 0;
-	font-family: 'JBHGXK';
+	// font-family: 'JBHGXK';
 }
 #mainContainer {
 	background-size: 100% 100%;
 	background-attachment: fixed;
-	width: 100%;
+	background-color: #70e6ff;
 	margin-top: 50px;
 	box-sizing: border-box;
-	padding-left: 10%;
-	padding-right: 10%;
+	padding-left: 10vw;
+	padding-right: 10vw;
 	display: flex;
 	flex-wrap: wrap;
 	justify-content: space-between;
@@ -78,6 +77,7 @@ export default {
 		margin-bottom: 10px;
 		border-radius: 5px;
 		min-height: 100vh;
+		transition: 0.6s;
 	}
 }
 .moon {
@@ -91,27 +91,5 @@ export default {
 		padding-left: 1vw;
 		padding-right: 1vw;
 	}
-}
-@media screen and (max-width: 1000px) {
-	#mainContainer {
-		padding-left: 3vw;
-		padding-right: 3vw;
-	}
-}
-::-webkit-scrollbar {
-	/*滚动条整体样式*/
-	width: 5px;
-}
-
-::-webkit-scrollbar-thumb {
-	/*滚动条里面小方块*/
-	border-radius: 5px;
-	background: rgba(0, 0, 0, 0.2);
-}
-
-::-webkit-scrollbar-track {
-	/*滚动条里面轨道*/
-	border-radius: 0;
-	background: rgba(0, 0, 0, 0);
 }
 </style>

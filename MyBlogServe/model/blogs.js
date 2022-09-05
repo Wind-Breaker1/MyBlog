@@ -34,7 +34,7 @@ const addblog = data => {
 		});
 };
 // 更新博客内容
-const updateBlog = (_id, content, title, digest, tags) => {
+const updateBlog = (_id, content, digest, title, tags) => {
 	console.log(tags);
 	return BlogModel.updateOne({ _id }, { $set: { content, title, digest, tags } });
 };
@@ -42,7 +42,6 @@ const updateBlog = (_id, content, title, digest, tags) => {
 const changeBlogState = (state, id) => {
 	// return BlogModel.updateOne(id, { $set: { state } });
 	return BlogModel.updateOne(id, { $set: { state } });
-	
 };
 // 删除博客
 const deleteBlog = _id => {
@@ -54,17 +53,16 @@ const getBlog = id => {
 	// return BlogModel.aggregate([
 	// 	{
 	// 		$lookup: {
-  //       from: "classifies", // 关联 articles 表
-  //       localField: "classification", // 根据 comments 里 articleId 字段查询
-  //       foreignField: "_id", // 查找 articles 表里对应的 _id 的数据
-	// 			pipeline: [ {$project: {title: 1} } ],
-  //       as: "classify",// 返回的字段别名
-  //     },
+	// 			from: 'classifies', // 关联 articles 表
+	// 			localField: 'classification', // 根据 comments 里 articleId 字段查询
+	// 			foreignField: '_id', // 查找 articles 表里对应的 _id 的数据
+	// 			pipeline: [{ $project: { title: 1 } }],
+	// 			as: 'classify', // 返回的字段别名
+	// 		},
 	// 	},
-	// 	{$match:{_id:id}},
-		// { $unwind: "$userinfo" },//数据打散
+	// 	{ $match: { _id: id } },
+	// 	{ $unwind: '$userinfo' }, //数据打散
 	// ]);
-	
 };
 // 查询所有文章
 const getBlogs = () => {
@@ -72,7 +70,7 @@ const getBlogs = () => {
 };
 // 查询所有已发布的博客
 const getPublishBlogs = (pageStart = 0, pageSize = 5) => {
-	return BlogModel.find({ state: true }, '_id date digest favour title browse').skip(pageStart).limit(pageSize).lean();
+	return BlogModel.find({ state: true }, '_id date digest favour title browse classification').skip(pageStart).limit(pageSize).lean();
 };
 // 查询所有已发布的博客的数量
 const getblogSums = () => {
@@ -80,11 +78,11 @@ const getblogSums = () => {
 };
 // 查询某一专栏下的所有博客
 const getBlogsOfClassify = classification => {
-	return BlogModel.find({ classification }, '_id date digest favour title browse').lean();
+	return BlogModel.find({ classification, state: true }, '_id date digest favour title browse').lean();
 };
 // 查询某一书签下的所有博客
-const getBlogsOfTag= searchTag => {
-	return BlogModel.find({ tags:{$in: searchTag} }, '_id date digest favour title browse');
+const getBlogsOfTag = searchTag => {
+	return BlogModel.find({ tags: { $in: searchTag } }, '_id date digest favour title browse').lean();
 };
 // 增加点赞
 const addFavour = (id, favourMurmur) => {
@@ -104,7 +102,7 @@ const searchBlogs = searchValue => {
 	return BlogModel.find({
 		$or: [{ title: { $regex: regexp } }],
 		state: true,
-	});
+	}).lean();
 };
 module.exports = {
 	addblog,
@@ -120,5 +118,5 @@ module.exports = {
 	addBlogBrowse,
 	getFavour,
 	searchBlogs,
-	getBlogsOfTag
+	getBlogsOfTag,
 };

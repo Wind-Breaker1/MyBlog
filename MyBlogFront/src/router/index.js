@@ -5,40 +5,37 @@ Vue.use(VueRouter);
 
 const routes = [
 	{
-		path: '/blogs',
-		component: () => import('@/views/Blogs.vue'),
-	},
-	{
-		path: '/jottings',
-		component: () => import('@/views/Jottings.vue'),
+		path: '/list/:type',
+		component: () => import('@/views/list.vue'),
 	},
 	{
 		path: '/about',
-		component: () => import('@/views/About.vue'),
+		component: () => import('@/views/about.vue'),
 	},
 	{
 		path: '/article/:type/:id',
-		component: () => import('@/views/Article.vue'),
+		component: () => import('@/views/article.vue'),
 	},
-	{
-		path: '/search',
-		component: () => import('@/views/Search.vue'),
-	},
+
 	{
 		path: '/timeclue',
-		component: () => import('@/views/TimeClue.vue'),
+		component: () => import('@/views/timeClue.vue'),
 	},
 	{
 		path: '/messageboard',
-		component: () => import('@/views/MessageBoard.vue'),
+		component: () => import('@/views/messageBoard.vue'),
 	},
 	{
 		path: '/photo',
-		component: () => import('@/views/PhotoWall.vue'),
+		component: () => import('@/views/photoWall.vue'),
 	},
 	{
 		path: '/',
-		redirect: '/blogs',
+		redirect: '/list/blog',
+	},
+	{
+		path: '*',
+		redirect: '/list/blog',
 	},
 ];
 

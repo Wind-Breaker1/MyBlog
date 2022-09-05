@@ -8,11 +8,11 @@
             </template>
             <el-menu-item-group>
 					<template slot="title">分组一</template> -->
-		<!-- <el-menu-item :index="'/admin/' + item.path" v-for="item in routes" :key="item.id">
-      <i :class="item.meta.icon"></i>
-      <span slot="title">{{ item.name }}</span>
-    </el-menu-item> -->
-		<el-menu-item index="/admin/article">
+		<el-menu-item :index="'/admin/' + item.path" v-for="item in navRouteList" :key="item.id">
+			<i :class="item.meta.icon"></i>
+			<span slot="title">{{ item.name }}</span>
+		</el-menu-item>
+		<!-- <el-menu-item index="/admin/article">
 			<i class="el-icon-notebook-1"></i>
 			<span slot="title">文章管理</span>
 		</el-menu-item>
@@ -31,8 +31,7 @@
 		<el-menu-item index="/admin/user">
 			<i class="el-icon-s-custom"></i>
 			<span slot="title">用户管理</span>
-		</el-menu-item>
-
+		</el-menu-item> -->
 		<!-- <el-menu-item index="/admin/routingmanage">
 			<i class="el-icon-s-custom"></i>
 			<span slot="title">路由管理</span>
@@ -47,7 +46,7 @@
 import { mapGetters } from "vuex";
 export default {
 	computed: {
-		...mapGetters(["routes"]),
+		...mapGetters(["navRouteList"]),
 	},
 	methods: {},
 };

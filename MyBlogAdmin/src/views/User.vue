@@ -99,7 +99,9 @@ export default {
 			if (value === "") {
 				callback(new Error("请输入密码"));
 			} else {
-				if (this.form.rePassword !== "") {
+				if (value.length < 8 || value.length > 20) {
+					callback(new Error("密码长度在8-20之间"));
+				} else if (this.form.rePassword !== "") {
 					this.$refs.form.validateField("rePassword");
 				}
 				callback();
@@ -194,6 +196,7 @@ export default {
 				this.getUsers();
 			}
 			if (res.status === 200) {
+				this.getUsers();
 				this.$message.success(res.msg);
 			} else {
 				this.$message.error(res.msg);

@@ -11,8 +11,6 @@ const requests = axios.create({
 requests.interceptors.request.use(config => {
 	// config:配置对象，对象信息里边有一个重要信息，请求头headers
 	// 进度条开始
-	// console.log(config, 'config');
-
 	return config;
 });
 // 响应拦截器

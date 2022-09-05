@@ -18,6 +18,7 @@ const addTag = async (req, res) => {
 			data: tag,
 		});
 	} else {
+		s;
 		res.send({
 			msg: '新增标签失败',
 			status: 0,
@@ -158,7 +159,9 @@ const searchArticle = async (req, res) => {
 		res.send({
 			msg: '搜索到文章',
 			status: 200,
-			data,
+			data: {
+				dataList: [...blogs, ...jottings],
+			},
 		});
 	} else {
 		res.send({
@@ -180,12 +183,14 @@ const getArticlesOfTag = async (req, res) => {
 		item.date = util.formatDate(item.date);
 		item.type = 'jotting';
 	});
-	let data = [...blogs, ...jottings];
-	if (data.length > 0) {
+	let dataList = [...blogs, ...jottings];
+	if (dataList) {
 		res.send({
-			msg: '搜索到文章',
+			msg: '查询到文章',
 			status: 200,
-			data,
+			data: {
+				dataList,
+			},
 		});
 	} else {
 		res.send({
@@ -221,7 +226,7 @@ const uploadAvatar = async (req, res) => {
 	const avatarUrl = util.imgBaseUrl('avatar') + file.filename;
 	const url = path.join(__dirname, '../public/avatars/', file.filename);
 	let user = null,
-		res = null;
+		result = null;
 	if (murmur) {
 		user = await MurmruModel.getMurmurInfo(murmur);
 	} else if (email) {
@@ -231,11 +236,11 @@ const uploadAvatar = async (req, res) => {
 		util.deleteImg(user.avatarUrl);
 	}
 	if (murmur) {
-		res = await MurmruModel.updateMurmurAvatar(murmur, avatarUrl);
+		result = await MurmruModel.updateMurmurAvatar(murmur, avatarUrl);
 	} else {
-		res = await UserModel.uploadAvatar(email, avatarUrl);
+		result = await UserModel.uploadAvatar(email, avatarUrl);
 	}
-	if (res.acknowledged && res.modifiedCount != 0 && fs.existsSync(url)) {
+	if (result.acknowledged && result.modifiedCount != 0 && fs.existsSync(url)) {
 		res.send({
 			avatarUrl,
 			status: 200,

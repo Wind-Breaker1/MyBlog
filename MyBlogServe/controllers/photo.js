@@ -34,8 +34,8 @@ const addPhoto = async (req, res) => {
 const getPhotos = async (req, res) => {
 	const photos = await PhotoModel.getPhotos();
 	photos.forEach(item => {
-		item.uploadTime = util.formatTime(item.uploadTime);
-		item.shootingTime = util.formatTime(item.shootingTime);
+		item.uploadTime = util.formatDate(item.uploadTime);
+		item.shootingTime = util.formatDate(item.shootingTime);
 	});
 	if (photos) {
 		res.send({

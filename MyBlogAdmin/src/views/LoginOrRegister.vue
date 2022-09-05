@@ -9,8 +9,8 @@
 				<h2 @click="change(true)">login |</h2>
 				<h2 @click="change(false)">register</h2>
 				<div class="item" v-show="!isLogin">
-					<input type="text" v-model="username" @input="verifyUsername" />
-					<label for="">username</label>
+					<input type="text" name="usernaem" v-model="username" @input="verifyUsername" />
+					<label for="usernaem">username</label>
 					<div class="err-msg" v-show="errUsername"><i class="el-icon-info"></i>用户名不能为空</div>
 				</div>
 				<div class="item">
@@ -83,9 +83,9 @@ export default {
 					return;
 				}
 				// 登录限制后要判断在跳转
-				this.$store.dispatch("getRoutes", getUserInfo().role);
+				// this.$store.dispatch("getRoutes", getUserInfo().role);
 				this.$notify.success("登陆成功");
-				this.$router.push("/admin/blog");
+				this.$router.push("/admin/article");
 			} catch (error) {
 				console.log(error);
 				this.$message.error("错误请重新输入账号密码！");

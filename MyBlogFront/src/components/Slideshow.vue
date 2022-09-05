@@ -5,10 +5,10 @@
 				<img :src="item" alt="加载失败" />
 			</el-carousel-item>
 		</el-carousel>
-		<div class="info" :style="`${infoBgColor}`">
+		<div class="info card" :style="`${infoBgColor}`">
 			<img :src="infoBgUrl" alt="avatar" />
 			<el-avatar :src="avatarUrl" class="avatar" :size="50"></el-avatar>
-			<div class="my-name">面谱人生</div>
+			<div class="my-name">孤城浪人</div>
 			<div class="info-detail">
 				<div>
 					博客<span>{{ webInfo.blogNums || 0 }}</span>
@@ -53,9 +53,6 @@ export default {
 		...mapGetters(['color', 'infoBgColor', 'mainBg']),
 	},
 	mounted() {
-		// console.log(this.color, this.infoBgColor);
-		// this.styleObj.color = this.color;
-		// this.styleObj.backgroundColor = this.infoBgColor;
 		this.getInfo();
 	},
 	methods: {
@@ -80,10 +77,10 @@ export default {
 #slideshow-box {
 	height: 45vh;
 	width: 100%;
-	margin-top: 1%;
+	margin-top: 1vh;
 	border-radius: 5px;
 	position: relative;
-	transition: background-color 0.7s;
+	transition: 0.6s;
 
 	.cart-img {
 		height: 42vh;
@@ -96,13 +93,13 @@ export default {
 
 	.info {
 		position: absolute;
-		height: 190px;
+		height: 200px;
 		width: 13vw;
 		left: 5%;
 		bottom: 2%;
 		z-index: 5;
 		border-radius: 5px;
-		transition: background-color 0.6s;
+		transition: 0.6s;
 
 		& > img {
 			height: 45%;
@@ -114,16 +111,16 @@ export default {
 			position: absolute;
 			left: 50%;
 			top: 40%;
-			transform: translate(-50%, -45%);
+			transform: translate(-50%, -50%);
 		}
 		.my-name {
-			margin-top: 3vh;
+			margin-top: 20px;
 			text-align: center;
 			font-size: 20px;
 		}
 		.info-detail {
 			display: flex;
-			height: 7vh;
+			height: 50px;
 			justify-content: space-around;
 			align-items: center;
 			font-size: 14px;

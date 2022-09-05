@@ -9,25 +9,35 @@
 			active-text-color="#FFFFFF"
 			router
 			:collapse-transition="false">
-			<el-menu-item index="/blogs"> <i class="el-icon-menu"></i><span slot="title">博客</span> </el-menu-item>
-			<el-menu-item index="/jottings"> <i class="el-icon-s-opportunity"></i><span slot="title">心情</span></el-menu-item>
-			<el-menu-item index="/messageboard"> <i class="el-icon-chat-dot-round"></i><span slot="title">留言板</span> </el-menu-item>
-			<el-menu-item index="/timeclue"> <i class="el-icon-stopwatch"></i><span slot="title">时间线</span> </el-menu-item>
-			<el-menu-item index="/photo"> <i class="el-icon-stopwatch"></i>照片墙 </el-menu-item>
-			<el-menu-item index="/about"> <i class="el-icon-user"></i><span slot="title">关于</span> </el-menu-item>
+			<el-menu-item index="/list/blog">
+				<i class="el-icon-menu"></i><span slot="title">博客</span>
+			</el-menu-item>
+			<el-menu-item index="/list/jotting">
+				<i class="el-icon-s-opportunity"></i><span slot="title">心情</span>
+			</el-menu-item>
+			<el-menu-item index="/photo">
+				<i class="el-icon-picture"></i><span slot="title">照片墙</span>
+			</el-menu-item>
+			<el-menu-item index="/messageboard">
+				<i class="el-icon-chat-dot-round"></i><span slot="title">留言板</span>
+			</el-menu-item>
+			<el-menu-item index="/timeclue">
+				<i class="el-icon-stopwatch"></i><span slot="title">时间线</span>
+			</el-menu-item>
+			<el-menu-item index="/about">
+				<i class="el-icon-user"></i><span slot="title">关于</span>
+			</el-menu-item>
 			<!-- <el-menu-item index="/loading"> <i class="el-icon-user"></i>{{ screenWidth }}</el-menu-item> -->
 		</el-menu>
 	</div>
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
 export default {
 	data() {
 		return {
 			screenWidth: document.documentElement.clientWidth,
 			isCollapse: document.documentElement.clientWidth < 900,
-			// current: $route.path,
 		};
 	},
 	watch: {
@@ -59,7 +69,6 @@ export default {
 	position: sticky;
 	opacity: 0.8;
 	top: 50px;
-	// top: 0;
 	padding-top: 5px;
 	.navbar {
 		height: calc(100vh - 130px - 15vh);

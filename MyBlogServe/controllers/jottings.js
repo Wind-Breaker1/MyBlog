@@ -1,4 +1,5 @@
 const JottingModel = require('../model/jottings');
+const TagModel = require('../model/tag');
 const util = require('../utils');
 const addJotting = async (req, res, next) => {
 	let { title, content, digest, state, tags } = req.body;
@@ -60,7 +61,7 @@ const getJottings = async (req, res, next) => {
 	let result = await JottingModel.getJottings();
 	result.forEach(item => {
 		item.date = util.formatDate(item.date);
-	})
+	});
 	if (result) {
 		res.send({
 			msg: '随笔查询成功',
@@ -77,16 +78,17 @@ const getJottings = async (req, res, next) => {
 // 获取已发布文章列表
 const getPublishJottings = async (req, res, next) => {
 	let { pageStart, pageSize } = req.query;
-	let jottingList = await JottingModel.getPublishJottings(pageStart, pageSize);
-	jottingList.forEach(item => {
+	let dataList = await JottingModel.getPublishJottings(pageStart, pageSize);
+	dataList.forEach(item => {
 		item.date = util.formatDate(item.date);
-	})
+	});
+
 	let count = await JottingModel.getJottingSums();
-	if (jottingList) {
+	if (dataList) {
 		res.send({
 			msg: '随笔查询成功',
 			status: 200,
-			data: { jottingList, count },
+			data: { dataList, count },
 		});
 	} else {
 		res.send({
@@ -99,6 +101,8 @@ const getPublishJottings = async (req, res, next) => {
 const getJotting = async (req, res, next) => {
 	let { _id } = req.query;
 	let jotting = await JottingModel.getJotting(_id);
+	const tags = await TagModel.getTags();
+	jotting.tags = util.manageTags(jotting.tags, tags);
 	jotting.date = util.formatDate(jotting.date);
 	if (jotting) {
 		res.send({

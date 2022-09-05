@@ -185,7 +185,7 @@ export default {
 						// this.$refs[formName].resetFields();
 						this.dialogVisible = false;
 						this.$message.success(res.msg);
-						this.$router.push("/admin/article");
+						this.$router.push("/admin/result");
 					} else {
 						this.$message.error(res.msg);
 					}

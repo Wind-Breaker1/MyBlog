@@ -52,7 +52,8 @@ exports.formatDate = dateNum => {
 	const year = date.getFullYear();
 	const month = date.getMonth() + 1;
 	const day = date.getDate();
-	return year + '-' + month + '-' + day;
+	// return (y < 10 ? '0' + y : y) + '-' + (m < 10 ? '0' + m : m) + '-' + (d < 10 ? '0' + d : d);
+	return year + '-' + (month < 10 ? '0' + month : month) + '-' + (day < 10 ? '0' + day : day);
 };
 exports.formatTime = timeNum => {
 	const date = new Date(timeNum);
@@ -61,9 +62,29 @@ exports.formatTime = timeNum => {
 	const day = date.getDate();
 	const hour = date.getHours();
 	const minutes = date.getMinutes();
-	return year + '-' + month + '-' + day + ' ' + hour + ':' + minutes;
+	return (
+		year +
+		'-' +
+		(month < 10 ? '0' + month : month) +
+		'-' +
+		(day < 10 ? '0' + day : day) +
+		' ' +
+		(hour < 10 ? '0' + hour : hour) +
+		':' +
+		(minutes < 10 ? '0' + minutes : minutes)
+	);
 };
-
+exports.manageTags = (articleTags, tags) => {
+	const result = [];
+	articleTags?.forEach(artTag => {
+		tags?.forEach(tag => {
+			if (artTag.toString() == tag._id.toString()) {
+				result.push(tag);
+			}
+		});
+	});
+	return result;
+};
 exports.manageMurmurComments = (murmurInfo, comments) => {
 	const hashMurmur = new Map();
 	murmurInfo?.forEach(item => {
@@ -129,7 +150,7 @@ exports.deleteImg = function (imgUrl) {
 };
 // 生成随机颜色
 exports.randomColor = () => {
-	const colorList = ['#ffcc00', '#66CDAA', '#acc2e6', '#d7b0d8', '#95abe6', '#ffc47b', '#b6d288', '#f49586', '#bcaf7a', '#c6c5c1'];
+	const colorList = ['#ffcc00', '#66CDAA', '#acc2e6', '#d7b0d8', '#95abe6', '#ffc47b', '#b6d288', '#f49586', '#bcaf7a', '#a6a5a1'];
 	return colorList[Math.floor(Math.random() * 10)];
 };
 // // 生成随机颜色

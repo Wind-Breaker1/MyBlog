@@ -1,27 +1,4 @@
 import Fingerprint2 from 'fingerprintjs2';
-// export const createFingerprint = () => {
-//   // 选择哪些信息做为浏览器指纹生成的依据
-//   const options = {
-//     fonts: {
-//       extendedJsFonts: true,
-//     },
-//     excludes: {
-//       audio: true,
-//       userAgent: true,
-//       enumerateDevices: true,
-//       touchSupport: true,
-//     },
-//   };
-//   // 浏览器指纹
-//   const fingerprint = Fingerprint2.get(options, (components) => { // 参数只有回调函数或者options为{}时，默认浏览器指纹依据全部配置信息进行生成
-//     const values = components.map(component => component.value); // 配置的值的数组
-//     const murmur = Fingerprint2.x64hash128(values.join(''), 31); // 生成浏览器指纹
-//     // console.log(components);
-//     // console.log(values);
-//     console.log(murmur);
-//     localStorage.setItem('browserId', murmur); // 存储浏览器指纹，在项目中用于校验用户身份和埋点
-//   });
-// }
 // 获取浏览器指纹
 export const createFingerprint = () => {
 	Fingerprint2.get(components => {
@@ -35,7 +12,6 @@ export const createFingerprint = () => {
 		// 生成最终id murmur
 		let murmur = Fingerprint2.x64hash128(values.join(''), 31);
 		localStorage.setItem('browserId', murmur); // 存储浏览器指纹，在项目中用于校验用户身份和埋点
-		console.log('浏览器指纹码：' + murmur);
 	});
 };
 // 压缩图片
@@ -46,7 +22,7 @@ export const pressImg = img => {
 	// 瓦片canvas
 	const tCanvas = document.createElement('canvas');
 	const tctx = tCanvas.getContext('2d');
-	const initSize = img.src.length;
+	// const initSize = img.src.length;
 	let width = img.width;
 	let height = img.height;
 	// 如果图片大于四百万像素，计算压缩比并将大小压至4万以下
@@ -74,7 +50,17 @@ export const pressImg = img => {
 		tCanvas.height = nh;
 		for (let i = 0; i < count; i++) {
 			for (let j = 0; j < count; j++) {
-				tctx.drawImage(img, i * nw * ratio, j * nh * ratio, nw * ratio * 2, nh * ratio * 2, 0, 0, nw, nh);
+				tctx.drawImage(
+					img,
+					i * nw * ratio,
+					j * nh * ratio,
+					nw * ratio * 2,
+					nh * ratio * 2,
+					0,
+					0,
+					nw,
+					nh
+				);
 				ctx.drawImage(tCanvas, i * nw, j * nh, nw * 2, nh * 2);
 			}
 		}
@@ -83,9 +69,9 @@ export const pressImg = img => {
 	}
 	// 进行最小压缩
 	const pressImgData = canvas.toDataURL('image/jpeg', 0.5);
-	console.log('压缩前：' + initSize);
-	console.log('压缩后：' + pressImgData.length);
-	console.log('压缩率：' + ~~((100 * (initSize - pressImgData.length)) / initSize) + '%');
+	// console.log('压缩前：' + initSize);
+	// console.log('压缩后：' + pressImgData.length);
+	// console.log('压缩率：' + ~~((100 * (initSize - pressImgData.length)) / initSize) + '%');
 	return pressImgData;
 };
 // 图片转为二进制
@@ -107,19 +93,14 @@ export const toBolb = (basestr, type) => {
 	}
 	return blob;
 };
-export const formatTime = timeNum => {
-	const date = new Date(timeNum);
-	const year = date.getFullYear();
-	const month = date.getMonth() + 1;
-	const day = date.getDate();
-	const hour = date.getHours();
-	const minutes = date.getMinutes();
-	return year + '-' + month + '-' + day + ' ' + hour + ':' + minutes;
-};
-export const dormatDate = dateNum => {
-	const date = new Date(dateNum);
-	const year = date.getFullYear();
-	const month = date.getMonth() + 1;
-	const day = date.getDate();
-	return year + '-' + month + '-' + day;
+// 头像更新后递归修改评论头像
+export const deepCommentAvatar = (murmur, avatarUrl, comments) => {
+	comments.forEach(item => {
+		if (murmur == item.murmur) {
+			item.avatarUrl = avatarUrl;
+		}
+		if (item.replyInfo?.length > 0) {
+			deepCommentAvatar(murmur, avatarUrl, item.replyInfo);
+		}
+	});
 };

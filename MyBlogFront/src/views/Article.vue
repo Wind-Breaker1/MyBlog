@@ -1,18 +1,24 @@
 <template>
 	<div>
-		<div class="article-info" :style="`${cartBg}`">
+		<div class="article-info" :style="`${cardBg}`">
 			<h1 class="article-title">{{ article.title }}</h1>
-			<div class="article-class" v-show="isBlog">
-				<div>专栏：{{ article.classifyName }}</div>
-				<div class="tag night-tag">
-					<div v-for="item in article.tags" :key="item._id" :style="{ 'background-color': item.bg }">
+			<div class="article-class">
+				<div v-show="isBlog">专栏：{{ article.classifyName }}</div>
+				<div class="tag">
+					<div
+						v-for="item in article.tags"
+						:key="item._id"
+						:style="{ 'background-color': item.bg }">
 						<i class="el-icon-price-tag"></i> {{ item.title }}
 					</div>
 				</div>
 			</div>
 			<div class="opration">
-				<i class="iconfont icon-icon" @click="giveALike(article._id)" :class="isGiveALiked ? 'active' : ''"></i>{{ favourList.length }}
-				<i class="el-icon-view"></i>{{ article.browse }}
+				<i
+					class="iconfont icon-icon"
+					@click="giveALike(article._id)"
+					:class="isGiveALiked ? 'active' : ''"></i
+				>{{ favourList.length }} <i class="el-icon-view"></i>{{ article.browse }}
 				<i class="iconfont icon-rili"> 写于 {{ article.date }}</i>
 			</div>
 		</div>
@@ -39,15 +45,13 @@
 <script>
 import { mavonEditor } from 'mavon-editor';
 import 'mavon-editor/dist/css/index.css';
-import Comment from '@/components/Comment.vue';
+import Comment from '@/components/comment.vue';
 import { mapState, mapGetters } from 'vuex';
 export default {
 	data() {
 		return {
 			article: {},
-			// content: "",
 			favourList: [],
-			// classifyName: "",
 			isBlog: true,
 			isGiveALiked: false,
 		};
@@ -63,7 +67,7 @@ export default {
 		...mapState({
 			isLight: state => state.theme.isLight,
 		}),
-		...mapGetters(['color', 'cartBg']),
+		...mapGetters(['color', 'cardBg']),
 	},
 	watch: {
 		$route() {
@@ -82,8 +86,10 @@ export default {
 				this.favourList = [];
 				// 判断是博客还是随笔
 				if (type === 'blog') {
+					this.$api.addBlogBrowse({ _id: id });
 					res = await this.$api.getBlog({ _id: id });
 				} else {
+					this.$api.addJottingBrowse({ _id: id });
 					res = await this.$api.getJotting({ _id: id });
 				}
 				if (res.status === 200) {
@@ -92,11 +98,8 @@ export default {
 					} else {
 						this.isBlog = false;
 					}
-					console.log('res', res);
 					this.$loading.hide();
 					this.article = res.data;
-					// this.content = res.data.content;
-					// this.classifyName = res.data.classifyName;
 					this.favourList = res.data.favour;
 					const murmur = localStorage.getItem('browserId');
 					this.isGiveALiked = this.favourList.includes(murmur) ? true : false;
@@ -150,9 +153,13 @@ export default {
 }
 .markDown-night {
 	/deep/.v-show-content {
-		background-color: rgb(50, 50, 50) !important;
+		background-color: #323232 !important;
 		color: #ffffff;
-		transition: background-color 0.6s;
+		transition: 0.6s;
+	}
+	/deep/ img {
+		background-color: #323232 !important;
+		transition: 0.6s;
 	}
 }
 .article-info {
@@ -162,7 +169,7 @@ export default {
 	position: relative;
 	border-radius: 5px;
 	margin-bottom: 2vh;
-	transition: background-color 0.6s;
+	transition: 0.6s;
 	.article-title {
 		text-align: center;
 	}
@@ -183,11 +190,6 @@ export default {
 				margin-right: 0;
 			}
 		}
-		.night-tag {
-			& > div {
-				background-color: #ffcc00;
-			}
-		}
 	}
 
 	.opration {
@@ -200,37 +202,12 @@ export default {
 			margin-right: 10px;
 			cursor: pointer;
 		}
-
 		& > i:nth-child(2) {
 			margin-left: 25px;
 		}
-
 		& > i:nth-child(3) {
-			margin-left: 25px;
 			float: right;
 		}
-	}
-}
-
-.desc {
-	display: block;
-	height: 10vh;
-	text-overflow: ellipsis;
-}
-
-.show {
-	height: 4vh;
-	color: gray;
-	line-height: 4vh;
-
-	.favour,
-	.brows {
-		float: left;
-		width: 100px;
-	}
-
-	.createtime {
-		float: right;
 	}
 }
 </style>

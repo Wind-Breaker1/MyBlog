@@ -59,8 +59,8 @@ const getPublishJottings = (pageStart = 0, pageSize = 5) => {
 	return JottingModel.find({ state: true }, '_id date digest favour title browse').skip(pageStart).limit(pageSize).lean();
 };
 // 查询某一书签下的所有博客
-const getJottingsOfTag= searchTag => {
-	return BlogModel.find({ tags:{$in: searchTag} }, '_id date digest favour title browse').lean();
+const getJottingsOfTag = searchTag => {
+	return JottingModel.find({ tags: { $in: searchTag } }, '_id date digest favour title browse').lean();
 };
 // 查询所有已发布的随笔数量
 const getJottingSums = () => {
@@ -84,7 +84,7 @@ const searchJottings = searchValue => {
 	return JottingModel.find({
 		$or: [{ title: { $regex: regexp } }],
 		state: true,
-	});
+	}).lean();
 };
 module.exports = {
 	addJotting,
@@ -99,5 +99,5 @@ module.exports = {
 	addFavour,
 	getFavour,
 	searchJottings,
-	getJottingsOfTag
+	getJottingsOfTag,
 };

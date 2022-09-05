@@ -10,7 +10,8 @@ export const getBlog = params => requests.get('/blogs/getblog', { params });
 export const getClassifies = () => requests.get('/classifies/getclassifies');
 
 // 获取随笔
-export const getPublishJottings = params => requests.get('/jottings/getpublishjottings', { params });
+export const getPublishJottings = params =>
+	requests.get('/jottings/getpublishjottings', { params });
 
 // 获取随笔
 export const getJotting = params => requests.get('/jottings/getjotting', { params });
@@ -42,7 +43,8 @@ export const addMurmur = data => requests.post('/murmur/addmurmurinfo', data);
 export const updateMurmur = data => requests.post('/murmur/updatemurmurusername', data);
 
 // 获取某篇文章的所有评论
-export const getCommentsOfArticle = params => requests.get('/comments/getcommentsofarticle', { params });
+export const getCommentsOfArticle = params =>
+	requests.get('/comments/getcommentsofarticle', { params });
 // 一级评论点赞
 export const addfirstfavour = params => requests.get('/comments/addfirstfavour', { params });
 // 二级评论点赞
@@ -52,11 +54,17 @@ export const addfirstcomment = data => requests.post('/comments/addfirstcomment'
 // 新增二级评论
 export const addsecondcomment = data => requests.post('/comments/addsecondcomment', data);
 // 删除一级评论
-export const deletefirstcomment = params => requests.delete('/comments/deletefirstcomment', { params });
+export const deletefirstcomment = params =>
+	requests.delete('/comments/deletefirstcomment', { params });
 // 删除二级评论
-export const deletesecondcomment = params => requests.delete('/comments/deletesecondcomment', { params });
-// 获取事件线数据
+export const deletesecondcomment = params =>
+	requests.delete('/comments/deletesecondcomment', { params });
+// 获取时间线数据
 export const getTimeclues = params => requests.get('/timeclues/gettimeclues', { params });
+// 获取照片墙线数据
+export const getPhotos = () => requests.get('/photo/getphotos');
+// 根据标签获取文章
+export const getArticlesOfTag = params => requests.get('/synthesis/getarticlesoftag', { params });
 // 上传图片
 export const uploadAvatar = data =>
 	requests.post('/synthesis/uploadavatar', data, {

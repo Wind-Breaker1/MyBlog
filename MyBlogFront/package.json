@@ -5,7 +5,8 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint"
+    "lint": "vue-cli-service lint",
+    "report": "vue-cli-service build --report"
   },
   "dependencies": {
     "axios": "^0.27.2",
@@ -29,6 +30,7 @@
     "element-ui": "^2.15.9",
     "eslint": "^8.23.0",
     "eslint-plugin-vue": "^8.0.3",
+    "image-webpack-loader": "^8.1.0",
     "less": "^4.0.0",
     "less-loader": "^8.0.0",
     "vue-template-compiler": "^2.6.14"

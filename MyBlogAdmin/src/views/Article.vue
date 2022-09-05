@@ -274,7 +274,7 @@ export default {
 		// 删除
 		async deleteItem(row, type) {
 			let res = null;
-			switch ((type, isFirst)) {
+			switch (type) {
 				case "blog":
 					res = await this.$store.dispatch("deleteBlog", { _id: row._id, classification: row.classification });
 					this.$store.dispatch("getBlogs");
@@ -298,13 +298,13 @@ export default {
 					} else {
 						res = await deleteSecondComment({ _id: row._id, replyId: "" });
 					}
+					getComments();
 			}
 			if (res.status === 200) {
 				this.$message.success(res.msg);
 			} else {
 				this.$message.error(res.msg);
 			}
-			// this.getData();
 		},
 		// 修改文章状态
 		async changeState(row, type) {

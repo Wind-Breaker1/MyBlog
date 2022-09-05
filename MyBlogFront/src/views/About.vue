@@ -89,7 +89,6 @@ export default {
 					right: 0;
 					bottom: 0;
 					margin: auto;
-					// background-color: #777777;
 				}
 
 				.drop1 {

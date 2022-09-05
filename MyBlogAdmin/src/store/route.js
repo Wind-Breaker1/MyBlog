@@ -58,20 +58,15 @@ const actions = {
 // 返回特定路由数据
 const getters = {
 	// 路由管理需要的路由信息和动态导航栏
-	routeList(state) {
-		// const routeList = [];
-		// state.routeList.forEach(item => {
-		// 	if (item.name) {
-		// 		routeList.push({
-		// 			id: item._id,
-		// 			path: "/admin/" + item.path,
-		// 			name: item.name,
-		// 			icon: item.meta.icon,
-		// 			limits: item.limits,
-		// 		});
-		// 	}
-		// });
-		return state.routeList;
+	navRouteList(state) {
+		const routeList = [];
+		state.routes.forEach(item => {
+			console.log(!item.meta.NotShow);
+			if (!item.meta.NotShow) {
+				routeList.push(item);
+			}
+		});
+		return routeList;
 	},
 	// 路由拦截需要的路由信息
 	routes(state) {
