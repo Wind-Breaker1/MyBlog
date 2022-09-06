@@ -6,28 +6,28 @@ Vue.use(VueRouter);
 const routes = [
 	{
 		path: '/list/:type',
-		component: () => import('@/views/list.vue'),
+		component: () => import('@/views/List.vue'),
 	},
 	{
 		path: '/about',
-		component: () => import('@/views/about.vue'),
+		component: () => import('@/views/About.vue'),
 	},
 	{
 		path: '/article/:type/:id',
-		component: () => import('@/views/article.vue'),
+		component: () => import('@/views/Article.vue'),
 	},
 
 	{
 		path: '/timeclue',
-		component: () => import('@/views/timeClue.vue'),
+		component: () => import('@/views/TimeClue.vue'),
 	},
 	{
 		path: '/messageboard',
-		component: () => import('@/views/messageBoard.vue'),
+		component: () => import('@/views/MessageBoard.vue'),
 	},
 	{
 		path: '/photo',
-		component: () => import('@/views/photoWall.vue'),
+		component: () => import('@/views/PhotoWall.vue'),
 	},
 	{
 		path: '/',

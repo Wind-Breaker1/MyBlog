@@ -3,9 +3,10 @@
 		<h3>MyBlog后台管理</h3>
 		<div class="user-info">
 			<el-dropdown placement="bottom" @command="handleClick">
-				<el-avatar class="avatar" src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png" size="medium" shape="square"></el-avatar>
+				<el-avatar class="avatar" src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"
+					size="medium" shape="square"></el-avatar>
 				<el-dropdown-menu slot="dropdown">
-					<el-dropdown-item command="handleToSelf">个人中心</el-dropdown-item>
+					<!-- <el-dropdown-item command="handleToSelf">个人中心</el-dropdown-item> -->
 					<el-dropdown-item command="logout">退出登录</el-dropdown-item>
 				</el-dropdown-menu>
 			</el-dropdown>

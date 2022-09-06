@@ -18,19 +18,14 @@
 			</div>
 		</transition>
 		<transition name="el-zoom-in-top">
-			<Comment
-				keyId="messageBoard"
-				emptyText="期待您的留言！"
-				buttonText="留言"
-				:contentLength="200"
-				placeholderText="请输入最多200字的留言..."
-				v-show="showMian"></Comment>
+			<Comment keyId="messageBoard" emptyText="期待您的留言！" buttonText="留言" :contentLength="200"
+				placeholderText="请输入最多200字的留言..." v-show="showMian"></Comment>
 		</transition>
 	</div>
 </template>
 
 <script>
-import Comment from '@/components/comment.vue';
+import Comment from '@/components/Comment.vue';
 export default {
 	components: {
 		Comment,
@@ -57,6 +52,7 @@ export default {
 	padding: 5%;
 	font-size: 18px;
 }
+
 h2 {
 	text-align: center;
 	margin-bottom: 5%;

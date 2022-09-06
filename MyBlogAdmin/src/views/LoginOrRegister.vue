@@ -1,10 +1,6 @@
 <template>
 	<div id="box">
-		<div
-			class="login-main-box"
-			:style="{
-				height: isLogin ? '364px' : '520px',
-			}">
+		<div class="login-main-box" :style="{height: isLogin ? '364px' : '520px',}">
 			<div :class="isLogin ? 'login-box' : 'register-box'">
 				<h2 @click="change(true)">login |</h2>
 				<h2 @click="change(false)">register</h2>
@@ -19,12 +15,14 @@
 					<div class="err-msg" v-show="errEmail"><i class="el-icon-info"></i>邮箱格式不正确</div>
 				</div>
 				<div class="item">
-					<input type="password" v-model="password" @input="verifyPassword" @blur="verifyTrue('password', 'errPassword')" />
+					<input type="password" v-model="password" @input="verifyPassword"
+						@blur="verifyTrue('password', 'errPassword')" />
 					<label for="">password(8~12位字符)</label>
 					<div class="err-msg" v-show="errPassword"><i class="el-icon-info"></i>密码不符合要求</div>
 				</div>
 				<div class="item" v-show="!isLogin">
-					<input type="password" v-model="rePassword" @input="verifyRepassword" @blur="verifyTrue('rePassword', 'errRepassword')" />
+					<input type="password" v-model="rePassword" @input="verifyRepassword"
+						@blur="verifyTrue('rePassword', 'errRepassword')" />
 					<label for="">rePassword</label>
 					<div class="err-msg" v-show="errRepassword"><i class="el-icon-info"></i>两次密码不一致</div>
 				</div>
@@ -46,9 +44,7 @@
 		</div>
 	</div>
 </template>
-
 <script>
-import { getUserInfo } from "../util";
 export default {
 	data() {
 		return {
@@ -68,7 +64,6 @@ export default {
 			try {
 				const { email, password, errEmail, errPassword } = this;
 				let result = null;
-				console.log(errEmail, errPassword);
 				if (!errEmail && !errPassword) {
 					result = await this.$store.dispatch("login", {
 						email,
@@ -175,12 +170,14 @@ export default {
 	margin-top: 5px;
 	line-height: 2rem;
 }
+
 input,
 button {
 	background: transparent;
 	border: 0;
 	outline: none;
 }
+
 #box {
 	height: 100vh;
 	width: 100vw;
@@ -217,6 +214,7 @@ button {
 	width: 320px;
 	animation: loginAnimation 1s;
 }
+
 .register-box {
 	position: absolute;
 	width: 320px;
@@ -228,20 +226,24 @@ button {
 		transform: translateX(-100px);
 		opacity: 0;
 	}
+
 	100% {
 		/* transform: translateX(0px); */
 		opacity: 1;
 	}
 }
+
 @keyframes registerAnimation {
 	0% {
 		transform: translateX(100px);
 		opacity: 0;
 	}
+
 	100% {
 		opacity: 1;
 	}
 }
+
 h2 {
 	/* text-align: center; */
 	display: inline-block;
@@ -266,8 +268,8 @@ h2 {
 	box-sizing: border-box;
 }
 
-.item input:focus + label,
-.item input:valid + label {
+.item input:focus+label,
+.item input:valid+label {
 	top: 0px;
 	font-size: 2px;
 }
@@ -298,11 +300,11 @@ h2 {
 	transition: all 500ms linear;
 }
 
-.btn > span {
+.btn>span {
 	position: absolute;
 }
 
-.btn > span:nth-child(1) {
+.btn>span:nth-child(1) {
 	width: 100%;
 	height: 2px;
 	background: -webkit-linear-gradient(left, transparent, #03e9f4);
@@ -312,13 +314,14 @@ h2 {
 }
 
 @keyframes line1 {
+
 	50%,
 	100% {
 		left: 100%;
 	}
 }
 
-.btn > span:nth-child(2) {
+.btn>span:nth-child(2) {
 	width: 2px;
 	height: 100%;
 	background: -webkit-linear-gradient(top, transparent, #03e9f4);
@@ -328,13 +331,14 @@ h2 {
 }
 
 @keyframes line2 {
+
 	50%,
 	100% {
 		top: 100%;
 	}
 }
 
-.btn > span:nth-child(3) {
+.btn>span:nth-child(3) {
 	width: 100%;
 	height: 2px;
 	background: -webkit-linear-gradient(left, #03e9f4, transparent);
@@ -344,13 +348,14 @@ h2 {
 }
 
 @keyframes line3 {
+
 	50%,
 	100% {
 		left: -100%;
 	}
 }
 
-.btn > span:nth-child(4) {
+.btn>span:nth-child(4) {
 	width: 2px;
 	height: 100%;
 	background: -webkit-linear-gradient(top, transparent, #03e9f4);
@@ -360,6 +365,7 @@ h2 {
 }
 
 @keyframes line4 {
+
 	50%,
 	100% {
 		top: -100%;

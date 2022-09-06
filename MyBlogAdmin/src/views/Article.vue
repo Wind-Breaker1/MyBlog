@@ -48,7 +48,8 @@
 					<el-table-column label="操作" min-width="120">
 						<template slot-scope="scope">
 							<el-button size="mini" @click="Edit(scope.row, 'blog')">编辑</el-button>
-							<el-button size="mini" type="success" @click="changeState(scope.row, 'blog')">{{ scope.row.state ? "下架" : "发布" }}</el-button>
+							<el-button size="mini" type="success" @click="changeState(scope.row, 'blog')">{{ scope.row.state ? "下架" :
+							"发布" }}</el-button>
 							<el-button size="mini" type="danger" @click="deleteItem(scope.row, 'blog')">删除</el-button>
 						</template>
 					</el-table-column>
@@ -98,7 +99,8 @@
 					<el-table-column label="操作" min-width="120">
 						<template slot-scope="scope">
 							<el-button size="mini" @click="Edit(scope.row, 'jotting')">编辑</el-button>
-							<el-button size="mini" type="success" @click="changeState(scope.row, 'jotting')">{{ scope.row.state ? "下架" : "发布" }} </el-button>
+							<el-button size="mini" type="success" @click="changeState(scope.row, 'jotting')">{{ scope.row.state ? "下架"
+							: "发布" }} </el-button>
 							<el-button size="mini" type="danger" @click="deleteItem(scope.row, 'jotting')">删除</el-button>
 						</template>
 					</el-table-column>
@@ -144,7 +146,7 @@
 				</el-table>
 			</el-tab-pane>
 			<el-tab-pane label="评论管理" class="tab-content">
-				<el-table :data="comments" row-key="_id" default-expand-all :tree-props="{ children: 'children', hasChildren: 'hasChildren' }" height="100%">
+				<el-table :data="comments" row-key="_id" default-expand-all :tree-props="{children: 'children'}" height="100%">
 					<el-table-column label="评论日期" min-width="60">
 						<template slot-scope="scope">
 							<i class="el-icon-time"></i>
@@ -163,10 +165,10 @@
 		</el-tabs>
 		<el-dialog :title="dialogTitle" :visible.sync="dialogVisible" center @close="resetForm('form')">
 			<el-form :model="form" ref="form" :rules="formRules">
-				<el-form-item :label="currentTab == 2 ? '专栏名' : '书签名'" :label-width="formLabelWidth" prop="title">
+				<el-form-item :label="currentTab == 2 ? '专栏名' : '书签名'" label-width="120px" prop="title">
 					<el-input v-model="form.title" autocomplete="off"></el-input>
 				</el-form-item>
-				<el-form-item label="专栏介绍" :label-width="formLabelWidth" prop="digest">
+				<el-form-item label="专栏介绍" label-width="120px" prop="digest">
 					<el-input v-model="form.digest" autocomplete="off"></el-input>
 				</el-form-item>
 			</el-form>
@@ -200,12 +202,12 @@ export default {
 					{ min: 1, max: 30, message: "长度在 1 到 30 个字符", trigger: "blur" },
 				],
 			},
-			formLabelWidth: "120px",
 			dialogVisible: false,
 			id: "",
 			dialogTitle: "",
 			currentTab: 0,
-			comments: [],
+			comments: [
+			],
 		};
 	},
 	mounted() {
@@ -293,12 +295,14 @@ export default {
 					this.$store.dispatch("getClassifies");
 					break;
 				case "comment":
-					if (isFirst) {
+					console.log('r', row);
+					if (row.keyId) {
 						res = await deleteFirstComment({ _id: row._id });
 					} else {
-						res = await deleteSecondComment({ _id: row._id, replyId: "" });
+						res = await deleteSecondComment({ _id: row.fatherId, replyId: row._id });
 					}
-					getComments();
+					const result = await getComments();
+					this.comments = result.data;
 			}
 			if (res.status === 200) {
 				this.$message.success(res.msg);

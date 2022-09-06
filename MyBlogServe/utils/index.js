@@ -92,17 +92,20 @@ exports.manageMurmurComments = (murmurInfo, comments) => {
 	});
 	return depComments(hashMurmur, comments);
 };
-const depComments = (hashMurmur, comments) => {
+const depComments = (hashMurmur, comments, fatherId) => {
 	comments?.forEach(item => {
 		const murValue = hashMurmur.get(item.murmur);
 		item.date = this.formatTime(item.date);
 		item.username = murValue.username;
 		item.avatarUrl = murValue.avatarUrl;
+		if (fatherId) {
+			item.fatherId=fatherId;
+		}
 		if (item.replyInfo?.length > 0) {
 			item.children = item.replyInfo;
-			item.hasChildren = true;
-			depComments(hashMurmur, item.replyInfo);
+			depComments(hashMurmur, item.replyInfo, item._id);
 		}
+		delete item.replyInfo;
 	});
 	return comments;
 };

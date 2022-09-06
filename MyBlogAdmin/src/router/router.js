@@ -4,6 +4,11 @@ export const routes = [
 		name: "home",
 		component: () => import("@/views/Admin.vue"),
 		children: [
+			{
+				path: "databoard",
+				name: "article",
+				component: () => import("../views/DataBoard.vue"),
+			},
 			// {
 			// 	path: "article",
 			// 	name: "article",

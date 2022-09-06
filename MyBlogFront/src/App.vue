@@ -12,11 +12,11 @@
 	</div>
 </template>
 <script>
-import SiderInfo from '@/components/siderInfo.vue';
-import Header from '@/components/header.vue';
-import Nav from '@/components/nav.vue';
-import Footer from '@/components/footer.vue';
-import Slideshow from '@/components/slideshow.vue';
+import SiderInfo from '@/components/SiderInfo.vue';
+import Header from '@/components/Header.vue';
+import Nav from '@/components/Nav.vue';
+import Footer from '@/components/Footer.vue';
+import Slideshow from '@/components/Slideshow.vue';
 import { createFingerprint } from '@/util';
 import clickSpecialEffect from '@/util/clickSpecialEffect';
 import bgSpecialEffect from '@/util/bgSpecialEffect';
@@ -60,6 +60,7 @@ export default {
 	margin: 0;
 	// font-family: 'JBHGXK';
 }
+
 #mainContainer {
 	background-size: 100% 100%;
 	background-attachment: fixed;
@@ -71,6 +72,7 @@ export default {
 	display: flex;
 	flex-wrap: wrap;
 	justify-content: space-between;
+
 	.main-box {
 		flex: 1;
 		margin-top: 5px;
@@ -80,12 +82,15 @@ export default {
 		transition: 0.6s;
 	}
 }
+
 .moon {
 	background: url('@/assets/img/lightBg.png') no-repeat;
 }
+
 .night {
 	background: url('@/assets/img/nightBg.jpg') no-repeat;
 }
+
 @media screen and (max-width: 768px) {
 	#mainContainer {
 		padding-left: 1vw;

@@ -9,12 +9,14 @@
 				</el-form-item>
 				<el-form-item label="文章类型" label-width="120px" v-if="!type" prop="classification">
 					<el-select placeholder="请选择文章类型" filterable v-model="article.classification">
-						<el-option v-for="item in classifyOptions" :key="item.value" :label="item.label" :value="item.value"> </el-option>
+						<el-option v-for="item in classifyOptions" :key="item.value" :label="item.label" :value="item.value">
+						</el-option>
 					</el-select>
 				</el-form-item>
 				<el-form-item label="书签" label-width="120px" prop="tags">
 					<el-select multiple placeholder="请选择文章标签" default-first-option filterable v-model="article.tags">
-						<el-option v-for="item in tagsOptions" :key="item.value" :label="item.label" :value="item.value"> </el-option>
+						<el-option v-for="item in tagsOptions" :key="item.value" :label="item.label" :value="item.value">
+						</el-option>
 					</el-select>
 				</el-form-item>
 				<el-form-item label="摘要" label-width="120px" prop="digest">
@@ -222,9 +224,11 @@ export default {
 .markdown-box {
 	padding: 0 !important;
 	background-color: transparent !important;
+
 	.markdown {
 		height: calc(100% - 40px);
 	}
+
 	.sub {
 		background-color: #323232;
 		color: #ffffff;

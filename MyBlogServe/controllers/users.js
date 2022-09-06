@@ -48,6 +48,7 @@ const login = async (req, res, next) => {
 				username: user.username,
 				limits: user.limits,
 				role: user.role,
+				avatarUrl:user.avatarUrl
 			};
 			const token = sign(email);
 			res.send({
