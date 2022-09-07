@@ -2,7 +2,6 @@ const bcrypt = require('bcrypt');
 const fs = require('fs');
 const path = require('path');
 const jwt = require('jsonwebtoken');
-const { type } = require('os');
 /**
  * 密码加密
  * @param {string} myPassword
@@ -156,8 +155,47 @@ exports.randomColor = () => {
 	const colorList = ['#ffcc00', '#66CDAA', '#acc2e6', '#d7b0d8', '#95abe6', '#ffc47b', '#b6d288', '#f49586', '#bcaf7a', '#a6a5a1'];
 	return colorList[Math.floor(Math.random() * 10)];
 };
-// // 生成随机颜色
-// exports.randomHex = () =>
-// 	`#${Math.floor(Math.random() * 0xffffff)
-// 		.toString(16)
-// 		.padEnd(6, '0')}`;
+// 处理数据面板数据
+exports.manangeDataBoard = (tags, blogs, jottings) => {
+	const map = new Map();
+	const now = Date.now();
+	const savenDaysAgo = this.formatDate(now - 7 * 24 * 3600 * 1000);
+	const articleOfTag = [], blogsOf7=Array(7).fill(0),jottingsOf7=Array(7).fill(0);
+	tags.forEach(item => {
+		map.set(item._id.toString(), {name:item.title,value:0});
+		articleOfTag.push(map.get(item._id.toString()));
+	})
+	blogs.forEach(blog => {
+		blog.tags.forEach(item => {
+			const temp = map.get(item.toString());
+			if (temp)
+			temp.value++;
+		})
+		const date = this.formatDate(blog.date);
+			if (date >= savenDaysAgo) {
+				for (let i = 1; i <= 7; i++ ) {
+					if (date >= this.formatDate(now - i * 24 * 3600 * 1000 )) {
+						blogsOf7[i]++;
+						break;
+					} 
+				}
+			}
+	})
+	jottings.forEach(jotting => {
+		jotting.tags.forEach(item => {
+			const temp = map.get(item.toString());
+			if (temp)
+				temp.value++;
+		})
+		const date = this.formatDate(jotting.date);
+			if (date >= savenDaysAgo) {
+				for (let i = 1; i <= 7; i++ ) {
+					if (date >= this.formatDate(now - i * 24 * 3600 * 1000 )) {
+						jottingsOf7[i]++;
+						break;
+					} 
+				}
+			}
+	})
+	return {articleOfTag,blogsOf7,jottingsOf7};
+}

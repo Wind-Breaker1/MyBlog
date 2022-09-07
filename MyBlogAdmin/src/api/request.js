@@ -39,7 +39,6 @@ requests.interceptors.response.use(
 	res => {
 		// 进度条结束
 		nprogress.done();
-		console.log("res", res);
 		return res.data;
 	},
 	err => {

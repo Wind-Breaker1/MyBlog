@@ -66,7 +66,7 @@ const getBlog = id => {
 };
 // 查询所有文章
 const getBlogs = () => {
-	return BlogModel.find().lean();
+	return BlogModel.find().sort({date:-1}).lean();
 };
 // 查询所有已发布的博客
 const getPublishBlogs = (pageStart = 0, pageSize = 5) => {

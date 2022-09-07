@@ -59,7 +59,7 @@ const updatRoute = async (req, res, next) => {
 const getRoutes = async (req, res, next) => {
 	const { role } = req.query;
 	const result = await RouteModel.getRoutes();
-	console.log('rew', result);
+	// console.log('rew', result);
 
 	const route = _filterRoute(role, result);
 	if (result) {

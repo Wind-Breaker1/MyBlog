@@ -253,6 +253,33 @@ const uploadAvatar = async (req, res) => {
 		});
 	}
 };
+// 获取数据面板数据
+// 上传头像
+const getDataForDataBoard = async (req, res) => {
+	const classify = await ClassifyModel.getClassifyForDataBoard();
+	const classification = classify.map(item => {return {name: item.title, value: 2}});
+	const tags = await TagModel.getTags();
+	const blogs = await BlogsModel.getBlogs();
+	const jottings = await JottingModel.getJottings();
+	const {articleOfTag,blogsOf7,jottingsOf7} = util.manangeDataBoard(tags, blogs, jottings);
+	if (articleOfTag && blogsOf7&&jottingsOf7) {
+		res.send({
+			data:{
+				classification,
+				articleOfTag,
+				blogsOf7,
+				jottingsOf7
+			},
+			status: 200,
+			msg: '查询成功',
+		});
+	} else {
+		res.send({
+			status: 0,
+			msg: '查询失败',
+		});
+	}
+};
 module.exports = {
 	getWebInfo,
 	getSliderInfo,
@@ -265,4 +292,5 @@ module.exports = {
 	getTags,
 	updateTag,
 	getArticlesOfTag,
+	getDataForDataBoard
 };

@@ -24,6 +24,10 @@ const addClassify = data => {
 const getClassify = id => {
 	return ClassifyModel.findById(id);
 };
+// 数据面板需要数据
+const getClassifyForDataBoard = () => {
+	return ClassifyModel.find({},'title articleNum');
+};
 // 删除专栏
 const deleteClassify = _id => {
 	return ClassifyModel.deleteOne({ _id });
@@ -52,4 +56,5 @@ module.exports = {
 	getClassify,
 	updateClassifyTitle,
 	getClassifySums,
+	getClassifyForDataBoard
 };

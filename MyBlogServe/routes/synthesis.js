@@ -40,4 +40,5 @@ router.delete('/deletetag', synthesisControll.deleteTag);
 router.post('/addtag', synthesisControll.addTag);
 router.post('/updatetag', synthesisControll.updateTag);
 router.get('/getarticlesoftag', synthesisControll.getArticlesOfTag);
+router.get('/getdatafordataboard', synthesisControll.getDataForDataBoard);
 module.exports = router;

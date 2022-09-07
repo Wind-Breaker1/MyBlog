@@ -107,3 +107,5 @@ export const updateTimeclue = data => requests.post("/timeclues/updatetimeclue",
 export const addTimeclue = data => requests.post("/timeclues/addtimeclue", data);
 // 改变时间节点状态
 export const changeTimeNodeState = params => requests.get("/timeclues/changetimenodestate", { params });
+// 改变时间节点状态
+export const getDataForDataBoard = () => requests.get("/synthesis/getdatafordataboard");

@@ -52,7 +52,7 @@ const getJotting = id => {
 };
 // 查询所有随笔
 const getJottings = () => {
-	return JottingModel.find().lean();
+	return JottingModel.find().sort({date:-1}).lean();
 };
 // 查询所有已发布随笔
 const getPublishJottings = (pageStart = 0, pageSize = 5) => {
