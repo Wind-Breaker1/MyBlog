@@ -1,5 +1,5 @@
 // 引入axios进行二次封装
-import axios from "axios";
+// import axios from "axios";
 // 进度条
 import nprogress from "nprogress";
 // 引入进度条样式

@@ -15,13 +15,6 @@ module.exports = {
 			'element-ui': 'ELEMENT',
 		},
 	},
-	chainWebpack: config => {
-		if (process.env.use_analyzer) {
-			config
-				.plugin('webpack-bundle-analyzer')
-				.use(require('webpack-bundle-analyzer').BundleAnalyzerPlugin);
-		}
-	},
 	configureWebpack: config => {
 		// 公共代码抽离
 		config.optimization = {

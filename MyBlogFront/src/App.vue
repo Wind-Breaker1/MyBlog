@@ -20,7 +20,7 @@ import Slideshow from '@/components/Slideshow.vue';
 import { createFingerprint } from '@/util';
 import clickSpecialEffect from '@/util/clickSpecialEffect';
 import bgSpecialEffect from '@/util/bgSpecialEffect';
-import SwitchBar from '@/components/switch.vue';
+import SwitchBar from '@/components/Switch.vue';
 import { mapState, mapGetters } from 'vuex';
 export default {
 	data() {
@@ -60,11 +60,12 @@ export default {
 	margin: 0;
 	// font-family: 'JBHGXK';
 }
-
+body {
+	overflow: auto;
+}
 #mainContainer {
 	background-size: 100% 100%;
 	background-attachment: fixed;
-	background-color: #70e6ff;
 	margin-top: 50px;
 	box-sizing: border-box;
 	padding-left: 10vw;
@@ -72,7 +73,7 @@ export default {
 	display: flex;
 	flex-wrap: wrap;
 	justify-content: space-between;
-
+	color: #000;
 	.main-box {
 		flex: 1;
 		margin-top: 5px;

@@ -5,6 +5,7 @@ const util = require('../utils');
 // 添加新博客
 const addBlog = async (req, res) => {
 	const { title, classification, content, digest, state, tags } = req.body;
+	console.log(classification);
 	const blog = await BlogsModel.addblog({
 		date: Date.now(),
 		title,
@@ -14,7 +15,7 @@ const addBlog = async (req, res) => {
 		state,
 		tags,
 	});
-	ClassifyModel.updateClassifySum(classification, 1);
+	await ClassifyModel.updateClassifySum(classification, 1);
 	if (blog) {
 		res.send({
 			msg: '博客添加成功',

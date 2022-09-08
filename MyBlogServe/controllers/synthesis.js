@@ -257,18 +257,20 @@ const uploadAvatar = async (req, res) => {
 // 上传头像
 const getDataForDataBoard = async (req, res) => {
 	const classify = await ClassifyModel.getClassifyForDataBoard();
-	const classification = classify.map(item => {return {name: item.title, value: 2}});
+	const classification = classify.map(item => {
+		return { name: item.title, value: item.articleNum };
+	});
 	const tags = await TagModel.getTags();
 	const blogs = await BlogsModel.getBlogs();
 	const jottings = await JottingModel.getJottings();
-	const {articleOfTag,blogsOf7,jottingsOf7} = util.manangeDataBoard(tags, blogs, jottings);
-	if (articleOfTag && blogsOf7&&jottingsOf7) {
+	const { articleOfTag, blogsOf7, jottingsOf7 } = util.manangeDataBoard(tags, blogs, jottings);
+	if (articleOfTag && blogsOf7 && jottingsOf7) {
 		res.send({
-			data:{
+			data: {
 				classification,
 				articleOfTag,
 				blogsOf7,
-				jottingsOf7
+				jottingsOf7,
 			},
 			status: 200,
 			msg: '查询成功',
@@ -292,5 +294,5 @@ module.exports = {
 	getTags,
 	updateTag,
 	getArticlesOfTag,
-	getDataForDataBoard
+	getDataForDataBoard,
 };

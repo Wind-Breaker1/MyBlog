@@ -50,7 +50,7 @@ const changeTimeNodeState = (id, state) => {
  @return {Array} 查找到的时间线信息对象数组
  */
 const getTimeclues = () => {
-	return TimeclueModel.find().lean();
+	return TimeclueModel.find().sort({ date: -1 }).lean();
 };
 /**
  *获取所有时间线信息的数量
