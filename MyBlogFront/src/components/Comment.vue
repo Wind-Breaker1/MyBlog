@@ -76,7 +76,7 @@
 					<!-- 次级评论 -->
 					<div
 						class="second-comment"
-						v-for="(reply, index) in item.replyInfo"
+						v-for="(reply, index) in item.children"
 						:key="reply.murmur + '' + index"
 						:style="`${cardBg}`">
 						<!-- 次级评论头像,该用户没有头像则显示默认头像 -->
@@ -372,7 +372,7 @@ export default {
 					.deletesecondcomment({ replyId, _id })
 					.then(res => {
 						this.$message.success(res.msg);
-						const temp = this.comments.find(item => item._id == _id).replyInfo;
+						const temp = this.comments.find(item => item._id == _id).children;
 						for (let i = 0; i < temp.length; i++) {
 							if (temp[i]._id == replyId) {
 								temp.splice(i, 1);
@@ -430,7 +430,11 @@ export default {
 				res.data.avatarUrl = this.avatarUrl;
 
 				if (replyName) {
-					this.comments.find(item => item._id == id).replyInfo.push(res.data);
+					const comment = this.comments.find(item => item._id == id);
+					if (comment.children) {
+						comment.children = [];
+					}
+					comment.children.push(res.data);
 					this.replyContext = '';
 				} else {
 					this.comments.push(res.data);

@@ -61,8 +61,7 @@ const getters = {
 	navRouteList(state) {
 		const routeList = [];
 		state.routes.forEach(item => {
-			console.log(!item.meta.NotShow);
-			if (!item.meta.NotShow) {
+			if (!item.meta.NotShow && item.name != "日志") {
 				routeList.push(item);
 			}
 		});

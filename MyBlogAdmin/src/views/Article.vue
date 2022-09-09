@@ -48,8 +48,7 @@
 					<el-table-column label="操作" min-width="120">
 						<template slot-scope="scope">
 							<el-button size="mini" @click="Edit(scope.row, 'blog')">编辑</el-button>
-							<el-button size="mini" type="success" @click="changeState(scope.row, 'blog')">{{ scope.row.state ? "下架" :
-							"发布" }}</el-button>
+							<el-button size="mini" type="success" @click="changeState(scope.row, 'blog')">{{ scope.row.state ? "下架" : "发布" }}</el-button>
 							<el-button size="mini" type="danger" @click="deleteItem(scope.row, 'blog')">删除</el-button>
 						</template>
 					</el-table-column>
@@ -99,8 +98,7 @@
 					<el-table-column label="操作" min-width="120">
 						<template slot-scope="scope">
 							<el-button size="mini" @click="Edit(scope.row, 'jotting')">编辑</el-button>
-							<el-button size="mini" type="success" @click="changeState(scope.row, 'jotting')">{{ scope.row.state ? "下架"
-							: "发布" }} </el-button>
+							<el-button size="mini" type="success" @click="changeState(scope.row, 'jotting')">{{ scope.row.state ? "下架" : "发布" }} </el-button>
 							<el-button size="mini" type="danger" @click="deleteItem(scope.row, 'jotting')">删除</el-button>
 						</template>
 					</el-table-column>
@@ -146,7 +144,7 @@
 				</el-table>
 			</el-tab-pane>
 			<el-tab-pane label="评论管理" class="tab-content">
-				<el-table :data="comments" row-key="_id" default-expand-all :tree-props="{children: 'children'}" height="100%">
+				<el-table :data="comments" row-key="_id" :tree-props="{ children: 'children' }" height="100%">
 					<el-table-column label="评论日期" min-width="60">
 						<template slot-scope="scope">
 							<i class="el-icon-time"></i>
@@ -206,8 +204,7 @@ export default {
 			id: "",
 			dialogTitle: "",
 			currentTab: 0,
-			comments: [
-			],
+			comments: [],
 		};
 	},
 	mounted() {
@@ -295,7 +292,7 @@ export default {
 					this.$store.dispatch("getClassifies");
 					break;
 				case "comment":
-					console.log('r', row);
+					console.log("r", row);
 					if (row.keyId) {
 						res = await deleteFirstComment({ _id: row._id });
 					} else {

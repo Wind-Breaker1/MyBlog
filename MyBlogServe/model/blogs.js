@@ -41,7 +41,7 @@ const updateBlog = (_id, content, digest, title, tags) => {
 // 修改博客状态
 const changeBlogState = (state, id) => {
 	// return BlogModel.updateOne(id, { $set: { state } });
-	return BlogModel.updateOne(id, { $set: { state } });
+	return BlogModel.updateOne({ _id: id }, { $set: { state } });
 };
 // 删除博客
 const deleteBlog = _id => {
@@ -66,7 +66,7 @@ const getBlog = id => {
 };
 // 查询所有文章
 const getBlogs = () => {
-	return BlogModel.find().sort({date:-1}).lean();
+	return BlogModel.find().sort({ date: -1 }).lean();
 };
 // 查询所有已发布的博客
 const getPublishBlogs = (pageStart = 0, pageSize = 5) => {

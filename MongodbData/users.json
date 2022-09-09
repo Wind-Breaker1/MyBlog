@@ -1,0 +1,29 @@
+[{
+  "_id": {
+    "$oid": "6313fb41c2377786e8339d70"
+  },
+  "username": "管理员",
+  "password": "$2b$10$LcM347ZIT4upIpm70zBHEOFXM6pXe2fXgfmPXUGzdLiThjkTbNyCW",
+  "email": "123@qq.com",
+  "date": {
+    "$date": {
+      "$numberLong": "1662253889206"
+    }
+  },
+  "role": "管理员",
+  "__v": 0
+},{
+  "_id": {
+    "$oid": "6319fd5eccef1193b5e48760"
+  },
+  "username": "普通用户",
+  "password": "$2b$10$G0H7p87B.vTw90ppA.c9q.AlcRDPEVBUK731gnUO1mknQVC0DmlQC",
+  "email": "234@qq.com",
+  "date": {
+    "$date": {
+      "$numberLong": "1662647646590"
+    }
+  },
+  "role": "普通用户",
+  "__v": 0
+}]

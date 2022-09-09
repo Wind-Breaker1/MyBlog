@@ -1,0 +1,124 @@
+[{
+  "_id": {
+    "$oid": "6314288d53aa7200deac6936"
+  },
+  "path": "article",
+  "name": "文章管理",
+  "component": "Article.vue",
+  "limits": [
+    "管理员",
+    "普通用户"
+  ],
+  "meta": {
+    "icon": "el-icon-document"
+  }
+},{
+  "_id": {
+    "$oid": "6314288d53aa7200deac6939"
+  },
+  "path": "photo",
+  "name": "照片管理",
+  "component": "Photo.vue",
+  "limits": [
+    "管理员",
+    "普通用户"
+  ],
+  "meta": {
+    "icon": "el-icon-menu"
+  }
+},{
+  "_id": {
+    "$oid": "6314288d53aa7200deac693c"
+  },
+  "path": "markdown",
+  "name": "编辑文章",
+  "component": "Markdown.vue",
+  "limits": [
+    "管理员",
+    "普通用户"
+  ],
+  "meta": {
+    "icon": "el-icon-edit"
+  }
+},{
+  "_id": {
+    "$oid": "6314288d53aa7200deac693f"
+  },
+  "path": "timeclue",
+  "name": "时间节点管理",
+  "component": "Timeclue.vue",
+  "limits": [
+    "管理员",
+    "普通用户"
+  ],
+  "meta": {
+    "icon": "el-icon-notebook-1"
+  }
+},{
+  "_id": {
+    "$oid": "6314288d53aa7200deac6942"
+  },
+  "path": "routingmanage",
+  "name": "路由管理",
+  "component": "Route.vue",
+  "limits": [
+    "管理员"
+  ],
+  "meta": {
+    "icon": "el-icon-rank"
+  }
+},{
+  "_id": {
+    "$oid": "6314288d53aa7200deac6945"
+  },
+  "path": "user",
+  "name": "用户管理",
+  "component": "User.vue",
+  "limits": [
+    "管理员"
+  ],
+  "meta": {
+    "icon": "el-icon-s-custom"
+  }
+},{
+  "_id": {
+    "$oid": "6314288d53aa7200deac6948"
+  },
+  "path": "logs",
+  "name": "日志",
+  "component": "Log.vue",
+  "limits": [
+    "管理员"
+  ],
+  "meta": {
+    "icon": "el-icon-setting"
+  }
+},{
+  "_id": {
+    "$oid": "6315efa453aa7200deac7a78"
+  },
+  "path": "result",
+  "name": "结果页",
+  "component": "Result.vue",
+  "limits": [
+    "管理员",
+    "普通用户"
+  ],
+  "meta": {
+    "NotShow": true
+  }
+},{
+  "_id": {
+    "$oid": "6315f83453aa7200deac7d30"
+  },
+  "path": "self",
+  "name": "个人中心",
+  "component": "Self.vue",
+  "limits": [
+    "管理员",
+    "普通用户"
+  ],
+  "meta": {
+    "icon": "el-icon-s-check"
+  }
+}]

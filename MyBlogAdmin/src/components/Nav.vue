@@ -1,6 +1,5 @@
 <template>
-	<el-menu router :default-active="$route.path" class="menu" background-color="#545c64" text-color="#fff"
-		active-text-color="#ffd04b">
+	<el-menu router :default-active="$route.path" class="menu" background-color="#545c64" text-color="#fff" active-text-color="#ffd04b">
 		<!-- <router-link to="/article">
 					<el-submenu index="/article">
             <template slot="title">
@@ -15,7 +14,7 @@
 		</el-menu-item>
 		<el-menu-item index="/admin/databoard">
 			<i class="el-icon-notebook-1"></i>
-			<span slot="title">文章管理</span>
+			<span slot="title">数据看板</span>
 		</el-menu-item>
 		<!-- <el-menu-item index="/admin/article">
 			<i class="el-icon-notebook-1"></i>
