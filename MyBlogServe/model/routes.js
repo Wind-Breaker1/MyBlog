@@ -6,13 +6,12 @@ const RouteSchema = new mongoose.Schema({
 	meta: { type: Object, default: {} },
 	children: [
 		{
-			path: { type: String, require: true, unique: true },
+			path: { type: String,unique: true },
 			name: { type: String },
 			meta: { type: Object, default: {} },
 			limits: [
 				{
 					type: String,
-					require: true,
 				},
 			],
 			component: { type: String }, //index: { unique: true }
