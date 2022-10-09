@@ -4,19 +4,19 @@ const RouteSchema = new mongoose.Schema({
 	path: { type: String, require: true, unique: true },
 	name: { type: String },
 	meta: { type: Object, default: {} },
-	children: [
-		{
-			path: { type: String,unique: true },
-			name: { type: String },
-			meta: { type: Object, default: {} },
-			limits: [
-				{
-					type: String,
-				},
-			],
-			component: { type: String }, //index: { unique: true }
-		},
-	],
+	// children: [
+	// 	{
+	// 		path: { type: String,unique: true },
+	// 		name: { type: String },
+	// 		meta: { type: Object, default: {} },
+	// 		limits: [
+	// 			{
+	// 				type: String,
+	// 			},
+	// 		],
+	// 		component: { type: String }, //index: { unique: true }
+	// 	},
+	// ],
 	limits: [
 		{
 			type: String,
